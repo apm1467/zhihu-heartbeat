@@ -1,0 +1,13 @@
+
+.hidden {
+    display: none;
+}
+
+.title-bar {
+    height: 30px;
+    -webkit-app-region: drag;
+}
+
+.captcha {
+
+}

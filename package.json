@@ -1,0 +1,26 @@
+{
+  "name": "zhihu-pin",
+  "version": "0.1",
+  "description": "（非官方）知乎想法桌面端",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "Yi Ge",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^2.0.0",
+    "electron-reloader": "^0.2.0"
+  },
+  "dependencies": {
+    "request": "^2.87.0"
+  }
+}

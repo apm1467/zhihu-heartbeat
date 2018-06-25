@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script>window.$ = window.jQuery = require('./assets/jquery-3.3.1.min.js');</script>
+    <link rel="stylesheet" type="text/css" href="./assets/main.css" />
+  </head>
+
+  <body>
+    <div class="title-bar"></div>
+
+    <div class="login-form">
+      <div class="login-data">
+        <input type="text" class="email">
+        <input type="text" class="password">
+      </div>
+
+      <div class="captcha hidden">
+        <input type="text" class="captcha-text">
+      </div>
+
+      <button type="button" class="login-btn">登录</button>
+    </div>
+
+    <div class="feed"></div>
+
+    <script>
+      require('./renderer.js')
+    </script>
+  </body>
+</html>
