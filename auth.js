@@ -76,6 +76,9 @@ function authenticate(email, password) {
         localStorage.setItem('access_expire_time', access_expire.toString());
 
         $('.login-form').addClass('hidden');
+
+        const feed = require('./feed');
+        feed.fetch_feed();
     });
 }
 
