@@ -1,26 +1,96 @@
-
+body {
+    color: rgb(242, 242, 242);
+}
 .hidden {
     display: none;
 }
-
-.title-bar {
-    height: 60px;
-    -webkit-app-region: drag;
+a {
+    color: rgb(106, 175, 253);
+    font-family: sans-serif;
+    text-decoration: none;
+    word-break: break-all;
 }
-
+.title-bar {
+    -webkit-app-region: drag;
+    height: 55px;
+    left: 0;
+    right: 0;
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    background-color: rgb(77, 77, 77);
+    vertical-align: center;
+}
 .self-avatar {
     border-radius: 50%;
     height: 45px;
     width: 45px;
     float: right;
+    margin-right: 10px;
+    margin-top: 4px;
 }
-
+.login-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: right;
+    max-width: 250px;
+}
 .captcha {
-
+    width: 100%;
+    margin-top: 20px;
 }
-
+.login-form input {
+    text-align: right;
+    border-radius: 4px;
+    margin: 8px 0;
+    padding: 10px;
+    font-size: 16px;
+}
+.email, .password {
+    width: 100%;
+    box-sizing: border-box;
+}
+.captcha-text {
+    width: 100px;
+}
+.login-btn {
+    margin-top: 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 13px;
+    background-color: rgb(242, 242, 242);
+    color: rgb(77, 77, 77);
+    padding: 8px 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.feed {
+    margin-top: 70px;
+}
+.feed-item {
+    margin-bottom: 12px;
+}
 .avatar {
     border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+}
+.name {
+    font-family: sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    margin-left: 50px;
+}
+.content {
+    font-size: 17px;
+    line-height: 1.6em;
+    font-family: sans-serif;
+    margin-top: 5px;
+    margin-left: 50px;
+    margin-right: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgb(102, 102, 102);
 }
