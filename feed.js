@@ -1,11 +1,6 @@
 var request = require('request');
 const settings = require('./settings');
 
-// append access_token to base_request_header => authorized_request_header
-var access_token = localStorage.getItem('access_token');
-var authorized_request_header = settings.BASE_REQUEST_HEADER;
-authorized_request_header['Authorization'] = 'Bearer ' + access_token;
-
 
 class Author {
     constructor(author_dict) {
@@ -18,7 +13,7 @@ class Author {
         return '<img class="avatar" src="' + this.avatar + '">';
     }
     get_name_html() {
-        return '<span class="name">' + this.name + '</div>';
+        return '<span class="name">' + this.name + '</span>';
     }
 }
 
@@ -47,7 +42,7 @@ exports.fetch_feed = function() {
     var options = {
         method: 'GET',
         url: settings.PIN_URL,
-        headers: authorized_request_header,
+        headers: get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -81,7 +76,7 @@ function display_self_avatar() {
     var options = {
         method: 'GET',
         url: settings.SELF_URL,
-        headers: authorized_request_header,
+        headers: get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -89,4 +84,12 @@ function display_self_avatar() {
         var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
         $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">')
     });
+}
+
+function get_authorized_request_header() {
+    // append access_token to base_request_header => authorized_request_header
+    var access_token = localStorage.getItem('access_token');
+    var header = settings.BASE_REQUEST_HEADER;
+    header['Authorization'] = 'Bearer ' + access_token;
+    return header;
 }
