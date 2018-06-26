@@ -24,25 +24,24 @@ const CAPTCHA_REQUEST_HEADER = { 'Authorization': 'oauth ' + CLIENT_ID };
 exports.CAPTCHA_REQUEST_HEADER = CAPTCHA_REQUEST_HEADER;
 
 const BASE_HEADER = {
-    'x-api-version': '3.0.54',
-    'x-app-version': '4.18.0',
+    'x-api-version': '3.0.90',
+    'x-app-version': '4.18.2',
+    'X-App-VersionCode': '984',
     'x-app-build': 'release',
     'x-app-za': jQuery.param({
-        'OS': 'Android',
-        'Release': '6.0',
-        'Model': 'Google Nexus 5 - 6.0.0 - API 23 - 1080x1920',
-        'VersionName': '4.18.0',
-        'VersionCode': '477',
-        'Width': '1080',
-        'Height': '1920',
-        'Installer': 'Google Play',
+        'OS': 'iOS',
+        'Release': '11.4',
+        'Model': 'iPhone7,2',
+        'VersionName': '4.18.2',
+        'VersionCode': '984',
+        'Width': '750',
+        'Height': '1334',
+        'DeviceType': 'Phone',
+        'Brand': 'Apple',
+        'OperatorType': '26207'
     }),
-    'x-uuid': 'AHBCVBVCDAtLBfZCo1SYbPj8SgivYjqcGCs=',
-    'User-Agent': 'Futureve/4.18.0 Mozilla/5.0 (Linux; Android 6.0; ' +
-                  'Google Nexus 5 - 6.0.0 - API 23 - 1080x1920 Build/MRA58K; wv) ' +
-                  'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 ' +
-                  'Chrome/44.0.2403.119 Mobile Safari/537.36 ' +
-                  'Google-HTTP-Java-Client/1.22.0 (gzip)'
+    'x-uuid': 'AFDAPJdyuApLBdYntf8xLa7BMpUJQloGeys=',
+    'User-Agent': 'osee2unifiedRelease/4.18.2 (iPhone; iOS 11.4; Scale/2.00)'
 };
 exports.BASE_REQUEST_HEADER = BASE_HEADER;
 
