@@ -23,8 +23,21 @@ class Author {
 }
 
 class Pin {
-    constructor(pin_dict) {
-        
+    constructor(content_array) {
+        // handle text
+        this.text = '';
+        if (content_array[0]['type'] == 'text') {
+            this.text = content_array[0]['own_text'];
+        }
+    }
+
+    get_html() {
+        var output = '';
+
+        if (this.text) {
+            output += '<div class="text">' + this.text + '</div>';
+        }
+        return output;
     }
 }
 
@@ -51,11 +64,14 @@ function display_feed(feed_array) {
         var feed_item = feed_array[i];
         if (feed_item['type'] == 'moment') {
             var author = new Author(feed_array[i]['target']['author']);
-            var content_array = feed_array[i]['target']['content'];
             var author_html = '<div class="author">' + author.get_avatar_html() + 
                 author.get_name_html() + '</div>';
-            var pin_html = '<div class="pin">' + author_html + '</div>';
-            $('.feed').append(pin_html);
+
+            var pin = new Pin(feed_array[i]['target']['content']);
+            var pin_html = '<div class="content">' + pin.get_html() + '</div>';
+
+            var output = '<div class="feed-item">' + author_html + pin_html + '</div>';
+            $('.feed').append(output);
         }
     }
     return;
