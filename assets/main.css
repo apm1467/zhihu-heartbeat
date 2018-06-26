@@ -4,8 +4,15 @@
 }
 
 .title-bar {
-    height: 30px;
+    height: 60px;
     -webkit-app-region: drag;
+}
+
+.self-avatar {
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    float: right;
 }
 
 .captcha {

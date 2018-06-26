@@ -7,6 +7,8 @@ exports.SIGN_IN_URL = BASE_URL + '/sign_in';
 
 exports.PIN_URL = BASE_URL + '/pins/moments?reverse_order=0';
 
+exports.SELF_URL = BASE_URL + '/people/self';
+
 exports.APP_SECRET = 'ecbefbf6b17e47ecb9035107866380';
 
 const CLIENT_ID = '8d5227e0aaaa4797a763ac64e0c3b8';

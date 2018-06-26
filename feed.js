@@ -29,6 +29,8 @@ class Pin {
 }
 
 exports.fetch_feed = function() {
+    display_self_avatar()
+
     var options = {
         method: 'GET',
         url: settings.PIN_URL,
@@ -59,3 +61,16 @@ function display_feed(feed_array) {
     return;
 }
 
+function display_self_avatar() {
+    var options = {
+        method: 'GET',
+        url: settings.SELF_URL,
+        headers: authorized_request_header,
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var body_dict = JSON.parse(body);
+        var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
+        $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">')
+    });
+}
