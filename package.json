@@ -1,6 +1,6 @@
 {
   "name": "zhihu-pin",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "（非官方）知乎想法桌面端",
   "main": "main.js",
   "scripts": {
