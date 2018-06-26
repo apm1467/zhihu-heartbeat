@@ -35,26 +35,6 @@ function get_captcha() {
 
 
 exports.get_access_token = function(email, password, captcha_text) {
-    function log_in(email, password) {
-        var auth_data = settings.AUTH_DATA;
-        var time = Date.now();
-        auth_data['timestamp'] = time;
-        auth_data['signature'] = calculate_signature(auth_data);
-        auth_data['username'] = email;
-        auth_data['password'] = password;
-
-        var options = {
-            method: 'POST',
-            url: settings.SIGN_IN_URL,
-            form: auth_data,
-            jar: true
-        };
-        request(options, function(error, response, body) {
-            var token = body['access_token'];
-            console.log(body);
-        });
-    }
-
     if (captcha_text) {
         var options = {
             method: 'POST',
@@ -64,13 +44,35 @@ exports.get_access_token = function(email, password, captcha_text) {
             form: { input_text: captcha_text }
         };
         request(options, function(error, response, body) {
-            console.log(body);
-            log_in(email, password);
+            authenticate(email, password);
         });
     }
     else {
-        log_in(email, password);
+        authenticate(email, password);
     }
+}
+
+function authenticate(email, password) {
+    var auth_data = settings.AUTH_DATA;
+    var time = Date.now();
+    auth_data['timestamp'] = time;
+    auth_data['signature'] = calculate_signature(auth_data);
+    auth_data['username'] = email;
+    auth_data['password'] = password;
+
+    var options = {
+        method: 'POST',
+        url: settings.SIGN_IN_URL,
+        form: auth_data,
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        console.log(body);
+        var body_dict = JSON.parse(body);
+        var access_expire = time + body_dict['expires_in'];
+        localStorage.setItem('access_token', body_dict['access_token']);
+        localStorage.setItem('access_expire_time', access_expire.toString());
+    });
 }
 
 function calculate_signature(auth_data) {

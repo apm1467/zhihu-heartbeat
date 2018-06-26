@@ -20,8 +20,10 @@ exports.AUTH_DATA = {
     'password': '',
 };
 
-exports.LOGIN_HEADER = {
-    'Authorization': 'oauth ' + CLIENT_ID,
+const CAPTCHA_REQUEST_HEADER = { 'Authorization': 'oauth ' + CLIENT_ID };
+exports.CAPTCHA_REQUEST_HEADER = CAPTCHA_REQUEST_HEADER;
+
+const BASE_HEADER = {
     'x-api-version': '3.0.54',
     'x-app-version': '4.18.0',
     'x-app-build': 'release',
@@ -41,4 +43,8 @@ exports.LOGIN_HEADER = {
                   'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 ' +
                   'Chrome/44.0.2403.119 Mobile Safari/537.36 ' +
                   'Google-HTTP-Java-Client/1.22.0 (gzip)'
-}
+};
+exports.BASE_REQUEST_HEADER = BASE_HEADER;
+
+// combine two dicts
+exports.LOGIN_REQUEST_HEADER = Object.assign({}, CAPTCHA_REQUEST_HEADER, BASE_HEADER);
