@@ -71,7 +71,7 @@ function authenticate(email, password) {
     request(options, function(error, response, body) {
         console.log(body);
         var body_dict = JSON.parse(body);
-        var access_expire = time + body_dict['expires_in'];
+        var access_expire = time + body_dict['expires_in'] * 1000;
         localStorage.setItem('access_token', body_dict['access_token']);
         localStorage.setItem('access_expire_time', access_expire.toString());
 
