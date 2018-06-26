@@ -36,6 +36,7 @@ function get_captcha() {
 
 exports.get_access_token = function(email, password, captcha_text) {
     if (captcha_text) {
+        // submit captcha text before authentication
         var options = {
             method: 'POST',
             url: settings.CAPTCHA_URL,
@@ -48,6 +49,7 @@ exports.get_access_token = function(email, password, captcha_text) {
         });
     }
     else {
+        // authenticate directly
         authenticate(email, password);
     }
 }
@@ -72,6 +74,8 @@ function authenticate(email, password) {
         var access_expire = time + body_dict['expires_in'];
         localStorage.setItem('access_token', body_dict['access_token']);
         localStorage.setItem('access_expire_time', access_expire.toString());
+
+        $('.login-form').addClass('hidden');
     });
 }
 
