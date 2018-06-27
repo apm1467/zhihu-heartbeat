@@ -81,6 +81,7 @@ class Pin {
 
 exports.fetch_feed = function() {
     display_self_avatar()
+    localStorage.setItem('feed_offset', '0');
 
     var options = {
         method: 'GET',
@@ -112,7 +113,14 @@ function display_feed(feed_array) {
             $('.feed').append(output);
         }
     }
-    return;
+
+    // save last_pin_id & feed_offset
+    var last_pin_id = feed_array[array_length - 1]['target']['id'];
+    localStorage.setItem('last_pin_id', last_pin_id);
+
+    var feed_offset = localStorage.getItem('feed_offset');
+    feed_offset = parseInt(feed_offset) + 10;
+    localStorage.setItem('feed_offset', feed_offset.toString());
 }
 
 function display_self_avatar() {
