@@ -79,13 +79,13 @@ class Pin {
     }
 }
 
-exports.fetch_feed = function() {
+exports.fetch_initial_feed = function() {
     display_self_avatar()
     localStorage.setItem('feed_offset', '0');
 
     var options = {
         method: 'GET',
-        url: settings.PIN_URL,
+        url: settings.PIN_URL + '?reverse_order=0',
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -94,6 +94,27 @@ exports.fetch_feed = function() {
         var feed_array = body_dict['data'];
         console.log(feed_array);
         display_feed(feed_array);
+    });
+}
+
+exports.fetch_older_feed = function() {
+    var last_pin_id = localStorage.getItem('last_pin_id');
+    var feed_offset = localStorage.getItem('feed_offset');
+    var options = {
+        method: 'GET',
+        url: settings.PIN_URL + '?limit=20&after_id=' + last_pin_id + '&offset=' + feed_offset,
+        headers: get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var body_dict = JSON.parse(body);
+        var feed_array = body_dict['data'];
+        console.log(feed_array);
+        display_feed(feed_array);
+
+        // re-enable infinite scroll
+        const renderer = require('./renderer');
+        renderer.enable_infinite_scroll();
     });
 }
 
