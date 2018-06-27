@@ -48,7 +48,7 @@ class Pin {
             output += '<div class="text">' + this.text + '</div>';
         }
 
-        if (this.image_array) {
+        if (this.image_count > 0) {
             output += '<div class="images">';
 
             if (this.image_count == 1) {
