@@ -1,5 +1,6 @@
 body {
     color: rgb(242, 242, 242);
+    overflow-x: hidden;
 }
 .hidden {
     display: none;
@@ -90,7 +91,6 @@ a {
     font-family: sans-serif;
     margin-top: 5px;
     margin-left: 50px;
-    margin-right: 5px;
     padding-bottom: 10px;
     border-bottom: 1px solid rgb(102, 102, 102);
 }
@@ -129,5 +129,26 @@ a {
 }
 .img-grid .row + .row {
     margin-top: 3px;
+}
+.origin-pin {
+    font-size: 15px;
+    line-height: 1.5em;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 2px;
+    border-left: 2px solid rgb(102, 102, 102);
+}
+.origin-pin .name {
+    display: block;
+    margin-left: 0;
+    margin-bottom: 5px;
+    font-size: 17px;
+}
+.origin-pin .img-grid .img {
+    width: 118px;
+    height: 118px;
+}
+.origin-pin .img-grid .row {
+    width: 360;
 }
 

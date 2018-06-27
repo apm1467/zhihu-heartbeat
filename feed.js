@@ -18,7 +18,11 @@ class Author {
 }
 
 class Pin {
-    constructor(content_array) {
+    constructor(pin_dict) {
+        this.time = pin_dict['updated'];
+
+        var content_array = pin_dict['content'];
+
         // handle text
         this.text = '';
         if (content_array[0]['type'] == 'text') {
@@ -121,16 +125,38 @@ exports.fetch_older_feed = function() {
 function display_feed(feed_array) {
     var array_length = feed_array.length;
     for (var i = 0; i < array_length; i++) {
+
         var feed_item = feed_array[i];
         if (feed_item['type'] == 'moment') {
-            var author = new Author(feed_array[i]['target']['author']);
+            var author = new Author(feed_item['target']['author']);
             var author_html = '<div class="author">' + author.get_avatar_html() + 
                 author.get_name_html() + '</div>';
 
-            var pin = new Pin(feed_array[i]['target']['content']);
-            var pin_html = '<div class="content">' + pin.get_html() + '</div>';
+            var pin = new Pin(feed_item['target']);
+            var pin_html = '<div class="content">' + pin.get_html(); 
+            // </div> closing tag is added at the end
 
-            var output = '<div class="feed-item">' + author_html + pin_html + '</div>';
+            var output = '<div class="feed-item">' + author_html + pin_html;
+
+            // if this pin is a repin
+            if (feed_item['target']['origin_pin']) {
+                output += '<div class="origin-pin">';
+
+                if (feed_item['target']['origin_pin']['is_deleted']) {
+                    output += feed_item['target']['origin_pin']['deleted_reason'];
+                }
+                else {
+                    var origin_author = new Author(feed_item['target']['origin_pin']['author']);
+                    output += '<div class="author">' + origin_author.get_name_html() + '</div>';
+
+                    var origin_pin = new Pin(feed_item['target']['origin_pin']);
+                    output += '<div class="origin-pin-content">' + origin_pin.get_html() + '</div>';
+                }
+
+                output += '</div>';
+            }
+
+            output += '</div></div>';
             $('.feed').append(output);
         }
     }
