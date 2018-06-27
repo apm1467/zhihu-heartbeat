@@ -6,7 +6,7 @@ exports.check_captcha = function() {
     var options = {
         method: 'GET',
         url: settings.CAPTCHA_URL,
-        headers: { 'Authorization': 'oauth ' + settings.CLIENT_ID },
+        headers: settings.CAPTCHA_REQUEST_HEADER,
         jar: true // accept cookie
     };
 
@@ -21,7 +21,7 @@ function get_captcha() {
     var options = {
         method: 'PUT',
         url: settings.CAPTCHA_URL,
-        headers: { 'Authorization': 'oauth ' + settings.CLIENT_ID },
+        headers: settings.CAPTCHA_REQUEST_HEADER,
         jar: true
     };
 
@@ -69,7 +69,6 @@ function authenticate(email, password) {
         jar: true
     };
     request(options, function(error, response, body) {
-        console.log(body);
         var body_dict = JSON.parse(body);
         var access_expire = time + body_dict['expires_in'] * 1000;
         localStorage.setItem('access_token', body_dict['access_token']);
