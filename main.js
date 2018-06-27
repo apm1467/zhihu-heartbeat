@@ -22,6 +22,22 @@ function create_window () {
     // Open the DevTools.
     main_window.webContents.openDevTools();
 
+    // only hide the main window when user closes it on macOS
+    // not preventing user from quitting the app
+    if (process.platform === 'darwin') {
+        var user_quit = false;
+        app.on('before-quit', function() {
+            user_quit = true;
+        });
+        main_window.on('close', function(event) {
+            if (!user_quit) {
+                event.preventDefault();
+                main_window.hide();
+                return false;
+            }
+        });
+    }
+
     main_window.on('closed', function () {
         main_window = null;
     });
@@ -30,13 +46,11 @@ function create_window () {
 app.on('ready', create_window);
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+    app.quit();
+});
 
 app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+    if (process.platform == 'darwin') {
+        main_window.show();
+    }
+});
