@@ -94,3 +94,40 @@ a {
     padding-bottom: 10px;
     border-bottom: 1px solid rgb(102, 102, 102);
 }
+.images {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+.img {
+    cursor: pointer;
+}
+.img + .img {
+    margin-left: 3px;
+}
+.single-img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+}
+.double-img {
+    width: 49.5%;
+    height: 200px;
+}
+.img-grid .img {
+    display: inline-block;
+    width: 125px;
+    height: 125px;
+    background-position: center center;
+    background-size: cover;
+}
+.img-grid .row {
+    line-height: 0;
+    text-align: left;
+    margin: 0 auto;
+    width: 381px;
+}
+.img-grid .row + .row {
+    margin-top: 3px;
+}
+

@@ -24,6 +24,17 @@ class Pin {
         if (content_array[0]['type'] == 'text') {
             this.text = content_array[0]['own_text'];
         }
+
+        // handle images
+        var image_array = [];
+        var array_length = content_array.length;
+        for (var i = 0; i < array_length; i++) {
+            if (content_array[i]['type'] == 'image') {
+                image_array.push(content_array[i]['url']);
+            }
+        }
+        this.image_count = image_array.length;
+        this.image_array = image_array;
     }
 
     get_html() {
@@ -32,6 +43,38 @@ class Pin {
         if (this.text) {
             output += '<div class="text">' + this.text + '</div>';
         }
+
+        if (this.image_array) {
+            output += '<div class="images">';
+
+            if (this.image_count == 1) {
+                // <img class="img single-img" src="...">
+                output += '<img class="img single-img" src="' + this.image_array[0] + '">';
+            }
+            else if (this.image_count == 2) {
+                // <div class="img double-img" style="background-image: url('...');"></div>
+                output += '<div class="img double-img" style="background-image: url(\''
+                          + this.image_array[0] + '\');"></div>';
+                output += '<div class="img double-img" style="background-image: url(\''
+                          + this.image_array[1] + '\');"></div>';
+            }
+            else if (this.image_count >= 3) {
+                output += '<div class="img-grid"><div class="row">';
+                for (var i = 0; i < this.image_count; i++) {
+                    // <div class="img" style="background-image: url('...');"></div>
+                    output += '<div class="img" style="background-image: url(\''
+                              + this.image_array[i] + '\');"></div>';
+                    // change to new row after every 3 images
+                    if (i > 1 && (i + 1) % 3 == 0) {
+                        output += '</div><div class="row">';
+                    }
+                }
+                output += '</div></div>';
+            }
+
+            output += '</div>';
+        }
+
         return output;
     }
 }
