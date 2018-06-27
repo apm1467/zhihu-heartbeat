@@ -1,5 +1,10 @@
-const settings = require('./settings');
-const feed = require('./feed');
+// open links in external browser
+const shell = require('electron').shell;
+$(document).on('click', 'a[href^="http"]', function(event) {
+    event.preventDefault();
+    shell.openExternal(this.href);
+});
+
 
 var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
@@ -11,9 +16,9 @@ if (access_expire_time < time) {
 }
 else {
     // fetch feed directly using existing access_token
+    const feed = require('./feed');
     feed.fetch_feed();
 }
-
 
 function log_in() {
     const auth = require('./auth');
