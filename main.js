@@ -1,32 +1,33 @@
 const {app, BrowserWindow} = require('electron');
 try {
-  require('electron-reloader')(module);
+    require('electron-reloader')(module);
 } catch (err) {}
 
 
-let mainWindow = null
+let main_window = null;
 
-function createWindow () {
-  mainWindow = new BrowserWindow({
-    width: 450,
-    minWidth: 450,
-    maxWidth: 560,
-    height: 800,
-    titleBarStyle: 'hidden',
-    backgroundColor: "#484848",
-  })
+function create_window () {
+    main_window = new BrowserWindow({
+        width: 450,
+        minWidth: 450,
+        maxWidth: 560,
+        height: 800,
+        titleBarStyle: 'hiddenInset',
+        backgroundColor: "#484848",
+        webPreferences: { scrollBounce: true }
+    });
 
-  mainWindow.loadFile('index.html')
+    main_window.loadFile('index.html');
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+    // Open the DevTools.
+    main_window.webContents.openDevTools();
 
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
+    main_window.on('closed', function () {
+        main_window = null;
+    });
 }
 
-app.on('ready', createWindow)
+app.on('ready', create_window);
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
