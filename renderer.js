@@ -28,8 +28,11 @@ $(document).on('click', '.img', function(event) {
             height: this.height,
             width: this.width
         });
-        win.loadURL(img_url);
-        win.once('ready-to-show', () => {
+        // CSS "-webkit-app-region: drag;" is needed to make the image window draggable
+        win.loadURL('data:text/html,' +
+                    '<body style="-webkit-app-region: drag; margin: 0;">' +
+                    '<img src="' + img_url + '" draggable="false"></body>');
+        win.once('ready-to-show', function () {
             win.show();
         });
     };
