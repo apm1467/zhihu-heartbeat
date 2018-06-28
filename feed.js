@@ -85,7 +85,7 @@ class Pin {
 
 exports.fetch_initial_feed = function() {
     display_self_avatar()
-    localStorage.setItem('feed_offset', '0');
+    localStorage.setItem('feed_offset', '0'); // needed when fetching older feed
 
     var options = {
         method: 'GET',
@@ -102,11 +102,11 @@ exports.fetch_initial_feed = function() {
 }
 
 exports.fetch_older_feed = function() {
-    var last_pin_id = localStorage.getItem('last_pin_id');
+    var oldest_pin_id = localStorage.getItem('oldest_pin_id');
     var feed_offset = localStorage.getItem('feed_offset');
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?limit=20&after_id=' + last_pin_id + '&offset=' + feed_offset,
+        url: settings.PIN_URL + '?limit=20&after_id=' + oldest_pin_id + '&offset=' + feed_offset,
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -161,9 +161,9 @@ function display_feed(feed_array) {
     }
     $('.feed').append(output);
 
-    // save last_pin_id & feed_offset
-    var last_pin_id = feed_array[array_length - 1]['target']['id'];
-    localStorage.setItem('last_pin_id', last_pin_id);
+    // save oldest_pin_id & feed_offset
+    var oldest_pin_id = feed_array[array_length - 1]['target']['id'];
+    localStorage.setItem('oldest_pin_id', oldest_pin_id);
 
     var feed_offset = localStorage.getItem('feed_offset');
     feed_offset = parseInt(feed_offset) + 10;
