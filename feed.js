@@ -123,20 +123,20 @@ exports.fetch_older_feed = function() {
 }
 
 function display_feed(feed_array) {
+    var output = '';
     var array_length = feed_array.length;
     for (var i = 0; i < array_length; i++) {
-
         var feed_item = feed_array[i];
         if (feed_item['type'] == 'moment') {
+            output += '<div class="feed-item">';
+
             var author = new Author(feed_item['target']['author']);
-            var author_html = '<div class="author">' + author.get_avatar_html() + 
-                author.get_name_html() + '</div>';
+            output += '<div class="author">' + author.get_avatar_html() + 
+                      author.get_name_html() + '</div>';
 
             var pin = new Pin(feed_item['target']);
-            var pin_html = '<div class="content">' + pin.get_html(); 
-            // </div> closing tag is added at the end
-
-            var output = '<div class="feed-item">' + author_html + pin_html;
+            output += '<div class="content">' + pin.get_html(); 
+            // </div> tag is added at the end
 
             // if this pin is a repin
             if (feed_item['target']['origin_pin']) {
@@ -157,9 +157,9 @@ function display_feed(feed_array) {
             }
 
             output += '</div></div>';
-            $('.feed').append(output);
         }
     }
+    $('.feed').append(output);
 
     // save last_pin_id & feed_offset
     var last_pin_id = feed_array[array_length - 1]['target']['id'];
