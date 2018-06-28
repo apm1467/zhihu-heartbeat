@@ -16,7 +16,7 @@ a {
     -webkit-app-region: drag;
     height: 55px;
     width: 100%;
-    position: fixed;
+    position: sticky;
     z-index: 99;
     top: 0;
     background-color: rgb(77, 77, 77);
@@ -68,7 +68,7 @@ a {
     cursor: pointer;
 }
 .feed {
-    margin-top: 70px;
+    margin-top: 15px;
     margin-left: 8px;
     margin-right: 8px;
 }
