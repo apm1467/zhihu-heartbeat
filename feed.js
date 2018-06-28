@@ -97,7 +97,7 @@ exports.fetch_initial_feed = function() {
         var body_dict = JSON.parse(body);
         var feed_array = body_dict['data'];
         console.log(feed_array);
-        display_feed(feed_array);
+        append_to_feed(feed_array);
     });
 }
 
@@ -114,7 +114,7 @@ exports.fetch_older_feed = function() {
         var body_dict = JSON.parse(body);
         var feed_array = body_dict['data'];
         console.log(feed_array);
-        display_feed(feed_array);
+        append_to_feed(feed_array);
 
         // re-enable infinite scroll
         const renderer = require('./renderer');
@@ -122,42 +122,16 @@ exports.fetch_older_feed = function() {
     });
 }
 
-function display_feed(feed_array) {
+
+
+}
+
+function append_to_feed(feed_array) {
     var output = '';
     var array_length = feed_array.length;
     for (var i = 0; i < array_length; i++) {
-        var feed_item = feed_array[i];
-        if (feed_item['type'] == 'moment') {
-            output += '<div class="feed-item">';
-
-            var author = new Author(feed_item['target']['author']);
-            output += '<div class="author">' + author.get_avatar_html() + 
-                      author.get_name_html() + '</div>';
-
-            var pin = new Pin(feed_item['target']);
-            output += '<div class="content">' + pin.get_html(); 
-            // </div> tag is added at the end
-
-            // if this pin is a repin
-            if (feed_item['target']['origin_pin']) {
-                output += '<div class="origin-pin">';
-
-                if (feed_item['target']['origin_pin']['is_deleted']) {
-                    output += feed_item['target']['origin_pin']['deleted_reason'];
-                }
-                else {
-                    var origin_author = new Author(feed_item['target']['origin_pin']['author']);
-                    output += '<div class="author">' + origin_author.get_name_html() + '</div>';
-
-                    var origin_pin = new Pin(feed_item['target']['origin_pin']);
-                    output += '<div class="origin-pin-content">' + origin_pin.get_html() + '</div>';
-                }
-
-                output += '</div>';
-            }
-
-            output += '</div></div>';
-        }
+        var feed_item_dict = feed_array[i];
+        output += generate_feed_item_html(feed_item_dict);
     }
     $('.feed').append(output);
 
@@ -168,6 +142,42 @@ function display_feed(feed_array) {
     var feed_offset = localStorage.getItem('feed_offset');
     feed_offset = parseInt(feed_offset) + 10;
     localStorage.setItem('feed_offset', feed_offset.toString());
+}
+
+function generate_feed_item_html(feed_item_dict) {
+    var output = '';
+    if (feed_item_dict['type'] == 'moment') {
+        output += '<div class="feed-item">';
+
+        var author = new Author(feed_item_dict['target']['author']);
+        output += '<div class="author">' + author.get_avatar_html() + 
+                  author.get_name_html() + '</div>';
+
+        var pin = new Pin(feed_item_dict['target']);
+        output += '<div class="content">' + pin.get_html(); 
+        // </div> tag is added at the end
+
+        // if this pin is a repin
+        if (feed_item_dict['target']['origin_pin']) {
+            output += '<div class="origin-pin">';
+
+            if (feed_item_dict['target']['origin_pin']['is_deleted']) {
+                output += feed_item_dict['target']['origin_pin']['deleted_reason'];
+            }
+            else {
+                var origin_author = new Author(feed_item_dict['target']['origin_pin']['author']);
+                output += '<div class="author">' + origin_author.get_name_html() + '</div>';
+
+                var origin_pin = new Pin(feed_item_dict['target']['origin_pin']);
+                output += '<div class="origin-pin-content">' + origin_pin.get_html() + '</div>';
+            }
+
+            output += '</div>';
+        }
+
+        output += '</div></div>';
+    }
+    return output;
 }
 
 function display_self_avatar() {
