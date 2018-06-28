@@ -1,6 +1,7 @@
 body {
     color: rgb(242, 242, 242);
     overflow-x: hidden;
+    margin: 0;
 }
 .hidden {
     display: none;
@@ -14,13 +15,11 @@ a {
 .title-bar {
     -webkit-app-region: drag;
     height: 55px;
-    left: 0;
-    right: 0;
+    width: 100%;
     position: fixed;
     z-index: 99;
     top: 0;
     background-color: rgb(77, 77, 77);
-    vertical-align: center;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
 .self-avatar {
@@ -70,6 +69,8 @@ a {
 }
 .feed {
     margin-top: 70px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 .feed-item {
     margin-bottom: 12px;
@@ -115,6 +116,9 @@ a {
     width: 49.5%;
     height: 200px;
 }
+.img-grid {
+    margin-bottom: 6px;
+}
 .img-grid .img {
     display: inline-block;
     width: 125px;
@@ -136,6 +140,7 @@ a {
     line-height: 1.5em;
     margin-left: 10px;
     margin-top: 10px;
+    margin-bottom: 5px;
     padding-left: 10px;
     padding-top: 2px;
     border-left: 2px solid rgb(102, 102, 102);
