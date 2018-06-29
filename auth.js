@@ -1,12 +1,12 @@
 var request = require('request');
-const settings = require('./settings');
+const constants = require('./constants');
 
 
 exports.check_captcha = function() {
     var options = {
         method: 'GET',
-        url: settings.CAPTCHA_URL,
-        headers: settings.CAPTCHA_REQUEST_HEADER,
+        url: constants.CAPTCHA_URL,
+        headers: constants.CAPTCHA_REQUEST_HEADER,
         jar: true // accept cookie
     };
 
@@ -20,8 +20,8 @@ exports.check_captcha = function() {
 function get_captcha() {
     var options = {
         method: 'PUT',
-        url: settings.CAPTCHA_URL,
-        headers: settings.CAPTCHA_REQUEST_HEADER,
+        url: constants.CAPTCHA_URL,
+        headers: constants.CAPTCHA_REQUEST_HEADER,
         jar: true
     };
 
@@ -39,8 +39,8 @@ exports.get_access_token = function(email, password, captcha_text) {
         // submit captcha text before authentication
         var options = {
             method: 'POST',
-            url: settings.CAPTCHA_URL,
-            headers: settings.LOGIN_HEADER,
+            url: constants.CAPTCHA_URL,
+            headers: constants.LOGIN_HEADER,
             jar: true,
             form: { input_text: captcha_text }
         };
@@ -55,7 +55,7 @@ exports.get_access_token = function(email, password, captcha_text) {
 }
 
 function authenticate(email, password) {
-    var auth_data = settings.AUTH_DATA;
+    var auth_data = constants.AUTH_DATA;
     var time = Date.now();
     auth_data['timestamp'] = time;
     auth_data['signature'] = calculate_signature(auth_data);
@@ -64,7 +64,7 @@ function authenticate(email, password) {
 
     var options = {
         method: 'POST',
-        url: settings.SIGN_IN_URL,
+        url: constants.SIGN_IN_URL,
         form: auth_data,
         jar: true
     };
@@ -83,7 +83,7 @@ function authenticate(email, password) {
 
 function calculate_signature(auth_data) {
     const crypto = require('crypto');
-    var hmac = crypto.createHmac('sha1', settings.APP_SECRET);
+    var hmac = crypto.createHmac('sha1', constants.APP_SECRET);
 
     var msg = auth_data['grant_type'] + auth_data['client_id'] + auth_data['source'] 
         + auth_data['timestamp'];

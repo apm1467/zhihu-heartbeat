@@ -1,5 +1,5 @@
 var request = require('request');
-const settings = require('./settings');
+const constants = require('./constants');
 
 
 class Author {
@@ -111,7 +111,7 @@ exports.fetch_initial_feed = function() {
 
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?reverse_order=0',
+        url: constants.PIN_URL + '?reverse_order=0',
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -141,7 +141,7 @@ exports.fetch_older_feed = function() {
     var feed_offset = localStorage.getItem('feed_offset');
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
+        url: constants.PIN_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -176,7 +176,7 @@ function append_to_feed(feed_array) {
 exports.check_update = function() {
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?reverse_order=0',
+        url: constants.PIN_URL + '?reverse_order=0',
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -212,7 +212,7 @@ exports.check_update = function() {
 function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
+        url: constants.PIN_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -319,7 +319,7 @@ function report_latest_viewed_pin_id() {
     var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
     var options = {
         method: 'POST',
-        url: settings.PIN_VIEWS_REPORT_URL,
+        url: constants.PIN_VIEWS_REPORT_URL,
         headers: get_authorized_request_header(),
         form: { pin_ids: latest_local_pin_id },
         jar: true
@@ -330,7 +330,7 @@ function report_latest_viewed_pin_id() {
 function display_self_avatar() {
     var options = {
         method: 'GET',
-        url: settings.SELF_URL,
+        url: constants.SELF_URL,
         headers: get_authorized_request_header(),
         jar: true
     };
@@ -347,7 +347,7 @@ function display_self_avatar() {
 function get_authorized_request_header() {
     // append access_token to base_request_header => authorized_request_header
     var access_token = localStorage.getItem('access_token');
-    var header = settings.BASE_REQUEST_HEADER;
+    var header = constants.BASE_REQUEST_HEADER;
     header['Authorization'] = 'Bearer ' + access_token;
     return header;
 }
