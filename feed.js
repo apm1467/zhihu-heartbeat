@@ -18,10 +18,11 @@ class Author {
 }
 
 class Pin {
-    constructor(pin_dict) {
-        this.time = pin_dict['updated'];
+    constructor(feed_item) {
+        this.id = feed_item['target']['id'];
+        this.time = feed_item['target']['updated'];
 
-        var content_array = pin_dict['content'];
+        var content_array = feed_item['target']['content'];
 
         // handle text
         this.text = '';
@@ -41,6 +42,15 @@ class Pin {
         this.image_array = image_array;
     }
 
+    get_id() {
+        return this.id;
+    }
+    get_time_int() {
+        return this.time;
+    }
+    get_time_str() {
+        return this.time.toString();
+    }
     get_html() {
         var output = '';
 
@@ -50,7 +60,6 @@ class Pin {
 
         if (this.image_count > 0) {
             output += '<div class="images">';
-
             if (this.image_count == 1) {
                 // <img class="img single-img" src="...">
                 output += '<img class="img single-img" src="' + this.image_array[0] + '">';
@@ -75,13 +84,13 @@ class Pin {
                 }
                 output += '</div></div>';
             }
-
             output += '</div>';
         }
 
         return output;
     }
 }
+
 
 exports.fetch_initial_feed = function() {
     display_self_avatar()
