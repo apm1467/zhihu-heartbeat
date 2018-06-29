@@ -8,9 +8,9 @@ let main_window = null;
 
 function create_window () {
     main_window = new BrowserWindow({
-        width: 450,
-        minWidth: 450,
-        maxWidth: 560,
+        width: 430,
+        minWidth: 400,
+        maxWidth: 600,
         height: 800,
         titleBarStyle: 'hiddenInset',
         backgroundColor: "#484848",
