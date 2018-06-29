@@ -105,13 +105,32 @@ a {
     font-size: 19px;
     margin-left: 50px;
 }
-.time {
+.time, .statistics {
+    height: 0;
     float: right;
     position: relative;
     right: 10px;
-    top: -23px;
     color: rgb(220, 220, 220);
     font-size: 14px;
+}
+.time {
+    top: -23px;
+}
+.statistics {
+    display: none;
+    top: -21px; 
+}
+.statistics span {
+    margin-left: 7px;
+}
+.statistics i {
+    margin-right: 3px;
+}
+.feed-item:hover > .time {
+    display: none;
+}
+.feed-item:hover > .statistics {
+    display: inline-block;
 }
 .content {
     font-size: 17px;

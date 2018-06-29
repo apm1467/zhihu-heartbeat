@@ -22,6 +22,10 @@ class Pin {
         this.id = feed_item['target']['id'];
         this.time = feed_item['target']['updated'];
 
+        this.likes = feed_item['target']['reaction_count'];
+        this.repins = feed_item['target']['repin_count'];
+        this.comments_count = feed_item['target']['comment_count'];
+
         var content_array = feed_item['target']['content'];
 
         // handle text
@@ -50,6 +54,15 @@ class Pin {
     }
     get_time_str() {
         return this.time.toString();
+    }
+    get_likes_html() {
+        return '<span><i class="far fa-heart"></i>' + this.likes + '</span>';
+    }
+    get_repins_html() {
+        return '<span><i class="fas fa-retweet"></i>' + this.repins + '</span>';
+    }
+    get_comments_count_html() {
+        return '<span><i class="far fa-comment"></i>' + this.comments_count + '</span>';
     }
     get_content_html() {
         var output = '';
@@ -271,8 +284,10 @@ function generate_feed_item_html(feed_item) {
 
         var pin = new Pin(feed_item);
         output += '<div class="time" data-time="' + pin.get_time_str() + '"></div>';
+        output += '<div class="statistics">' + pin.get_comments_count_html() +
+                  pin.get_repins_html() + pin.get_likes_html() + '</div>';
         output += '<div class="content">' + pin.get_content_html(); 
-        // </div> tag is added at the end
+        // </div> is added at the end
 
         // if this pin is a repin
         if (feed_item['target']['origin_pin']) {
