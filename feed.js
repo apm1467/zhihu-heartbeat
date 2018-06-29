@@ -111,18 +111,16 @@ exports.fetch_initial_feed = function() {
 }
 
 exports.fetch_older_feed = function() {
-    var oldest_pin_id = localStorage.getItem('oldest_pin_id');
+    var oldest_local_pin_id = localStorage.getItem('oldest_local_pin_id');
     var feed_offset = localStorage.getItem('feed_offset');
     var options = {
         method: 'GET',
-        url: settings.PIN_URL + '?limit=20&after_id=' + oldest_pin_id + '&offset=' + feed_offset,
+        url: settings.PIN_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
         headers: get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
-        var body_dict = JSON.parse(body);
-        var feed_array = body_dict['data'];
-        console.log(feed_array);
+        var feed_array = JSON.parse(body)['data'];
         append_to_feed(feed_array);
 
         // re-enable infinite scroll
@@ -140,9 +138,9 @@ function append_to_feed(feed_array) {
     }
     $('.feed').append(output);
 
-    // save oldest_pin_id & feed_offset
-    var oldest_pin_id = feed_array[array_length - 1]['target']['id'];
-    localStorage.setItem('oldest_pin_id', oldest_pin_id);
+    // save oldest_local_pin_id & feed_offset
+    var oldest_local_pin_id = feed_array[array_length - 1]['target']['id'];
+    localStorage.setItem('oldest_local_pin_id', oldest_local_pin_id);
 
     var feed_offset = localStorage.getItem('feed_offset');
     feed_offset = parseInt(feed_offset) + 10;
