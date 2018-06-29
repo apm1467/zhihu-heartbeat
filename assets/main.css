@@ -7,6 +7,9 @@ body {
 .hidden {
     display: none;
 }
+.darkened {
+    filter: brightness(50%);
+}
 a {
     color: rgb(106, 175, 253);
     text-decoration: none;

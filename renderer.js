@@ -11,6 +11,9 @@ $(document).on('click', 'a[href^="http"]', function(event) {
 // open feed images in new window
 const {BrowserWindow} = require('electron').remote;
 $(document).on('click', '.img', function(event) {
+    // darken the image while load image window
+    $(this).addClass('darkened');
+
     var img_url;
     if ($(this).hasClass('single-img')) {
         img_url = $(this).attr('src');
@@ -27,7 +30,8 @@ $(document).on('click', '.img', function(event) {
             titleBarStyle: 'hidden',
             show: false,
             height: this.height,
-            width: this.width
+            width: this.width,
+            backgroundColor: "#000",
         });
         // CSS "-webkit-app-region: drag;" is needed to make the image window draggable
         win.loadURL('data:text/html,' +
@@ -35,6 +39,9 @@ $(document).on('click', '.img', function(event) {
                     '<img src="' + img_url + '" draggable="false"></body>');
         win.once('ready-to-show', function () {
             win.show();
+
+            // remove darkening
+            $('.img').removeClass('darkened');
         });
     };
 });
