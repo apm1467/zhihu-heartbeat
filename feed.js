@@ -103,9 +103,20 @@ exports.fetch_initial_feed = function() {
         jar: true
     };
     request(options, function(error, response, body) {
-        var body_dict = JSON.parse(body);
-        var feed_array = body_dict['data'];
+        var feed_array = JSON.parse(body)['data'];
         console.log(feed_array);
+
+        // save latest_local_pin_id & latest_local_pin_time
+        var array_length = feed_array.length;
+        for (var i = 0; i < array_length; i++) {
+            var feed_item = feed_array[i];
+            if (feed_item['type'] == 'moment') {
+                pin = new Pin(feed_item);
+                localStorage.setItem('latest_local_pin_id', pin.get_id());
+                localStorage.setItem('latest_local_pin_time', pin.get_time_str());
+                break;
+            }
+        }
         append_to_feed(feed_array);
     });
 }
