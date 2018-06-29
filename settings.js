@@ -7,6 +7,8 @@ exports.SIGN_IN_URL = BASE_URL + '/sign_in';
 
 exports.PIN_URL = BASE_URL + '/pins/moments';
 
+exports.PIN_VIEWS_REPORT_URL = BASE_URL + '/pins/views';
+
 exports.SELF_URL = BASE_URL + '/people/self';
 
 exports.APP_SECRET = 'ecbefbf6b17e47ecb9035107866380';

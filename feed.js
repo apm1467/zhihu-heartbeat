@@ -117,6 +117,8 @@ exports.fetch_initial_feed = function() {
                 break;
             }
         }
+
+        report_latest_viewed_pin_id();
         append_to_feed(feed_array);
     });
 }
@@ -196,6 +198,18 @@ function generate_feed_item_html(feed_item) {
     return output;
 }
 
+function report_latest_viewed_pin_id() {
+    var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
+    var options = {
+        method: 'POST',
+        url: settings.PIN_VIEWS_REPORT_URL,
+        headers: get_authorized_request_header(),
+        form: { pin_ids: latest_local_pin_id },
+        jar: true
+    };
+    request(options, function(error, response, body) {});
+}
+
 function display_self_avatar() {
     var options = {
         method: 'GET',
@@ -205,6 +219,9 @@ function display_self_avatar() {
     };
     request(options, function(error, response, body) {
         var body_dict = JSON.parse(body);
+        if ("error" in body_dict) {
+            display_self_avatar();
+        }
         var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
         $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">')
     });
