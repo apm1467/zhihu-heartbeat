@@ -138,7 +138,7 @@ exports.fetch_older_feed = function() {
 
         // re-enable infinite scroll
         const renderer = require('./renderer');
-        renderer.enable_infinite_scroll();
+        renderer.enable_scroll_event();
     });
 }
 
@@ -243,6 +243,9 @@ function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
                 // add .feed-item margin-bottom 12px
                 $(window).scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
             }, 2000);
+
+            // display update notification
+            $('#update-notification').addClass('notification-show');
 
             // update latest_local_pin_id & latest_local_pin_time
             localStorage.setItem('latest_local_pin_id', server_latest_pin.get_id());

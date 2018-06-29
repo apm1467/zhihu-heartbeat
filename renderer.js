@@ -70,22 +70,27 @@ function log_in() {
 
 // ------------------------------------------------------------
 
-enable_infinite_scroll();
+enable_scroll_event();
 
-exports.enable_infinite_scroll = enable_infinite_scroll;
+exports.enable_scroll_event = enable_scroll_event;
 
-function enable_infinite_scroll() {
+function enable_scroll_event() {
     $(window).scroll(function () {
         var page_length = $(document).height();
         var scroll_position = $(window).scrollTop();
-    
-        // trigger to request older feed
+
+        // enable infinite scroll (scroll down to request older feed)
         if (page_length - scroll_position < 3000) {
             feed.fetch_older_feed();
-    
-            // unbind scroll event so only one request is sent
-            // the scroll event will be binded again in feed.fetch_older_feed()
+
+            // unbind scroll event so only one fetch request is sent
+            // the scroll event will be binded again after fetch in feed.fetch_older_feed()
             $(window).off('scroll');
+        }
+
+        // scroll to top to remove feed update notification
+        if (scroll_position == 0) {
+            $('#update-notification').removeClass('notification-show');
         }
     });
 }
@@ -96,3 +101,4 @@ function enable_infinite_scroll() {
 setInterval(function() {
     feed.check_update();
 }, 10000);
+

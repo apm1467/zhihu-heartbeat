@@ -30,6 +30,26 @@ a {
     margin-right: 10px;
     margin-top: 4px;
 }
+#update-notification {
+    font-family: sans-serif;
+    color: rgb(220, 220, 220);
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: inline-block;
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 2px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    transition: top 0.5s;
+}
+.notification-show {
+    top: 50px !important;
+}
 .login-form {
     position: absolute;
     top: 50%;
