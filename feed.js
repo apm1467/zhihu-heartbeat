@@ -1,5 +1,6 @@
 var request = require('request');
 const constants = require('./constants');
+const auth = require('./auth');
 
 
 class Author {
@@ -112,7 +113,7 @@ exports.fetch_initial_feed = function() {
     var options = {
         method: 'GET',
         url: constants.PIN_URL + '?reverse_order=0',
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -142,7 +143,7 @@ exports.fetch_older_feed = function() {
     var options = {
         method: 'GET',
         url: constants.PIN_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -177,7 +178,7 @@ exports.check_update = function() {
     var options = {
         method: 'GET',
         url: constants.PIN_URL + '?reverse_order=0',
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -213,7 +214,7 @@ function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
     var options = {
         method: 'GET',
         url: constants.PIN_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -320,7 +321,7 @@ function report_latest_viewed_pin_id() {
     var options = {
         method: 'POST',
         url: constants.PIN_VIEWS_REPORT_URL,
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         form: { pin_ids: latest_local_pin_id },
         jar: true
     };
@@ -331,7 +332,7 @@ function display_self_avatar() {
     var options = {
         method: 'GET',
         url: constants.SELF_URL,
-        headers: get_authorized_request_header(),
+        headers: auth.get_authorized_request_header(),
         jar: true
     };
     request(options, function(error, response, body) {
@@ -342,12 +343,4 @@ function display_self_avatar() {
         var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
         $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">')
     });
-}
-
-function get_authorized_request_header() {
-    // append access_token to base_request_header => authorized_request_header
-    var access_token = localStorage.getItem('access_token');
-    var header = constants.BASE_REQUEST_HEADER;
-    header['Authorization'] = 'Bearer ' + access_token;
-    return header;
 }

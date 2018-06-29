@@ -91,3 +91,11 @@ function calculate_signature(auth_data) {
     return hmac.digest('hex');
 }
 
+
+exports.get_authorized_request_header = function () {
+    // append access_token to base_request_header => authorized_request_header
+    var access_token = localStorage.getItem('access_token');
+    var header = constants.BASE_REQUEST_HEADER;
+    header['Authorization'] = 'Bearer ' + access_token;
+    return header;
+}
