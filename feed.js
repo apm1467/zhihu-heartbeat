@@ -51,7 +51,7 @@ class Pin {
     get_time_str() {
         return this.time.toString();
     }
-    get_html() {
+    get_content_html() {
         var output = '';
 
         if (this.text) {
@@ -271,7 +271,8 @@ function generate_feed_item_html(feed_item) {
 
         var pin = new Pin(feed_item);
         output += '<div class="time" data-time="' + pin.get_time_str() + '"></div>';
-        output += '<div class="content">' + pin.get_html(); // </div> tag is added at the end
+        output += '<div class="content">' + pin.get_content_html(); 
+        // </div> tag is added at the end
 
         // if this pin is a repin
         if (feed_item['target']['origin_pin']) {
@@ -287,7 +288,8 @@ function generate_feed_item_html(feed_item) {
                 var origin_pin_item = {};
                 origin_pin_item['target'] = feed_item['target']['origin_pin']
                 var origin_pin = new Pin(origin_pin_item);
-                output += '<div class="origin-pin-content">' + origin_pin.get_html() + '</div>';
+                output += '<div class="origin-pin-content">' + 
+                          origin_pin.get_content_html() + '</div>';
             }
 
             output += '</div>';
