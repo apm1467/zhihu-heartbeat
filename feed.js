@@ -270,6 +270,7 @@ function generate_feed_item_html(feed_item) {
                   author.get_name_html() + '</div>';
 
         var pin = new Pin(feed_item);
+        output += '<div class="time" data-time="' + pin.get_time_str() + '"></div>';
         output += '<div class="content">' + pin.get_html(); // </div> tag is added at the end
 
         // if this pin is a repin

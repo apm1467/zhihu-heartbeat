@@ -102,3 +102,42 @@ setInterval(function() {
     feed.check_update();
 }, 10000);
 
+
+// ------------------------------------------------------------
+
+// update pin time every second
+setInterval(function() {
+    $('.time').each(function () {
+        var seconds = parseInt($(this).attr('data-time'));
+        seconds += 1;
+        $(this).text(get_relative_time_str(seconds));
+    });
+}, 1000);
+
+// seconds: int
+function get_relative_time_str(seconds) {
+    const sec_per_min = 60;
+    const sec_per_hour = sec_per_min * 60;
+    const sec_per_day = sec_per_hour * 24;
+    const sec_per_week = sec_per_day * 7;
+
+    var now = Math.round(Date.now() / 1000);
+    var diff = now - seconds;
+
+    if (diff < sec_per_min) {
+         return diff + ' 秒前';   
+    }
+    else if (diff < sec_per_hour) {
+         return Math.round(diff / sec_per_min) + ' 分前';   
+    }
+    else if (diff < sec_per_day ) {
+         return Math.round(diff / sec_per_hour) + ' 时前';   
+    }
+    else if (diff < sec_per_week) {
+        return Math.round(diff / sec_per_day) + ' 日前';   
+    }
+    else {
+        date = new Date(seconds * 1000);
+        return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
+    }
+}

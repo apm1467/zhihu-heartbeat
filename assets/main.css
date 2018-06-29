@@ -1,5 +1,6 @@
 body {
     color: rgb(242, 242, 242);
+    font-family: sans-serif;
     overflow-x: hidden;
     margin: 0;
 }
@@ -8,7 +9,6 @@ body {
 }
 a {
     color: rgb(106, 175, 253);
-    font-family: sans-serif;
     text-decoration: none;
     word-break: break-all;
 }
@@ -31,7 +31,6 @@ a {
     margin-top: 4px;
 }
 #update-notification {
-    font-family: sans-serif;
     color: rgb(220, 220, 220);
     font-size: 14px;
     background-color: rgba(0, 0, 0, 0.6);
@@ -102,15 +101,21 @@ a {
     position: absolute;
 }
 .name {
-    font-family: sans-serif;
     font-weight: 600;
     font-size: 19px;
     margin-left: 50px;
 }
+.time {
+    float: right;
+    position: relative;
+    right: 10px;
+    top: -23px;
+    color: rgb(220, 220, 220);
+    font-size: 14px;
+}
 .content {
     font-size: 17px;
     line-height: 1.6em;
-    font-family: sans-serif;
     margin-top: 5px;
     margin-left: 50px;
     padding-bottom: 10px;
