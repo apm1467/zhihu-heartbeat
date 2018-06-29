@@ -131,10 +131,6 @@ exports.fetch_older_feed = function() {
     });
 }
 
-
-
-}
-
 function append_to_feed(feed_array) {
     var output = '';
     var array_length = feed_array.length;
@@ -153,31 +149,33 @@ function append_to_feed(feed_array) {
     localStorage.setItem('feed_offset', feed_offset.toString());
 }
 
-function generate_feed_item_html(feed_item_dict) {
+// feed_item: dict
+function generate_feed_item_html(feed_item) {
     var output = '';
-    if (feed_item_dict['type'] == 'moment') {
+    if (feed_item['type'] == 'moment') {
         output += '<div class="feed-item">';
 
-        var author = new Author(feed_item_dict['target']['author']);
+        var author = new Author(feed_item['target']['author']);
         output += '<div class="author">' + author.get_avatar_html() + 
                   author.get_name_html() + '</div>';
 
-        var pin = new Pin(feed_item_dict['target']);
-        output += '<div class="content">' + pin.get_html(); 
-        // </div> tag is added at the end
+        var pin = new Pin(feed_item);
+        output += '<div class="content">' + pin.get_html(); // </div> tag is added at the end
 
         // if this pin is a repin
-        if (feed_item_dict['target']['origin_pin']) {
+        if (feed_item['target']['origin_pin']) {
             output += '<div class="origin-pin">';
 
-            if (feed_item_dict['target']['origin_pin']['is_deleted']) {
-                output += feed_item_dict['target']['origin_pin']['deleted_reason'];
+            if (feed_item['target']['origin_pin']['is_deleted']) {
+                output += feed_item['target']['origin_pin']['deleted_reason'];
             }
             else {
-                var origin_author = new Author(feed_item_dict['target']['origin_pin']['author']);
+                var origin_author = new Author(feed_item['target']['origin_pin']['author']);
                 output += '<div class="author">' + origin_author.get_name_html() + '</div>';
 
-                var origin_pin = new Pin(feed_item_dict['target']['origin_pin']);
+                var origin_pin_item = {};
+                origin_pin_item['target'] = feed_item['target']['origin_pin']
+                var origin_pin = new Pin(origin_pin_item);
                 output += '<div class="origin-pin-content">' + origin_pin.get_html() + '</div>';
             }
 
