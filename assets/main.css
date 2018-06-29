@@ -1,6 +1,6 @@
 body {
     color: rgb(242, 242, 242);
-    font-family: sans-serif;
+    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, sans-serif;
     overflow-x: hidden;
     margin: 0;
 }
@@ -24,6 +24,7 @@ a {
 }
 .self-avatar {
     border-radius: 50%;
+    border: 1px solid rgb(102, 102, 102);
     height: 45px;
     width: 45px;
     float: right;
@@ -88,21 +89,23 @@ a {
 }
 .feed {
     margin-top: 15px;
-    margin-left: 12px;
-    margin-right: 12px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .feed-item {
     margin-bottom: 12px;
 }
 .avatar {
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
+    border: 1px solid rgb(102, 102, 102);
+    height: 42px;
+    width: 42px;
     position: absolute;
+    transform: translate(0, 2px);
 }
 .name {
     font-weight: 600;
-    font-size: 19px;
+    font-size: 18px;
     margin-left: 50px;
 }
 .time, .statistics {
