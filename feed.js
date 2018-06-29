@@ -160,6 +160,96 @@ function append_to_feed(feed_array) {
     localStorage.setItem('feed_offset', feed_offset.toString());
 }
 
+exports.check_update = function() {
+    var options = {
+        method: 'GET',
+        url: settings.PIN_URL + '?reverse_order=0',
+        headers: get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
+        var latest_local_pin_time = parseInt(localStorage.getItem('latest_local_pin_time'));
+        var feed_array = JSON.parse(body)['data'];
+        console.log(feed_array);
+
+        var array_length = feed_array.length;
+        for (var i = 0; i < array_length; i++) {
+            var feed_item = feed_array[i];
+            if (feed_item['type'] == 'moment') {
+                pin = new Pin(feed_item);
+                console.log(pin.get_id());
+                console.log(latest_local_pin_id);
+
+                // add extra 10 seconds tolerance when checking
+                if (pin.get_id() != latest_local_pin_id &&
+                    pin.get_time_int() + 10 > latest_local_pin_time) {
+
+                    // save the first pin, and fetch the rest in fetch_update()
+                    var output = generate_feed_item_html(feed_item);
+                    fetch_update(pin.get_id(), 0, output, pin);
+                }
+                break;
+            }
+        }
+    });
+}
+
+// fetch_after_id: str; fetch_offset: int; server_latest_pin: Pin
+function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
+    var options = {
+        method: 'GET',
+        url: settings.PIN_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
+        headers: get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var feed_array = JSON.parse(body)['data'];
+        var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
+        var latest_local_pin_time = parseInt(localStorage.getItem('latest_local_pin_time'));
+        var stop_fetching = false;
+        var pin_time;
+        console.log(fetch_after_id);
+        console.log(latest_local_pin_id);
+        console.log(fetch_offset);
+        console.log(feed_array);
+
+        var array_length = feed_array.length;
+        for (var i = 0; i < array_length; i++) {
+            var feed_item = feed_array[i];
+            if (feed_item['type'] == 'moment') {
+                pin = new Pin(feed_item);
+
+                if (pin.get_id() == latest_local_pin_id ||
+                    pin.get_time_int() + 10 <= latest_local_pin_time) {
+
+                    stop_fetching = true;
+                    break;
+                }
+                else {
+                    fetch_after_id = pin.get_id();
+                    output += generate_feed_item_html(feed_item);
+                }
+            }
+        }
+        if (stop_fetching) {
+            output = '<div class="update">' + output + '</div>';
+            var scroll_top = $(window).scrollTop();
+            $('.feed').prepend(output);
+            $(window).scrollTop($('.update').height());
+
+            // update latest_local_pin_id & latest_local_pin_time
+            localStorage.setItem('latest_local_pin_id', server_latest_pin.get_id());
+            report_latest_viewed_pin_id();
+            localStorage.setItem('latest_local_pin_time', server_latest_pin.get_time_str());
+        }
+        else {
+            // make recursive call to fetch more update
+            fetch_update(fetch_after_id, fetch_offset + 10, output, server_latest_pin);
+        }
+    });
+}
+
 // feed_item: dict
 function generate_feed_item_html(feed_item) {
     var output = '';

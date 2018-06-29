@@ -1,5 +1,6 @@
 const feed = require('./feed');
 
+
 // open links in external browser
 const shell = require('electron').shell;
 $(document).on('click', 'a[href^="http"]', function(event) {
@@ -38,6 +39,8 @@ $(document).on('click', '.img', function(event) {
     };
 });
 
+// ------------------------------------------------------------
+
 var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
 
@@ -65,8 +68,11 @@ function log_in() {
     $('.login-form').removeClass('hidden');
 }
 
+// ------------------------------------------------------------
 
 enable_infinite_scroll();
+
+exports.enable_infinite_scroll = enable_infinite_scroll;
 
 function enable_infinite_scroll() {
     $(window).scroll(function () {
@@ -84,4 +90,9 @@ function enable_infinite_scroll() {
     });
 }
 
-exports.enable_infinite_scroll = enable_infinite_scroll;
+// ------------------------------------------------------------
+
+// check feed update every 10 seconds
+setInterval(function() {
+    feed.check_update();
+}, 10000);
