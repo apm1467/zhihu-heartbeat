@@ -114,7 +114,7 @@ exports.fetch_initial_feed = function() {
 
     var options = {
         method: 'GET',
-        url: constants.PIN_URL + '?reverse_order=0',
+        url: constants.PIN_FETCH_URL + '?reverse_order=0',
         headers: auth.get_authorized_request_header(),
         jar: true
     };
@@ -144,7 +144,7 @@ exports.fetch_older_feed = function() {
     var feed_offset = localStorage.getItem('feed_offset');
     var options = {
         method: 'GET',
-        url: constants.PIN_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
+        url: constants.PIN_FETCH_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
         headers: auth.get_authorized_request_header(),
         jar: true
     };
@@ -179,7 +179,7 @@ function append_to_feed(feed_array) {
 exports.check_update = function() {
     var options = {
         method: 'GET',
-        url: constants.PIN_URL + '?reverse_order=0',
+        url: constants.PIN_FETCH_URL + '?reverse_order=0',
         headers: auth.get_authorized_request_header(),
         jar: true
     };
@@ -215,7 +215,7 @@ exports.check_update = function() {
 function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
     var options = {
         method: 'GET',
-        url: constants.PIN_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
+        url: constants.PIN_FETCH_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
         headers: auth.get_authorized_request_header(),
         jar: true
     };

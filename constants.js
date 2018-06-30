@@ -5,7 +5,7 @@ exports.CAPTCHA_URL = BASE_URL + '/captcha';
 
 exports.SIGN_IN_URL = BASE_URL + '/sign_in';
 
-exports.PIN_URL = BASE_URL + '/pins/moments';
+exports.PIN_FETCH_URL = BASE_URL + '/pins/moments';
 
 exports.PIN_VIEWS_REPORT_URL = BASE_URL + '/pins/views';
 
