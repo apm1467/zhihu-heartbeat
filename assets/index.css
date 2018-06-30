@@ -26,6 +26,7 @@ a {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
 .logo {
+    -webkit-app-region: no-drag;
     font-size: 27px;
     color: rgb(160, 160, 160);
     position: absolute;
@@ -59,18 +60,18 @@ a {
 }
 #update-notification {
     color: rgb(220, 220, 220);
-    font-size: 14px;
+    font-size: 13px;
     background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
     display: inline-block;
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translate(-50%, 0);
+    right: 25px;
     border-radius: 2px;
     padding-top: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 1px;
     transition: top 0.5s;
 }
 .notification-show {
@@ -138,8 +139,8 @@ a {
     height: 0;
     float: right;
     position: relative;
-    right: 10px;
-    color: rgb(220, 220, 220);
+    right: 5px;
+    color: rgb(160, 160, 160);
     font-size: 14px;
 }
 .time {
@@ -147,7 +148,9 @@ a {
 }
 .statistics {
     display: none;
-    top: -21px; 
+    top: -21px;
+    user-select: none;
+    cursor: default;
 }
 .statistics span {
     margin-left: 7px;
@@ -173,9 +176,6 @@ a {
     margin-top: 10px;
     width: 100%;
     text-align: center;
-}
-.img {
-    cursor: pointer;
 }
 .img + .img {
     margin-left: 3px;
