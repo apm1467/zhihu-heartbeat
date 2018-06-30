@@ -174,6 +174,10 @@ a {
 .statistics i {
     margin-right: 3px;
 }
+.statistics .delete-btn {
+    margin-right: 3px;
+    color: rgb(220, 80, 60);
+}
 .feed-item:hover > .time {
     display: none;
 }

@@ -5,11 +5,15 @@ const auth = require('./auth');
 
 class Author {
     constructor(author_dict) {
+        this.id = author_dict['id'];
         this.name = author_dict['name'];
         this.avatar = author_dict['avatar_url'];
         this.url = author_dict['url'];
     }
 
+    is_self() {
+        return this.id == localStorage.getItem('self_id');
+    }
     get_avatar_html() {
         return '<img class="avatar" src="' + this.avatar + '">';
     }
@@ -305,23 +309,26 @@ function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
 function generate_feed_item_html(feed_item) {
     var output = '';
     if (feed_item['type'] == 'moment') {
-        output += '<div class="feed-item">';
-
-        var author = new Author(feed_item['target']['author']);
-        output += '<div class="author">' + author.get_avatar_html() + 
-                  author.get_name_html() + '</div>';
-
         var pin = new Pin(feed_item);
+        var author = new Author(feed_item['target']['author']);
+
+        output += '<div class="feed-item" data-id="' + pin.get_id() + '">';
+        output += '<div class="author">' + author.get_avatar_html() + 
+                  author.get_name_html() + '</div>';        
         output += '<div class="time" data-time="' + pin.get_time_str() + '"></div>';
-        output += '<div class="statistics">' + pin.get_comments_count_html() +
+        output += '<div class="statistics">';
+        if (author.is_self()) {
+            // include delete button
+            output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
+        }
+        output += pin.get_comments_count_html() +
                   pin.get_repins_html() + pin.get_likes_html() + '</div>';
-        output += '<div class="content">' + pin.get_content_html(); 
-        // </div> is added at the end
+
+        output += '<div class="content">' + pin.get_content_html();
 
         // if this pin is a repin
         if (feed_item['target']['origin_pin']) {
             output += '<div class="origin-pin">';
-
             if (feed_item['target']['origin_pin']['is_deleted']) {
                 output += feed_item['target']['origin_pin']['deleted_reason'];
             }
@@ -335,7 +342,6 @@ function generate_feed_item_html(feed_item) {
                 output += '<div class="origin-pin-content">' + 
                           origin_pin.get_content_html() + '</div>';
             }
-
             output += '</div>';
         }
 
@@ -369,6 +375,24 @@ function display_self_avatar() {
             display_self_avatar();
         }
         var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
-        $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">')
+        $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
+
+        // store self id
+        localStorage.setItem('self_id', body_dict['id']);
+    });
+}
+
+exports.delete_pin = function(id) {
+    var options = {
+        method: 'DELETE',
+        url: constants.PIN_POST_URL + '/' + id,
+        headers: auth.get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        if (JSON.parse(body)['success']) {
+            var selector = '[data-id="' + id + '"]';
+            $(selector).remove();
+        }
     });
 }

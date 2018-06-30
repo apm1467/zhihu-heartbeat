@@ -196,3 +196,12 @@ function get_relative_time_str(seconds) {
 $('.logo').click(function () {
     publish.open_editor();
 });
+
+// ------------------------------------------------------------
+
+// click delete button to delete pin
+$(document).on('click', '.delete-btn', function(event) {
+    $(this).fadeOut(200);
+    var pin_id = $(this).parent().parent().attr('data-id');
+    feed.delete_pin(pin_id);
+});
