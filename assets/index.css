@@ -172,7 +172,7 @@ a {
     padding-bottom: 10px;
     border-bottom: 1px solid rgb(102, 102, 102);
 }
-.images {
+.images, .video {
     margin-top: 10px;
     width: 100%;
     text-align: center;
@@ -180,7 +180,7 @@ a {
 .img + .img {
     margin-left: 3px;
 }
-.single-img {
+.single-img, .thumbnail {
     max-width: 100%;
     max-height: 250px;
     border-radius: 8px;
@@ -214,6 +214,18 @@ a {
 }
 .img-grid .row + .row {
     margin-top: 3px;
+}
+.video {
+    position: relative;
+}
+.video div {
+    font-size: 22px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);; 
 }
 .origin-pin {
     font-size: 15px;

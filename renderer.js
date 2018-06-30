@@ -1,3 +1,4 @@
+const {BrowserWindow} = require('electron').remote;
 const feed = require('./feed');
 const publish = require('./publish');
 
@@ -10,7 +11,6 @@ $(document).on('click', 'a[href^="http"]', function(event) {
 });
 
 // open feed images in new window
-const {BrowserWindow} = require('electron').remote;
 $(document).on('click', '.img', function(event) {
     // darken the image while load image window
     $(this).addClass('darkened');
@@ -34,17 +34,54 @@ $(document).on('click', '.img', function(event) {
             width: this.width,
             backgroundColor: "#000",
         });
-        // CSS "-webkit-app-region: drag;" is needed to make the image window draggable
+
+        // CSS is needed to make the image window draggable
         win.loadURL('data:text/html,' +
                     '<body style="-webkit-app-region: drag; margin: 0;">' +
                     '<img src="' + img_url + '" draggable="false"></body>');
+
         win.once('ready-to-show', function () {
             win.show();
+            $('.img').removeClass('darkened'); // remove darkening
+        });
 
-            // remove darkening
-            $('.img').removeClass('darkened');
+        win.on('closed', function () {
+            win = null;
         });
     };
+});
+
+// open video in new window
+$(document).on('click', '.video', function(event) {
+    $(this).addClass('darkened');
+
+    var video_url = $(this).attr('data-url');
+    var width = parseInt($(this).attr('data-width'));
+    var height = parseInt($(this).attr('data-height'));
+
+    var win = new BrowserWindow({
+        titleBarStyle: 'hidden',
+        show: false,
+        height: height,
+        width: width,
+        backgroundColor: "#000"
+    });
+    win.loadFile('video_player.html');
+    console.log(video_url);
+
+    // pass video url to player window
+    win.webContents.on('did-finish-load', () => {
+        win.webContents.send('video_url', video_url);
+    });
+
+    win.once('ready-to-show', function () {
+        win.show();
+        $('.video').removeClass('darkened'); // remove darkening
+    });
+
+    win.on('closed', function () {
+        win = null;
+    });
 });
 
 // ------------------------------------------------------------

@@ -37,12 +37,24 @@ class Pin {
             this.text = content_array[0]['own_text'].replace(/<script/ig, '');
         }
 
-        // handle images
+        // handle media
         var image_array = [];
         var array_length = content_array.length;
         for (var i = 0; i < array_length; i++) {
             if (content_array[i]['type'] == 'image') {
                 image_array.push(content_array[i]['url']);
+            }
+            else if (content_array[i]['type'] == 'video') {
+                this.video_thumbnail = content_array[i]['thumbnail'];
+                var playlist = content_array[i]['playlist'];
+                var playlist_length = playlist.length;
+                for (var j = 0; j < playlist_length; j++) {
+                    if (playlist[j]['quality'] == 'hd') {
+                        this.video = playlist[j]['url'];
+                        this.video_height = playlist[j]['height'];
+                        this.video_width = playlist[j]['width'];
+                    }
+                }
             }
         }
         this.image_count = image_array.length;
@@ -100,6 +112,15 @@ class Pin {
                 }
                 output += '</div></div>';
             }
+            output += '</div>';
+        }
+
+        if (this.video) {
+            output += '<div class="video" data-url="' + this.video + '" ' + 
+                      'data-width="' + this.video_width + '" ' + 
+                      'data-height="' + this.video_height + '">';
+            output += '<img class="thumbnail" src="' + this.video_thumbnail + '">';
+            output += '<div class="far fa-play-circle"></div>';
             output += '</div>';
         }
 

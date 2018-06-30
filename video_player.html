@@ -1,0 +1,23 @@
+<body style="-webkit-app-region: drag; margin: 0;">
+
+    <video id="video" width="100%" height="100%" controls></video>
+    
+    <script src="./assets/hls-0.10.1.js"></script>
+    
+    <script>
+        // get video url message from renderer.js
+        var ipc = require('electron').ipcRenderer;
+        ipc.on('video_url', function (event, url) {
+
+            // load video
+            var video = document.getElementById('video');
+            var hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play();
+            });
+        });
+    </script>
+
+</body>
