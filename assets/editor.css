@@ -38,6 +38,9 @@ body {
     padding: 1px 5px;
     border: 1px solid rgb(102, 102, 102);
 }
+.submit:hover {
+    background-color: rgb(102, 102, 102);
+}
 textarea {
     height: 500px;
     color: rgb(242, 242, 242);
