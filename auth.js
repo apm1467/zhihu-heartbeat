@@ -84,7 +84,6 @@ function authenticate(email, password) {
         localStorage.setItem('access_expire_time', access_expire.toString());
 
         $('.login-form').addClass('hidden');
-        $('.logo').removeClass('hidden');
 
         const feed = require('./feed');
         feed.fetch_initial_feed();

@@ -107,6 +107,8 @@ else {
 }
 
 function log_in() {
+    $('.logo').addClass('hidden');
+
     const auth = require('./auth');
     auth.check_captcha();
 
