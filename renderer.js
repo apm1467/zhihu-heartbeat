@@ -144,14 +144,6 @@ function enable_scroll_event() {
 
 // ------------------------------------------------------------
 
-// check feed update every 10 seconds
-setInterval(function() {
-    feed.check_update();
-}, 10000);
-
-
-// ------------------------------------------------------------
-
 // update pin time every second
 setInterval(function() {
     $('.time').each(function () {

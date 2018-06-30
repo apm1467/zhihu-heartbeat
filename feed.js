@@ -157,6 +157,11 @@ exports.fetch_initial_feed = function() {
 
         report_latest_viewed_pin_id();
         append_to_feed(feed_array);
+
+        // check feed update every 10 seconds
+        setInterval(function() {
+            check_update();
+        }, 10000);
     });
 }
 
@@ -197,7 +202,7 @@ function append_to_feed(feed_array) {
     localStorage.setItem('feed_offset', feed_offset.toString());
 }
 
-exports.check_update = function() {
+function check_update() {
     var options = {
         method: 'GET',
         url: constants.PIN_FETCH_URL + '?reverse_order=0',

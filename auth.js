@@ -77,7 +77,7 @@ function authenticate(email, password) {
         $('.login-form').addClass('hidden');
 
         const feed = require('./feed');
-        feed.fetch_feed();
+        feed.fetch_initial_feed();
     });
 }
 
