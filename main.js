@@ -13,8 +13,7 @@ function create_window () {
         maxWidth: 600,
         height: 800,
         titleBarStyle: 'hiddenInset',
-        backgroundColor: "#484848",
-        webPreferences: { scrollBounce: true }
+        backgroundColor: "#484848"
     });
 
     main_window.loadFile('index.html');
