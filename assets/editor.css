@@ -1,0 +1,49 @@
+html, body { 
+    height: 100%;
+    box-sizing: border-box;
+}
+body {
+    color: rgb(242, 242, 242);
+    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, sans-serif;
+    margin: 0;
+}
+.hidden {
+    display: none;
+}
+.title-bar {
+    -webkit-app-region: drag;
+    height: 40px;
+    width: 100%;
+}
+.submit, .sending {
+    float: right;
+    margin-right: 10px;
+}
+.submit {
+    -webkit-app-region: no-drag;
+    color: rgb(106, 175, 253);
+    user-select: none;
+    margin-top: 8px;
+    border-radius: 7px;
+    padding: 1px 5px;
+    border: 1px solid rgb(102, 102, 102);
+}
+.sending {
+    margin-top: 10px;
+    color: rgb(160, 160, 160);
+}
+textarea {
+    height: 500px;
+    color: rgb(242, 242, 242);
+    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, sans-serif;
+    font-size: 17px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 35px;
+}

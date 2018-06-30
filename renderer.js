@@ -1,4 +1,5 @@
 const feed = require('./feed');
+const publish = require('./publish');
 
 
 // open links in external browser
@@ -48,6 +49,7 @@ $(document).on('click', '.img', function(event) {
 
 // ------------------------------------------------------------
 
+// initialize the main window
 var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
 
@@ -77,6 +79,7 @@ function log_in() {
 
 // ------------------------------------------------------------
 
+// enable scroll events
 enable_scroll_event();
 
 exports.enable_scroll_event = enable_scroll_event;
@@ -148,3 +151,10 @@ function get_relative_time_str(seconds) {
         return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
     }
 }
+
+// ------------------------------------------------------------
+
+// click logo to publish new pin
+$('.logo').click(function () {
+    publish.open_editor();
+});

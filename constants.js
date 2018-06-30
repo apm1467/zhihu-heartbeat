@@ -9,6 +9,10 @@ exports.PIN_URL = BASE_URL + '/pins/moments';
 
 exports.PIN_VIEWS_REPORT_URL = BASE_URL + '/pins/views';
 
+exports.PIN_TOKEN_URL = BASE_URL + '/pins/token';
+
+exports.PIN_POST_URL = BASE_URL + '/pins';
+
 exports.SELF_URL = BASE_URL + '/people/self';
 
 exports.APP_SECRET = 'ecbefbf6b17e47ecb9035107866380';
@@ -53,3 +57,30 @@ exports.BASE_REQUEST_HEADER = BASE_HEADER;
 
 // combine two dicts
 exports.LOGIN_REQUEST_HEADER = Object.assign({}, CAPTCHA_REQUEST_HEADER, BASE_HEADER);
+
+exports.PIN_PUBLISH_FORM = {
+    'source_pin_id': 0,
+    'version': 1,
+    'token': '',
+    'view_permission': 'all',
+    'content': ''
+};
+
+// needes to be stringified and assigned to PIN_PUBLISH_FORM['content']
+exports.PIN_PUBLISH_CONTENT_FORM = [
+    {
+        'randomTag': 100,
+        'mark_end': 0,
+        'image_height': 0,
+        'width': 0,
+        'is_gif': false,
+        'image_width': 0,
+        'feedCollectionCount': 0,
+        'height': 0,
+        'duration': 0,
+        'mark_start': 0,
+        'chapter_index': 0,
+        'type': 'text',
+        'content': ''
+    }
+];
