@@ -32,7 +32,9 @@ class Pin {
         // handle text
         this.text = '';
         if (content_array[0]['type'] == 'text') {
-            this.text = content_array[0]['own_text'];
+            // remove "<script" tag beginnings for extra safety
+            // normally html special chars should already been escaped
+            this.text = content_array[0]['own_text'].replace(/<script/ig, '');
         }
 
         // handle images
