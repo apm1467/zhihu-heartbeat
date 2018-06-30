@@ -87,6 +87,12 @@ $(document).on('click', '.video', function(event) {
 // ------------------------------------------------------------
 
 // initialize the main window
+var login_error = localStorage.getItem('login_error');
+if (login_error) {
+    $('.login-error').text(login_error);
+    localStorage.removeItem('login_error');
+}
+
 var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
 
@@ -105,6 +111,7 @@ function log_in() {
     auth.check_captcha();
 
     $('.login-btn').click(function () {
+        $(this).fadeTo(200, 0);
         var email = $('.email').val();
         var password = $('.password').val();
         var captcha_text = $('.captcha-text').val();

@@ -19,9 +19,6 @@ function create_window () {
 
     main_window.loadFile('index.html');
 
-    // Open the DevTools.
-    main_window.webContents.openDevTools();
-
     // only hide the main window when user closes it on macOS
     // not preventing user from quitting the app
     if (process.platform === 'darwin') {

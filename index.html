@@ -8,20 +8,20 @@
   </head>
 
   <body>
-    <div class="title-bar"><div class="logo"><i class="fas fa-heartbeat"></i></div></div>
+    <div class="title-bar"><div class="logo hidden"><i class="fas fa-heartbeat"></i></div></div>
     <div id="update-notification">有更新</div>
 
     <div class="login-form hidden">
+      <h1>登录知乎</h1>
       <div class="login-data">
         <input type="text" class="email"  placeholder="邮箱">
         <input type="password" class="password" placeholder="密码">
       </div>
-
       <div class="captcha hidden">
         <input type="text" class="captcha-text" placeholder="验证码">
       </div>
-
       <button type="button" class="login-btn">登录</button>
+      <div class="login-error"></div>
     </div>
 
     <div class="feed"></div>

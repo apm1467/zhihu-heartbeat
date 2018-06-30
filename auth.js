@@ -9,7 +9,6 @@ exports.check_captcha = function() {
         headers: constants.CAPTCHA_REQUEST_HEADER,
         jar: true // accept cookie
     };
-
     request(options, function(error, response, body) {
         if (JSON.parse(body)['show_captcha']) {
             get_captcha();
@@ -24,7 +23,6 @@ function get_captcha() {
         headers: constants.CAPTCHA_REQUEST_HEADER,
         jar: true
     };
-
     request(options, function(error, response, body) {
         var image = new Image();
         image.src = 'data:image/gif;base64,' + JSON.parse(body)['img_base64'];
@@ -45,6 +43,12 @@ exports.get_access_token = function(email, password, captcha_text) {
             form: { input_text: captcha_text }
         };
         request(options, function(error, response, body) {
+            var body_dict = JSON.parse(body);
+            if (body_dict['error']) {
+                reload_login_page(body_dict['error']['message']);
+                return;
+            }
+
             authenticate(email, password);
         });
     }
@@ -70,11 +74,17 @@ function authenticate(email, password) {
     };
     request(options, function(error, response, body) {
         var body_dict = JSON.parse(body);
+        if (body_dict['error']) {
+            reload_login_page(body_dict['error']['message']);
+            return;
+        }
+
         var access_expire = time + body_dict['expires_in'] * 1000;
         localStorage.setItem('access_token', body_dict['access_token']);
         localStorage.setItem('access_expire_time', access_expire.toString());
 
         $('.login-form').addClass('hidden');
+        $('.logo').removeClass('hidden');
 
         const feed = require('./feed');
         feed.fetch_initial_feed();
@@ -89,6 +99,14 @@ function calculate_signature(auth_data) {
         + auth_data['timestamp'];
     hmac.update(msg);
     return hmac.digest('hex');
+}
+
+function reload_login_page(message) {
+    console.log(message);
+    localStorage.setItem('login_error', message);
+
+    var remote = require('electron').remote;
+    remote.getCurrentWindow().reload();
 }
 
 
