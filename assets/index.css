@@ -192,6 +192,10 @@ a {
     padding-bottom: 10px;
     border-bottom: 1px solid rgb(102, 102, 102);
 }
+.content .fa-retweet {
+    margin-right: 3px;
+    color: rgb(160, 160, 160);
+}
 .images, .video {
     margin-top: 10px;
     width: 100%;

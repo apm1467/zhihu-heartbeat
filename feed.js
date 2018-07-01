@@ -41,6 +41,21 @@ class Pin {
             this.text = content_array[0]['own_text'].replace(/<script/ig, '');
         }
 
+        // handle text repin
+        if (feed_item['feed_type'] == 'repin' || 
+            feed_item['feed_type'] == 'repin_with_comment') {
+
+            var origin_pin_id = feed_item['target']['origin_pin']['id'];
+            var repin_id = feed_item['target']['repin']['id'];
+
+            // there is text repin only when origin_pin and repin differ
+            if (origin_pin_id != repin_id) {
+                this.text = content_array[0]['content']
+                    .replace(/<a\s/ig, '<i class="fas fa-retweet"></i><a ')
+                    .replace(/<\/a>:\s/ig, '</a>：');
+            }
+        }
+
         // handle media
         var image_array = [];
         var array_length = content_array.length;
@@ -185,6 +200,7 @@ exports.fetch_older_feed = function() {
     request(options, function(error, response, body) {
         var feed_array = JSON.parse(body)['data'];
         append_to_feed(feed_array);
+        console.log(feed_array);
 
         // re-enable infinite scroll
         const renderer = require('./renderer');
@@ -221,7 +237,6 @@ function check_update() {
         var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
         var latest_local_pin_time = parseInt(localStorage.getItem('latest_local_pin_time'));
         var feed_array = JSON.parse(body)['data'];
-        console.log(feed_array);
 
         var array_length = feed_array.length;
         for (var i = 0; i < array_length; i++) {
@@ -341,7 +356,7 @@ function generate_feed_item_html(feed_item) {
                 output += '<div class="author">' + origin_author.get_name_html() + '</div>';
 
                 var origin_pin_item = {};
-                origin_pin_item['target'] = feed_item['target']['origin_pin']
+                origin_pin_item['target'] = feed_item['target']['origin_pin'];
                 var origin_pin = new Pin(origin_pin_item);
                 output += '<div class="origin-pin-content">' + 
                           origin_pin.get_content_html() + '</div>';
