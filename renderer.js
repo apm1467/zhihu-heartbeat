@@ -1,4 +1,5 @@
-const {BrowserWindow} = require('electron').remote;
+const remote = require('electron').remote;
+const {BrowserWindow, Menu, MenuItem} = require('electron').remote;
 const feed = require('./feed');
 const publish = require('./publish');
 
@@ -214,4 +215,29 @@ $(document).on('click', '.delete-btn', function(event) {
         }
     ]);
     delete_menu.popup(current_window);
+});
+
+// ------------------------------------------------------------
+
+// click self avatar to open logout menu
+const logout_menu = Menu.buildFromTemplate([
+    {
+        label: '重载界面',
+        click: function() {
+            current_window.reload();
+        }
+    },
+    {
+        type: 'separator'
+    },
+    {
+        label: '登出知乎',
+        click: function() {
+            localStorage.clear();
+            current_window.reload();
+        }
+    }
+]);
+$(document).on('click', '.self-avatar', function(event) {
+    logout_menu.popup(current_window);
 });
