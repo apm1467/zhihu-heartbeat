@@ -45,6 +45,10 @@ class Pin {
         var image_array = [];
         var array_length = content_array.length;
         for (var i = 0; i < array_length; i++) {
+            if (content_array[i]['type'] == 'link') {
+                var url = content_array[i]['url'];
+                this.text += '<br><br>' + '<a href="' + url + '">' + url + '</a>';
+            }
             if (content_array[i]['type'] == 'image') {
                 image_array.push(content_array[i]['url']);
             }
