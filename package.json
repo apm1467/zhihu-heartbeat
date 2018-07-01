@@ -10,7 +10,7 @@
   },
   "repository": "https://github.com/apm1467/zhihu-heartbeat",
   "author": "Yi Ge",
-  "license": "GNU GPLv3",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^2.0.0",
     "electron-builder": "^20.18.0",
