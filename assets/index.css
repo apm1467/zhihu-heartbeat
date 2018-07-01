@@ -139,6 +139,9 @@ a {
     margin-bottom: 12px;
     position: relative;
 }
+.feed-item a {
+    cursor: default;
+}
 .avatar {
     border-radius: 50%;
     border: 1px solid rgb(102, 102, 102);
@@ -151,6 +154,7 @@ a {
     font-weight: 600;
     font-size: 18px;
     margin-left: 50px;
+    color: inherit;
 }
 .time, .statistics {
     position: absolute;

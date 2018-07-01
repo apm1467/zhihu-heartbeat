@@ -8,17 +8,18 @@ class Author {
         this.id = author_dict['id'];
         this.name = author_dict['name'];
         this.avatar = author_dict['avatar_url'];
-        this.url = author_dict['url'];
+        this.url = constants.BASE_WEB_URL + author_dict['url'];
     }
 
     is_self() {
         return this.id == localStorage.getItem('self_id');
     }
     get_avatar_html() {
-        return '<img class="avatar" src="' + this.avatar + '">';
+        return '<a href="' + this.url +'">' + 
+               '<img class="avatar" src="' + this.avatar + '"></a>';
     }
     get_name_html() {
-        return '<span class="name">' + this.name + '</span>';
+        return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
     }
 }
 

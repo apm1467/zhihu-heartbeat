@@ -13,6 +13,8 @@ exports.PIN_TOKEN_URL = BASE_URL + '/pins/token';
 
 exports.PIN_POST_URL = BASE_URL + '/pins';
 
+exports.BASE_WEB_URL = 'https://www.zhihu.com';
+
 exports.SELF_URL = BASE_URL + '/people/self';
 
 exports.APP_SECRET = 'ecbefbf6b17e47ecb9035107866380';
