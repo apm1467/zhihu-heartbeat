@@ -34,7 +34,8 @@ $(document).on('click', '.img', function(event) {
             height: this.height,
             width: this.width,
             backgroundColor: "#000",
-            fullscreenable: false
+            fullscreenable: false,
+            useContentSize: true
         });
 
         // CSS is needed to make the image window draggable
@@ -66,7 +67,8 @@ $(document).on('click', '.video', function(event) {
         show: false,
         height: height,
         width: width,
-        backgroundColor: "#000"
+        backgroundColor: "#000",
+        useContentSize: true
     });
     win.loadFile('video_player.html');
     console.log(video_url);
@@ -97,7 +99,6 @@ if (login_error) {
 
 var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
-
 if (access_expire_time < time) {
     // access_token needs to be renewed first
     // feed.fetch_initial_feed() will be called automatically after authentication

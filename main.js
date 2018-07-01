@@ -15,7 +15,8 @@ function create_window () {
         height: 800,
         titleBarStyle: 'hiddenInset',
         backgroundColor: "#484848",
-        fullscreenable: false
+        fullscreenable: false,
+        useContentSize: true
     });
 
     main_window.loadFile('index.html');

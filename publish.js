@@ -12,7 +12,8 @@ exports.open_editor = function () {
         width: 400,
         titleBarStyle: 'hiddenInset',
         maximizable: false,
-        backgroundColor: "#484848"
+        backgroundColor: "#484848",
+        useContentSize: true
     });
 
     win.loadFile('editor.html');
