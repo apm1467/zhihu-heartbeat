@@ -37,9 +37,7 @@ class Pin {
         // handle text
         this.text = '';
         if (content_array[0]['type'] == 'text') {
-            // remove "<script" tag beginnings for extra safety
-            // normally html special chars should already been escaped
-            this.text = content_array[0]['own_text'].replace(/<script/ig, '');
+            this.text = content_array[0]['own_text'];
         }
 
         // handle text repin
@@ -52,10 +50,14 @@ class Pin {
             // there is text repin only when origin_pin and repin differ
             if (origin_pin_id != repin_id) {
                 this.text = content_array[0]['content']
-                    .replace(/<a\s/ig, '<i class="fas fa-retweet"></i><a ')
+                    .replace(/<a\shref/ig, '<i class="fas fa-retweet"></i><a href')
                     .replace(/<\/a>:\s/ig, '</a>：');
             }
         }
+
+        // remove "<script" tag beginnings for extra safety
+        // normally html special chars should already been escaped
+        this.text = this.text.replace(/<script/ig, '');
 
         // handle media
         var image_array = [];
