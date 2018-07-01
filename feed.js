@@ -288,10 +288,10 @@ function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
                 $('.update').removeClass('hidden');
                 // add .feed-item margin-bottom 12px
                 $(window).scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
-            }, 2000);
 
-            // display update notification
-            $('#update-notification').addClass('notification-show');
+                // display update notification
+                $('#update-notification').addClass('notification-show');
+            }, 2000);
 
             // update latest_local_pin_id & latest_local_pin_time
             localStorage.setItem('latest_local_pin_id', server_latest_pin.get_id());

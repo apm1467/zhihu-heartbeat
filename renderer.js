@@ -145,7 +145,7 @@ function enable_scroll_event() {
         }
 
         // scroll to top to remove feed update notification
-        if (scroll_position == 0) {
+        if (scroll_position <= 5) {
             $('#update-notification').removeClass('notification-show');
         }
     });
@@ -199,9 +199,19 @@ $('.logo').click(function () {
 
 // ------------------------------------------------------------
 
-// click delete button to delete pin
+// click delete button to open delete pin menu
+const current_window = remote.getCurrentWindow();
 $(document).on('click', '.delete-btn', function(event) {
-    $(this).fadeOut(200);
-    var pin_id = $(this).parent().parent().attr('data-id');
-    feed.delete_pin(pin_id);
+    var clicked_btn = $(this);
+    var delete_menu = Menu.buildFromTemplate([
+        {
+            label: '删除',
+            click: function() {
+                clicked_btn.fadeOut(200);
+                var pin_id = clicked_btn.parent().parent().attr('data-id');
+                feed.delete_pin(pin_id);
+            }
+        }
+    ]);
+    delete_menu.popup(current_window);
 });
