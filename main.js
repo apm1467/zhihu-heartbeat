@@ -1,4 +1,5 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, Menu} = require('electron');
+const shell = require('electron').shell;
 try {
     require('electron-reloader')(module);
 } catch (err) {}
@@ -39,6 +40,98 @@ function create_window () {
         main_window = null;
     });
 }
+
+// create app menu
+app.once('ready', function() {
+    const template = [
+        {
+            label: 'Edit',
+            submenu: [
+                { role: 'undo' },
+                { role: 'redo' },
+                { type: 'separator' },
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' },
+                { role: 'pasteandmatchstyle' },
+                { role: 'delete' },
+                { role: 'selectall' }
+            ]
+        },
+        {
+            label: 'View',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forcereload' },
+                { role: 'toggledevtools' }
+            ]
+        },
+        {
+            role: 'window',
+            submenu: [
+            { role: 'minimize' },
+            { role: 'close' }
+            ]
+        },
+        {
+            role: 'help',
+            submenu: [
+                {
+                    label: 'Github Repository',
+                    click: function () {
+                        shell.openExternal('https://github.com/apm1467/zhihu-heartbeat');
+                    }
+                }
+            ]
+        }
+    ]
+
+    if (process.platform === 'darwin') {
+        template.unshift({
+            label: 'Heartbeat',
+            submenu: [
+                { role: 'about' },
+                { type: 'separator' },
+                { role: 'services', submenu: [] },
+                { type: 'separator' },
+                { role: 'hide' },
+                { role: 'hideothers' },
+                { role: 'unhide' },
+                { type: 'separator' },
+                { role: 'quit' }
+            ]
+        });
+        template[1].submenu.push(
+            {
+                type: 'separator'
+            }, 
+            {
+                label: 'Speech',
+                submenu: [
+                    { role: 'startspeaking' },
+                    { role: 'stopspeaking' }
+                ]
+            }
+        );
+        template[3].submenu = [
+            { role: 'close' },
+            { role: 'minimize' },
+            { role: 'zoom' },
+            { type: 'separator' },
+            { role: 'front' }
+        ];
+    } else {
+        template.unshift({
+            label: 'File',
+            submenu: [{
+                role: 'quit'
+            }]
+        });
+    }
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+});
 
 app.on('ready', create_window);
 
