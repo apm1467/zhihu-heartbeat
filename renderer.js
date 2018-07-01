@@ -71,7 +71,6 @@ $(document).on('click', '.video', function(event) {
         useContentSize: true
     });
     win.loadFile('video_player.html');
-    console.log(video_url);
 
     // pass video url to player window
     win.webContents.on('did-finish-load', () => {

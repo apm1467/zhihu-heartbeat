@@ -102,7 +102,6 @@ function calculate_signature(auth_data) {
 }
 
 function reload_login_page(message) {
-    console.log(message);
     localStorage.setItem('login_error', message);
 
     var remote = require('electron').remote;

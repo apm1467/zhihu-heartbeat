@@ -43,8 +43,6 @@ exports.publish = function (text, editor_window) {
         content_form[0]['randomTag'] = generate_random_tag();
         content_form[0]['content'] = escape_html(text);
         publish_form['content'] = JSON.stringify(content_form);
-        console.log(content_form);
-        console.log(JSON.stringify(content_form));
 
         var options = {
             method: 'POST',
