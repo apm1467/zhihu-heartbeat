@@ -13,7 +13,8 @@ function create_window () {
         maxWidth: 600,
         height: 800,
         titleBarStyle: 'hiddenInset',
-        backgroundColor: "#484848"
+        backgroundColor: "#484848",
+        fullscreenable: false
     });
 
     main_window.loadFile('index.html');

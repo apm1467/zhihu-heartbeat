@@ -34,6 +34,7 @@ $(document).on('click', '.img', function(event) {
             height: this.height,
             width: this.width,
             backgroundColor: "#000",
+            fullscreenable: false
         });
 
         // CSS is needed to make the image window draggable
