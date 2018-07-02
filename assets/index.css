@@ -200,6 +200,10 @@ a {
     margin-right: 3px;
     color: rgb(160, 160, 160);
 }
+.link-title {
+    margin-top: 20px;
+    color: rgb(190, 190, 190);
+}
 .images, .video {
     margin-top: 10px;
     width: 100%;

@@ -51,6 +51,7 @@ class Pin {
             if (origin_pin_id != repin_id) {
                 this.text = content_array[0]['content']
                     .replace(/<\/a>:\s/g, '</a>：') // use full-width colon
+                    .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '')
                     .replace(/\sdata-\w+=["'][^"']*["']/g, ''); // remove data-* attributes
 
                 /*
@@ -83,7 +84,12 @@ class Pin {
         for (var i = 0; i < array_length; i++) {
             if (content_array[i]['type'] == 'link') {
                 var url = content_array[i]['url'];
-                this.text += '<br><br>' + '<a href="' + url + '">' + url + '</a>';
+                url = '<a href="' + url + '">' + url + '</a>';
+                var title = content_array[i]['title'];
+                if (title.length > 18) {
+                    title = title.substring(0, 17) + '…';
+                }
+                this.text += '<div class="link-title">' + title + '</div>' + url;
             }
             if (content_array[i]['type'] == 'image') {
                 image_array.push(content_array[i]['url']);
