@@ -50,13 +50,31 @@ class Pin {
             // there is text repin only when origin_pin and repin differ
             if (origin_pin_id != repin_id) {
                 this.text = content_array[0]['content']
-                    .replace(/<a\shref/ig, '<i class="fas fa-retweet"></i><a href')
-                    .replace(/<\/a>:\s/ig, '</a>：');
+                    .replace(/<\/a>:\s/g, '</a>：') // use full-width colon
+                    .replace(/\sdata-\w+=["'][^"']*["']/g, ''); // remove data-* attributes
+
+                /*
+                    add repin sign before account names
+
+                    an account name without data-* attributes looks like this:
+                    <a href="..." class="member_mention">name</a>
+
+                    with 2 possibilities: class name comes first for url comes first 
+                */
+                var repin_sign = '<i class="fas fa-retweet"></i>';
+
+                // 1. possibility: class name first
+                this.text = this.text.replace(/<a\sclass=["']member_mention["']/g, repin_sign + '<a');
+
+                // 2. possibility: url first
+                var urls = this.text.match(/<a\shref=["'][^"']*["']\sclass=["']member_mention["']/g);
+                for (var i = 0; i < urls.length; i++) {
+                    this.text = this.text.replace(urls[i], repin_sign + urls[i]);
+                }
             }
         }
 
-        // remove "<script" tag beginnings for extra safety
-        // normally html special chars should already been escaped
+        // make sure text does not contain script tags
         this.text = this.text.replace(/<script/ig, '');
 
         // handle media
