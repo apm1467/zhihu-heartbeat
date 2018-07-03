@@ -2,7 +2,8 @@ var request = require('request');
 const constants = require('./constants');
 
 
-exports.check_captcha = function() {
+exports.check_captcha = check_captcha;
+function check_captcha() {
     var options = {
         method: 'GET',
         url: constants.CAPTCHA_URL,
@@ -20,10 +21,16 @@ function get_captcha() {
     var options = {
         method: 'PUT',
         url: constants.CAPTCHA_URL,
-        headers: constants.CAPTCHA_REQUEST_HEADER,
+        headers: constants.LOGIN_REQUEST_HEADER,
         jar: true
     };
     request(options, function(error, response, body) {
+        console.log(response);
+        if ('error' in JSON.parse(body)) {
+            check_captcha();
+            return;
+        }
+
         var image = new Image();
         image.src = 'data:image/gif;base64,' + JSON.parse(body)['img_base64'];
         $('.captcha').prepend(image);
@@ -38,7 +45,7 @@ exports.get_access_token = function(email, password, captcha_text) {
         var options = {
             method: 'POST',
             url: constants.CAPTCHA_URL,
-            headers: constants.LOGIN_HEADER,
+            headers: constants.LOGIN_REQUEST_HEADER,
             jar: true,
             form: { input_text: captcha_text }
         };
@@ -112,7 +119,7 @@ function reload_login_page(message) {
 exports.get_authorized_request_header = function () {
     // append access_token to base_request_header => authorized_request_header
     var access_token = localStorage.getItem('access_token');
-    var header = constants.BASE_REQUEST_HEADER;
+    var header = constants.BASE_HEADER;
     header['Authorization'] = 'Bearer ' + access_token;
     return header;
 }

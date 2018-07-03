@@ -55,7 +55,7 @@ const BASE_HEADER = {
     'x-uuid': 'AFDAPJdyuApLBdYntf8xLa7BMpUJQloGeys=',
     'User-Agent': 'osee2unifiedRelease/4.18.2 (iPhone; iOS 11.4; Scale/2.00)'
 };
-exports.BASE_REQUEST_HEADER = BASE_HEADER;
+exports.BASE_HEADER = BASE_HEADER;
 
 // combine two dicts
 exports.LOGIN_REQUEST_HEADER = Object.assign({}, CAPTCHA_REQUEST_HEADER, BASE_HEADER);
