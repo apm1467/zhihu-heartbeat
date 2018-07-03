@@ -1,13 +1,13 @@
 # Zhihu Heartbeat
 
-（非官方）知乎想法桌面端，兼容 macOS 与 Windows。
+（非官方）知乎想法桌面端，兼容 macOS 与 Windows。点击[这里](https://github.com/apm1467/zhihu-heartbeat/releases/latest)下载。
 
 ## 功能
 
 - 流畅的阅读体验
 - 每 10 秒自动更新时间线
 - 发布或删除想法
-- 大屏幕观看高清图片和视频
+- 在大屏幕上观看高清图片和视频
 
 ## macOS
 
@@ -21,14 +21,14 @@
 
 ![](./windows.png)
 
-## 搭建方法
+## 构建方法
 
-本软件使用 [Electron](https://electronjs.org) 框架，macOS 版与 Windows 版需要在各自系统上搭建。
+本软件使用 [Electron](https://electronjs.org) 框架，macOS 版与 Windows 版需要在各自系统上构建。
 
 1. 安装 [`yarn`](https://yarnpkg.com/lang/en/docs/install/) 
 2. `$ cd zhihu-heartbeat/`
 3. `$ yarn install`
-4. 使用 `$ yarn start` 直接启动应用，或 `$ yarn dist` 搭建
+4. 使用 `$ yarn start` 直接启动应用，或 `$ yarn dist` 输出可执行程序
 
 ## 致谢
 
