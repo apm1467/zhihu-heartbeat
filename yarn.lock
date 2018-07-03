@@ -226,7 +226,7 @@ buffer-from@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.0.tgz#87fcaa3a298358e0ade6e442cfce840740d1ad04"
 
-builder-util-runtime@4.4.0, builder-util-runtime@^4.4.0:
+builder-util-runtime@4.4.0, builder-util-runtime@^4.4.0, builder-util-runtime@~4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-4.4.0.tgz#1f486819df12a04abfa128fe082e7c54edda0ef7"
   dependencies:
@@ -725,6 +725,20 @@ electron-reloader@^0.2.0:
   dependencies:
     chokidar "^2.0.0"
     electron-is-dev "^0.3.0"
+
+electron-updater@^2.23.3:
+  version "2.23.3"
+  resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-2.23.3.tgz#7bf054075f0cef2cd832cb533cf21adcdd5780b8"
+  dependencies:
+    bluebird-lst "^1.0.5"
+    builder-util-runtime "~4.4.0"
+    electron-is-dev "^0.3.0"
+    fs-extra-p "^4.6.1"
+    js-yaml "^3.12.0"
+    lazy-val "^1.0.3"
+    lodash.isequal "^4.5.0"
+    semver "^5.5.0"
+    source-map-support "^0.5.6"
 
 electron@^2.0.0:
   version "2.0.3"
@@ -1436,6 +1450,10 @@ locate-path@^3.0.0:
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
 loud-rejection@^1.0.0:
   version "1.6.0"

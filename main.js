@@ -1,5 +1,6 @@
 const {app, BrowserWindow, Menu} = require('electron');
 const shell = require('electron').shell;
+const {autoUpdater} = require("electron-updater");
 try {
     require('electron-reloader')(module);
 } catch (err) {}
@@ -37,7 +38,7 @@ function create_window () {
         });
     }
 
-    main_window.on('closed', function () {
+    main_window.on('closed', function() {
         main_window = null;
     });
 }
@@ -136,12 +137,16 @@ app.once('ready', function() {
 
 app.on('ready', create_window);
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
     app.quit();
 });
 
-app.on('activate', function () {
+app.on('activate', function() {
     if (process.platform == 'darwin') {
         main_window.show();
     }
+});
+
+app.on('ready', function()  {
+    autoUpdater.checkForUpdatesAndNotify();
 });
