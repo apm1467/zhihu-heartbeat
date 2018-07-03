@@ -23,7 +23,11 @@
   "build": {
     "appId": "ch.yige.zhihu-heartbeat",
     "mac": {
-      "category": "public.app-category.social-networking"
+      "category": "public.app-category.social-networking",
+      "target": "zip"
+    },
+    "win": {
+      "target": "zip"
     }
   }
 }
