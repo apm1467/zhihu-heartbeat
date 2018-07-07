@@ -205,34 +205,35 @@ a {
     color: rgb(190, 190, 190);
 }
 .images, .video {
+    line-height: 0;
     margin-top: 10px;
+    margin-bottom: 6px;
     width: 100%;
     text-align: center;
+    border-radius: 8px;
+    overflow: hidden;
 }
 .img + .img {
     margin-left: 3px;
 }
-.single-img, .thumbnail {
+.single-img, .video .thumbnail {
     max-width: 100%;
     max-height: 250px;
     border-radius: 8px;
 }
-.double-img {
+.double-img, .img-grid .img {
     display: inline-block;
-    width: 49%;
-    height: 250px;
-}
-.img-grid {
-    margin-bottom: 6px;
-    margin-right: 0;
-}
-.img-grid .img {
-    display: inline-block;
-    position: relative;
-    width: 32.5%;
-    height: auto;
     background-position: center center;
     background-size: cover;
+}
+.double-img {
+    width: calc(50% - 1.5px);;
+    height: 250px;
+}
+.img-grid .img {
+    position: relative;
+    width: calc(33.33% - 2px);
+    height: auto;
 }
 .img-grid .img:before{
     content: "";

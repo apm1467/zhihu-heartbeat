@@ -160,7 +160,11 @@ class Pin {
                         output += '</div><div class="row">';
                     }
                 }
-                output += '</div></div>';
+                // remove the last <div class="row"> opening tag
+                if (output.slice(-17) == '<div class="row">') {
+                    output = output.slice(0, -17);
+                }
+                output += '</div>';
             }
             output += '</div>';
         }
