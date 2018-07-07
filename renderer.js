@@ -4,91 +4,6 @@ const feed = require('./feed');
 const publish = require('./publish');
 
 
-// open links in external browser
-const shell = require('electron').shell;
-$(document).on('click', 'a[href^="http"]', function(event) {
-    event.preventDefault();
-    shell.openExternal(this.href);
-});
-
-// open feed images in new window
-$(document).on('click', '.img', function(event) {
-    // darken the image while load image window
-    $(this).addClass('darkened');
-
-    var img_url;
-    if ($(this).hasClass('single-img')) {
-        img_url = $(this).attr('src');
-    }
-    else {
-        img_url = $(this).css('background-image').slice(4, -1).replace(/"/g, "");
-    }
-    img_url = img_url.replace(/_[a-z]+/, "_qhd"); // get large image
-
-    var img = new Image();
-    img.src = img_url;
-    img.onload = function(){
-        var win = new BrowserWindow({
-            titleBarStyle: 'hidden',
-            show: false,
-            height: this.height,
-            width: this.width,
-            backgroundColor: "#000",
-            fullscreenable: false,
-            useContentSize: true
-        });
-
-        // CSS is needed to make the image window draggable
-        win.loadURL('data:text/html,' +
-                    '<body style="-webkit-app-region: drag; margin: 0;">' +
-                    '<img src="' + img_url + '" draggable="false"></body>');
-
-        win.once('ready-to-show', function () {
-            win.show();
-            $('.img').removeClass('darkened'); // remove darkening
-        });
-
-        win.on('closed', function () {
-            win = null;
-        });
-    };
-});
-
-// open video in new window
-$(document).on('click', '.video', function(event) {
-    $(this).addClass('darkened');
-
-    var video_url = $(this).attr('data-url');
-    var width = parseInt($(this).attr('data-width'));
-    var height = parseInt($(this).attr('data-height'));
-
-    var win = new BrowserWindow({
-        titleBarStyle: 'hidden',
-        show: false,
-        height: height,
-        width: width,
-        backgroundColor: "#000",
-        useContentSize: true
-    });
-    win.loadFile('video_player.html');
-
-    // pass video url to player window
-    win.webContents.on('did-finish-load', () => {
-        win.webContents.send('video_url', video_url);
-    });
-
-    win.once('ready-to-show', function () {
-        win.show();
-        $('.video').removeClass('darkened'); // remove darkening
-    });
-
-    win.on('closed', function () {
-        win = null;
-    });
-});
-
-// ------------------------------------------------------------
-
 // initialize the main window
 var login_error = localStorage.getItem('login_error');
 if (login_error) {
@@ -155,7 +70,7 @@ function enable_scroll_event() {
 
 // ------------------------------------------------------------
 
-// update pin time every second
+// update post time of each feed-item every second
 setInterval(function() {
     $('.time').each(function () {
         var seconds = parseInt($(this).attr('data-time'));
@@ -241,4 +156,89 @@ const logout_menu = Menu.buildFromTemplate([
 ]);
 $(document).on('click', '.self-avatar', function(event) {
     logout_menu.popup(current_window);
+});
+
+// ------------------------------------------------------------
+
+// open links in external browser
+const shell = require('electron').shell;
+$(document).on('click', 'a[href^="http"]', function(event) {
+    event.preventDefault();
+    shell.openExternal(this.href);
+});
+
+// open feed images in new window
+$(document).on('click', '.img', function(event) {
+    // darken the image while load image window
+    $(this).addClass('darkened');
+
+    var img_url;
+    if ($(this).hasClass('single-img')) {
+        img_url = $(this).attr('src');
+    }
+    else {
+        img_url = $(this).css('background-image').slice(4, -1).replace(/"/g, "");
+    }
+    img_url = img_url.replace(/_[a-z]+/, "_qhd"); // get large image
+
+    var img = new Image();
+    img.src = img_url;
+    img.onload = function(){
+        var win = new BrowserWindow({
+            titleBarStyle: 'hidden',
+            show: false,
+            height: this.height,
+            width: this.width,
+            backgroundColor: "#000",
+            fullscreenable: false,
+            useContentSize: true
+        });
+
+        // CSS is needed to make the image window draggable
+        win.loadURL('data:text/html,' +
+                    '<body style="-webkit-app-region: drag; margin: 0;">' +
+                    '<img src="' + img_url + '" draggable="false"></body>');
+
+        win.once('ready-to-show', function () {
+            win.show();
+            $('.img').removeClass('darkened'); // remove darkening
+        });
+
+        win.on('closed', function () {
+            win = null;
+        });
+    };
+});
+
+// open video in new window
+$(document).on('click', '.video', function(event) {
+    $(this).addClass('darkened');
+
+    var video_url = $(this).attr('data-url');
+    var width = parseInt($(this).attr('data-width'));
+    var height = parseInt($(this).attr('data-height'));
+
+    var win = new BrowserWindow({
+        titleBarStyle: 'hidden',
+        show: false,
+        height: height,
+        width: width,
+        backgroundColor: "#000",
+        useContentSize: true
+    });
+    win.loadFile('video_player.html');
+
+    // pass video url to player window
+    win.webContents.on('did-finish-load', () => {
+        win.webContents.send('video_url', video_url);
+    });
+
+    win.once('ready-to-show', function () {
+        win.show();
+        $('.video').removeClass('darkened'); // remove darkening
+    });
+
+    win.on('closed', function () {
+        win = null;
+    });
 });
