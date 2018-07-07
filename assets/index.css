@@ -203,6 +203,11 @@ a {
 .link-title {
     margin-top: 20px;
     color: rgb(190, 190, 190);
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    cursor: default;
 }
 .images, .video {
     line-height: 0;

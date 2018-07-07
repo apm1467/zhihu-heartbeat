@@ -86,9 +86,6 @@ class Pin {
                 var url = content_array[i]['url'];
                 url = '<a href="' + url + '">' + url + '</a>';
                 var title = content_array[i]['title'];
-                if (title.length > 18) {
-                    title = title.substring(0, 17) + '…';
-                }
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
             if (content_array[i]['type'] == 'image') {
