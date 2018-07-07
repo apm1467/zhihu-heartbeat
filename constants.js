@@ -86,3 +86,6 @@ exports.PIN_PUBLISH_CONTENT_FORM = [
         'content': ''
     }
 ];
+
+exports.FEED_UPDATE_INTERVAL = 20000; // millisecond
+

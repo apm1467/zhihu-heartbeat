@@ -209,10 +209,10 @@ exports.fetch_initial_feed = function() {
         report_latest_viewed_pin_id();
         append_to_feed(feed_array);
 
-        // check feed update every 10 seconds
+        // check feed update every few time
         setInterval(function() {
             check_update();
-        }, 10000);
+        }, constants.FEED_UPDATE_INTERVAL);
     });
 }
 
