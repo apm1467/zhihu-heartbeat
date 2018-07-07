@@ -13,13 +13,13 @@
 
 第一次运行可能需要在「系统偏好设置」=>「安全性与隐私」 中点击允许。
 
-![](./mac-1.png)
+![](./screenshoots/mac-1.png)
 
-![](./mac-2.png)
+![](./screenshoots/mac-2.png)
 
 ## Windows
 
-![](./windows.png)
+![](./screenshoots/windows.png)
 
 ## 构建方法
 
