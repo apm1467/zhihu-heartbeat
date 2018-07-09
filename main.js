@@ -1,6 +1,5 @@
 const {app, BrowserWindow, Menu} = require('electron');
 const shell = require('electron').shell;
-const {autoUpdater} = require("electron-updater");
 try {
     require('electron-reloader')(module);
 } catch (err) {}
@@ -71,8 +70,8 @@ app.once('ready', function() {
         {
             role: 'window',
             submenu: [
-            { role: 'minimize' },
-            { role: 'close' }
+                { role: 'minimize' },
+                { role: 'close' }
             ]
         },
         {
@@ -145,8 +144,4 @@ app.on('activate', function() {
     if (process.platform == 'darwin') {
         main_window.show();
     }
-});
-
-app.on('ready', function()  {
-    autoUpdater.checkForUpdatesAndNotify();
 });

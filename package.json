@@ -17,7 +17,6 @@
     "electron-reloader": "^0.2.0"
   },
   "dependencies": {
-    "electron-updater": "^2.23.3",
     "request": "^2.87.0"
   },
   "build": {
