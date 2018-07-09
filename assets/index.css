@@ -201,13 +201,20 @@ a {
     color: rgb(160, 160, 160);
 }
 .link-title {
-    margin-top: 20px;
+    margin-top: 15px;
+    line-height: 1.4em;
     color: rgb(190, 190, 190);
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
     cursor: default;
+}
+.link {
+    display: block;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .images, .video {
     line-height: 0;
@@ -267,8 +274,8 @@ a {
     background-color: rgba(0, 0, 0, 0.6);; 
 }
 .origin-pin {
-    font-size: 15px;
-    line-height: 1.5em;
+    font-size: 16px;
+    line-height: 1.55em;
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 5px;
@@ -277,8 +284,8 @@ a {
     border-left: 2px solid rgb(102, 102, 102);
 }
 .origin-pin .name {
-    display: block;
+    display: inline-block;
     margin-left: 0;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     font-size: 17px;
 }

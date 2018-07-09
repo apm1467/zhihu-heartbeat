@@ -84,7 +84,7 @@ class Pin {
         for (var i = 0; i < array_length; i++) {
             if (content_array[i]['type'] == 'link') {
                 var url = content_array[i]['url'];
-                url = '<a href="' + url + '">' + url + '</a>';
+                url = '<a class="link" href="' + url + '">' + url + '</a>';
                 var title = content_array[i]['title'];
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
