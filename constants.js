@@ -35,12 +35,13 @@ exports.AUTH_DATA = {
 const CAPTCHA_REQUEST_HEADER = { 'Authorization': 'oauth ' + CLIENT_ID };
 exports.CAPTCHA_REQUEST_HEADER = CAPTCHA_REQUEST_HEADER;
 
+const querystring = require('querystring');
 const BASE_HEADER = {
     'x-api-version': '3.0.90',
     'x-app-version': '4.18.2',
     'X-App-VersionCode': '984',
     'x-app-build': 'release',
-    'x-app-za': jQuery.param({
+    'x-app-za': querystring.stringify({
         'OS': 'iOS',
         'Release': '11.4',
         'Model': 'iPhone7,2',
@@ -89,3 +90,8 @@ exports.PIN_PUBLISH_CONTENT_FORM = [
 
 exports.FEED_UPDATE_INTERVAL = 20000; // millisecond
 
+exports.GITHUB_REPO_URL = 'https://github.com/apm1467/zhihu-heartbeat/';
+
+exports.GITHUB_DOWNLOAD_URL = 'https://github.com/apm1467/zhihu-heartbeat/releases/latest';
+
+exports.GITHUB_CHECK_UPDATE_URL = 'https://api.github.com/repos/apm1467/zhihu-heartbeat/releases/latest';
