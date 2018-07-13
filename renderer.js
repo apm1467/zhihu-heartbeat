@@ -1,5 +1,6 @@
+const electron = require('electron');
 const remote = require('electron').remote;
-const {BrowserWindow, Menu, MenuItem} = require('electron').remote;
+const {BrowserWindow, Menu, MenuItem} = remote;
 const feed = require('./feed');
 const publish = require('./publish');
 
@@ -167,6 +168,10 @@ $(document).on('click', 'a[href^="http"]', function(event) {
     shell.openExternal(this.href);
 });
 
+// get screen size
+const screen_w = electron.screen.getPrimaryDisplay().workAreaSize.width;
+const screen_h = electron.screen.getPrimaryDisplay().workAreaSize.height;
+
 // open feed images in new window
 $(document).on('click', '.img', function(event) {
     // darken the image while load image window
@@ -179,29 +184,58 @@ $(document).on('click', '.img', function(event) {
     else {
         img_url = $(this).css('background-image').slice(4, -1).replace(/"/g, "");
     }
-    img_url = img_url.replace(/_[a-z]+/, "_qhd"); // get large image
+    img_url = img_url.replace(/_[a-z]+/, ""); // get original image
 
     var img = new Image();
     img.src = img_url;
-    img.onload = function(){
+    img.onload = function() {
+        // calculate image window size
+        var win_height = this.height;
+        var win_width = this.width;
+        var img_html_attr = '';
+
+        // image is larger than screen
+        if (screen_w < this.width || screen_h < this.height) {
+            var aspect_ratio = this.width / this.height;
+            if (aspect_ratio <= 0.45) {
+                // image is very tall; allow scroll in vertical direction
+                img_html_attr = 'width="100%"';
+                win_width = Math.min(screen_w, this.width);
+                win_height = Math.ceil(win_width / aspect_ratio);
+            }
+            else {
+                // normal aspect ratio; display image on screen enitrely
+                img_html_attr = 'width="100%" height="100%"';
+                win_height = Math.min(screen_h, this.height);
+                win_width = Math.ceil(win_height * aspect_ratio);
+
+                if (win_width > screen_w) {
+                    // image is very wide; adjust window size according to screen width
+                    win_width = screen_w;
+                    win_height = Math.ceil(win_width / aspect_ratio);
+                }
+            }
+        }
+
+        // open image window
         var win = new BrowserWindow({
             titleBarStyle: 'hidden',
             show: false,
-            height: this.height,
-            width: this.width,
+            height: win_height,
+            width: win_width,
             backgroundColor: "#000",
             fullscreenable: false,
             useContentSize: true
         });
 
-        // CSS is needed to make the image window draggable
         win.loadURL('data:text/html,' +
                     '<body style="-webkit-app-region: drag; margin: 0;">' +
-                    '<img src="' + img_url + '" draggable="false"></body>');
+                    '<img draggable="false" ' + img_html_attr + ' src="' + img_url + '">' +
+                    '</body>');
 
         win.once('ready-to-show', function () {
             win.show();
-            $('.img').removeClass('darkened'); // remove darkening
+            $('.img').removeClass('darkened');
         });
 
         win.on('closed', function () {
