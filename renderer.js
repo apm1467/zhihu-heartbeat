@@ -254,6 +254,7 @@ $(document).on('contextmenu', '.img', function(event) {
         {
             label: '保存原图到…',
             click: function() {
+                current_window.focus();
                 var path = dialog.showSaveDialog({
                     title: '保存原图',
                     defaultPath: file_name,
