@@ -4,6 +4,9 @@ body {
     overflow-x: hidden;
     margin: 0;
 }
+img {
+    -webkit-user-drag: none;
+}
 .hidden {
     display: none;
 }
@@ -149,6 +152,7 @@ a {
     width: 42px;
     position: absolute;
     transform: translate(0, 2px);
+    user-select: none;
 }
 .name {
     font-weight: 600;
