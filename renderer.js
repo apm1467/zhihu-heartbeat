@@ -1,6 +1,8 @@
+const fs = require('fs');
+const request = require('request');
 const electron = require('electron');
 const remote = require('electron').remote;
-const {BrowserWindow, Menu, MenuItem} = remote;
+const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
 const feed = require('./feed');
 const publish = require('./publish');
 
@@ -179,17 +181,8 @@ $(document).on('click', '.img', function(event) {
     // darken the image thumbnail while load image window
     $(this).addClass('darkened');
 
-    var img_url;
-    if ($(this).hasClass('single-img')) {
-        img_url = $(this).attr('src');
-    }
-    else {
-        img_url = $(this).css('background-image').slice(4, -1).replace(/"/g, "");
-    }
-    img_url = img_url.replace(/_[a-z]+/, ""); // get original image
-
     var img = new Image();
-    img.src = img_url;
+    img.src = get_img_url($(this));
     img.onload = function() {
         // calculate image window size
         var win_height = this.height;
@@ -232,7 +225,7 @@ $(document).on('click', '.img', function(event) {
 
         win.loadURL('data:text/html,' +
                     '<body style="-webkit-app-region: drag; margin: 0;">' +
-                    '<img draggable="false" ' + img_html_attr + ' src="' + img_url + '">' +
+                    '<img draggable="false" ' + img_html_attr + ' src="' + this.src + '">' +
                     '</body>');
 
         win.once('ready-to-show', function () {
@@ -246,6 +239,49 @@ $(document).on('click', '.img', function(event) {
     };
 });
 
+// right click to save feed images
+$(document).on('contextmenu', '.img', function(event) {
+    var img_url = get_img_url($(this));
+    var desktop_path = app.getPath('desktop') + '/';
+    var file_name = Date.now() + '.jpg';
+    const save_img_menu = Menu.buildFromTemplate([
+        {
+            label: '保存原图到桌面',
+            click: function() {
+                request(img_url).pipe(fs.createWriteStream(desktop_path + file_name));
+            }
+        },
+        {
+            label: '保存原图到…',
+            click: function() {
+                var path = dialog.showSaveDialog({
+                    title: '保存原图',
+                    defaultPath: file_name,
+                    filters: [{ extensions: ['jpg'] }]
+                });
+                if (path) {
+                    request(img_url).pipe(fs.createWriteStream(path));
+                }
+            }
+        }
+    ]);
+
+    save_img_menu.popup(current_window);
+});
+
+// accept a jQuery object
+function get_img_url(img_obj) {
+    var img_url;
+    if (img_obj.hasClass('single-img')) {
+        img_url = img_obj.attr('src');
+    }
+    else {
+        img_url = img_obj.css('background-image').slice(4, -1).replace(/"/g, "");
+    }
+    img_url = img_url.replace(/_[a-z]+/, ""); // get original image
+
+    return img_url;
+}
 
 // ------------------------------------------------------------
 
