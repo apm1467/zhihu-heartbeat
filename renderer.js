@@ -4,6 +4,8 @@ const {BrowserWindow, Menu, MenuItem} = remote;
 const feed = require('./feed');
 const publish = require('./publish');
 
+const current_window = remote.getCurrentWindow();
+
 
 // initialize the main window
 var login_error = localStorage.getItem('login_error');
@@ -12,9 +14,8 @@ if (login_error) {
     localStorage.removeItem('login_error');
 }
 
-var time = Date.now();
 var access_expire_time = localStorage.getItem('access_expire_time');
-if (access_expire_time < time) {
+if (access_expire_time < Date.now()) {
     // access_token needs to be renewed first
     // feed.fetch_initial_feed() will be called automatically after authentication
     log_in();
@@ -91,13 +92,13 @@ function get_relative_time_str(seconds) {
     var diff = now - seconds;
 
     if (diff < sec_per_min) {
-         return diff + ' 秒前';   
+        return diff + ' 秒前';   
     }
     else if (diff < sec_per_hour) {
-         return Math.round(diff / sec_per_min) + ' 分前';   
+        return Math.round(diff / sec_per_min) + ' 分前';   
     }
     else if (diff < sec_per_day ) {
-         return Math.round(diff / sec_per_hour) + ' 时前';   
+        return Math.round(diff / sec_per_hour) + ' 时前';   
     }
     else if (diff < sec_per_week) {
         return Math.round(diff / sec_per_day) + ' 日前';   
@@ -118,7 +119,6 @@ $('.logo').click(function () {
 // ------------------------------------------------------------
 
 // click delete button to open delete pin menu
-const current_window = remote.getCurrentWindow();
 $(document).on('click', '.delete-btn', function(event) {
     var clicked_btn = $(this);
     var delete_menu = Menu.buildFromTemplate([
@@ -168,13 +168,15 @@ $(document).on('click', 'a[href^="http"]', function(event) {
     shell.openExternal(this.href);
 });
 
+// ------------------------------------------------------------
+
 // get screen size
 const screen_w = electron.screen.getPrimaryDisplay().workAreaSize.width;
 const screen_h = electron.screen.getPrimaryDisplay().workAreaSize.height;
 
-// open feed images in new window
+// click to open feed images in new window
 $(document).on('click', '.img', function(event) {
-    // darken the image while load image window
+    // darken the image thumbnail while load image window
     $(this).addClass('darkened');
 
     var img_url;
@@ -243,6 +245,9 @@ $(document).on('click', '.img', function(event) {
         });
     };
 });
+
+
+// ------------------------------------------------------------
 
 // open video in new window
 $(document).on('click', '.video', function(event) {
