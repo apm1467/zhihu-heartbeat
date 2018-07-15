@@ -192,22 +192,25 @@ $(document).on('click', '.img', function(event) {
 
         // image is larger than screen
         if (screen_w < this.width || screen_h < this.height) {
+            const max_window_w = Math.ceil(screen_w * 0.95);
+            const max_window_h = Math.ceil(screen_h * 0.9);
+
             var aspect_ratio = this.width / this.height;
             if (aspect_ratio <= 0.45) {
                 // image is very tall; allow scroll in vertical direction
                 img_html_attr = 'width="100%"';
-                win_width = Math.min(screen_w, this.width);
+                win_width = Math.min(max_window_w, this.width);
                 win_height = Math.ceil(win_width / aspect_ratio);
             }
             else {
                 // normal aspect ratio; display image on screen enitrely
                 img_html_attr = 'width="100%" height="100%"';
-                win_height = Math.min(screen_h, this.height);
+                win_height = Math.min(max_window_h, this.height);
                 win_width = Math.ceil(win_height * aspect_ratio);
 
                 if (win_width > screen_w) {
                     // image is very wide; adjust window size according to screen width
-                    win_width = screen_w;
+                    win_width = max_window_w;
                     win_height = Math.ceil(win_width / aspect_ratio);
                 }
             }
