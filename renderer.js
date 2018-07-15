@@ -172,10 +172,6 @@ $(document).on('click', 'a[href^="http"]', function(event) {
 
 // ------------------------------------------------------------
 
-// get screen size
-const screen_w = electron.screen.getPrimaryDisplay().workAreaSize.width;
-const screen_h = electron.screen.getPrimaryDisplay().workAreaSize.height;
-
 // click to open feed images in new window
 $(document).on('click', '.img', function(event) {
     // darken the image thumbnail while load image window
@@ -188,6 +184,11 @@ $(document).on('click', '.img', function(event) {
         var win_height = this.height;
         var win_width = this.width;
         var img_html_attr = '';
+
+        // get current screen size
+        const current_screen = electron.screen.getDisplayMatching(current_window.getBounds());
+        const screen_w = current_screen.workAreaSize.width;
+        const screen_h = current_screen.workAreaSize.height;
 
         // image is larger than screen
         if (screen_w < this.width || screen_h < this.height) {
