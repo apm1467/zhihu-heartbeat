@@ -1,9 +1,10 @@
 const fs = require('fs');
 const request = require('request');
 const electron = require('electron');
-const remote = require('electron').remote;
+const remote = electron.remote;
+const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
-const feed = require('./feed');
+const Feed = require('./feed');
 const publish = require('./publish');
 
 const current_window = remote.getCurrentWindow();
@@ -16,15 +17,19 @@ if (login_error) {
     localStorage.removeItem('login_error');
 }
 
+const feed = new Feed();
+
 var access_expire_time = localStorage.getItem('access_expire_time');
 if (access_expire_time < Date.now()) {
-    // access_token needs to be renewed first
-    // feed.fetch_initial_feed() will be called automatically after authentication
     log_in();
+
+    // wait for message from auth
+    ipc.on('auth_finished', function (event) {
+        feed.start();
+    });
 }
 else {
-    // fetch feed directly using existing access_token
-    feed.fetch_initial_feed();
+    feed.start();
 }
 
 function log_in() {
@@ -42,34 +47,6 @@ function log_in() {
     });
 
     $('.login-form').removeClass('hidden');
-}
-
-// ------------------------------------------------------------
-
-// enable scroll events
-enable_scroll_event();
-
-exports.enable_scroll_event = enable_scroll_event;
-
-function enable_scroll_event() {
-    $(window).scroll(function () {
-        var page_length = $(document).height();
-        var scroll_position = $(window).scrollTop();
-
-        // enable infinite scroll (scroll down to request older feed)
-        if (page_length - scroll_position < 3000) {
-            feed.fetch_older_feed();
-
-            // unbind scroll event so only one fetch request is sent
-            // the scroll event will be binded again after fetch in feed.fetch_older_feed()
-            $(window).off('scroll');
-        }
-
-        // scroll to top to remove feed update notification
-        if (scroll_position <= 5) {
-            $('#update-notification').removeClass('notification-show');
-        }
-    });
 }
 
 // ------------------------------------------------------------
@@ -129,7 +106,7 @@ $(document).on('click', '.delete-btn', function(event) {
             click: function() {
                 clicked_btn.fadeOut(200);
                 var pin_id = clicked_btn.parent().parent().attr('data-id');
-                feed.delete_pin(pin_id);
+                Feed.delete_pin(pin_id);
             }
         }
     ]);
