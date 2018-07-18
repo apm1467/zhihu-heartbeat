@@ -11,9 +11,6 @@ class Author {
         this.url = constants.BASE_WEB_URL + author_dict['url'];
     }
 
-    is_self() {
-        return this.id == localStorage.getItem('self_id');
-    }
     get_avatar_html() {
         return '<a href="' + this.url +'">' + 
                '<img class="avatar" src="' + this.avatar + '"></a>';
@@ -111,11 +108,8 @@ class Pin {
     get_id() {
         return this.id;
     }
-    get_time_int() {
-        return this.time;
-    }
-    get_time_str() {
-        return this.time.toString();
+    get_time() {
+        return this.time; // int
     }
     get_likes_html() {
         return '<span><i class="far fa-heart"></i>' + this.likes + '</span>';
@@ -140,11 +134,11 @@ class Pin {
                 output += '<img class="img single-img" src="' + this.image_array[0] + '">';
             }
             else if (this.image_count == 2) {
-                // <div class="img double-img" style="background-image: url('...');"></div>
-                output += '<div class="img double-img" style="background-image: url(\''
-                          + this.image_array[0] + '\');"></div>';
-                output += '<div class="img double-img" style="background-image: url(\''
-                          + this.image_array[1] + '\');"></div>';
+                for (var i = 0; i < 2; i++) {
+                    // <div class="img double-img" style="background-image: url('...');"></div>
+                    output += '<div class="img double-img" style="background-image: url(\''
+                              + this.image_array[i] + '\');"></div>';
+                }
             }
             else if (this.image_count >= 3) {
                 output += '<div class="img-grid"><div class="row">';
@@ -180,266 +174,296 @@ class Pin {
 }
 
 
-exports.fetch_initial_feed = function() {
-    display_self_avatar()
-    localStorage.setItem('feed_offset', '0'); // needed when fetching older feed
-
-    var options = {
-        method: 'GET',
-        url: constants.PIN_FETCH_URL + '?reverse_order=0',
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var feed_array = JSON.parse(body)['data'];
-        console.log(feed_array);
-
-        // save latest_local_pin_id & latest_local_pin_time
-        var array_length = feed_array.length;
-        for (var i = 0; i < array_length; i++) {
-            var feed_item = feed_array[i];
-            if (feed_item['type'] == 'moment') {
-                pin = new Pin(feed_item);
-                localStorage.setItem('latest_local_pin_id', pin.get_id());
-                localStorage.setItem('latest_local_pin_time', pin.get_time_str());
-                break;
-            }
-        }
-
-        report_latest_viewed_pin_id();
-        append_to_feed(feed_array);
-
-        // check feed update every few time
-        setInterval(function() {
-            check_update();
-        }, constants.FEED_UPDATE_INTERVAL);
-    });
-}
-
-exports.fetch_older_feed = function() {
-    var oldest_local_pin_id = localStorage.getItem('oldest_local_pin_id');
-    var feed_offset = localStorage.getItem('feed_offset');
-    var options = {
-        method: 'GET',
-        url: constants.PIN_FETCH_URL + '?after_id=' + oldest_local_pin_id + '&offset=' + feed_offset,
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var feed_array = JSON.parse(body)['data'];
-        append_to_feed(feed_array);
-        console.log(feed_array);
-
-        // re-enable infinite scroll
-        const renderer = require('./renderer');
-        renderer.enable_scroll_event();
-    });
-}
-
-function append_to_feed(feed_array) {
-    var output = '';
-    var array_length = feed_array.length;
-    for (var i = 0; i < array_length; i++) {
-        var feed_item_dict = feed_array[i];
-        output += generate_feed_item_html(feed_item_dict);
+module.exports = class Feed {
+    constructor() {
+        this.feed_offset = 0; // needed when fetching older feed
+        this.latest_local_pin_id = '';
+        this.latest_local_pin_time = 0;
+        this.oldest_local_pin_id = '';
+        this.self_user_id = '';
     }
-    $('.feed').append(output);
 
-    // save oldest_local_pin_id & feed_offset
-    var oldest_local_pin_id = feed_array[array_length - 1]['target']['id'];
-    localStorage.setItem('oldest_local_pin_id', oldest_local_pin_id);
+    start() {
+        // async callback order:
+        // _get_self_user() => _fetch_initial_feed() => _enable_feed_scroll_event()
 
-    var feed_offset = localStorage.getItem('feed_offset');
-    feed_offset = parseInt(feed_offset) + 10;
-    localStorage.setItem('feed_offset', feed_offset.toString());
-}
+        this._get_self_user();
+    }
 
-function check_update() {
-    var options = {
-        method: 'GET',
-        url: constants.PIN_FETCH_URL + '?reverse_order=0',
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
-        var latest_local_pin_time = parseInt(localStorage.getItem('latest_local_pin_time'));
-        var feed_array = JSON.parse(body)['data'];
-
-        var array_length = feed_array.length;
-        for (var i = 0; i < array_length; i++) {
-            var feed_item = feed_array[i];
-            if (feed_item['type'] == 'moment') {
-                pin = new Pin(feed_item);
-                console.log(pin.get_id());
-                console.log(latest_local_pin_id);
-
-                // add extra 10 seconds tolerance when checking
-                if (pin.get_id() != latest_local_pin_id &&
-                    pin.get_time_int() + 10 > latest_local_pin_time) {
-
-                    // save the first pin, and fetch the rest in fetch_update()
-                    var output = generate_feed_item_html(feed_item);
-                    fetch_update(pin.get_id(), 0, output, pin);
-                }
-                break;
+    _get_self_user() {
+        var options = {
+            method: 'GET',
+            url: constants.SELF_URL,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var body_dict = JSON.parse(body);
+            if ("error" in body_dict) {
+                self._get_self_user();
             }
-        }
-    });
-}
 
-// fetch_after_id: str; fetch_offset: int; server_latest_pin: Pin
-function fetch_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
-    var options = {
-        method: 'GET',
-        url: constants.PIN_FETCH_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var feed_array = JSON.parse(body)['data'];
-        var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
-        var latest_local_pin_time = parseInt(localStorage.getItem('latest_local_pin_time'));
-        var stop_fetching = false;
-        var pin_time;
-        console.log(fetch_after_id);
-        console.log(latest_local_pin_id);
-        console.log(fetch_offset);
-        console.log(feed_array);
+            self.self_user_id = body_dict['id'];
 
-        var array_length = feed_array.length;
-        for (var i = 0; i < array_length; i++) {
-            var feed_item = feed_array[i];
-            if (feed_item['type'] == 'moment') {
-                pin = new Pin(feed_item);
+            // display self avatar
+            var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
+            $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
 
-                if (pin.get_id() == latest_local_pin_id ||
-                    pin.get_time_int() + 10 <= latest_local_pin_time) {
+            // start fetching initial feed
+            self._fetch_initial_feed();
+        });
+    }
 
-                    stop_fetching = true;
+    _fetch_initial_feed() {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_FETCH_URL + '?reverse_order=0',
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var feed_array = JSON.parse(body)['data'];
+    
+            // get latest pin id & time
+            var array_length = feed_array.length;
+            for (var i = 0; i < array_length; i++) {
+                var feed_item = feed_array[i];
+                if (feed_item['type'] == 'moment') {
+                    var pin = new Pin(feed_item);
+                    self.latest_local_pin_id = pin.get_id();
+                    self.latest_local_pin_time = pin.get_time();
                     break;
                 }
-                else {
-                    fetch_after_id = pin.get_id();
-                    output += generate_feed_item_html(feed_item);
+            }
+
+            self._report_latest_viewed_pin_id();
+            self._append_to_feed(feed_array);
+
+            // check feed update every few time
+            setInterval(function() {
+                self._check_feed_update();
+            }, constants.FEED_UPDATE_INTERVAL);
+
+            // enable feed scroll event
+            self._enable_feed_scroll_event();
+        });
+    }
+
+    _enable_feed_scroll_event() {
+        var self = this;
+        $(window).scroll(function () {
+            var page_length = $(document).height();
+            var scroll_position = $(window).scrollTop();
+    
+            // Scroll down to fetch older feed.
+            if (page_length - scroll_position < 3000) {
+                self._fetch_older_feed();
+    
+                // Unbind scroll event so only one fetch request is sent.
+                // The scroll event will be re-enabled in _fetch_older_feed().
+                $(window).off('scroll');
+            }
+
+            // Scroll to top to clear feed update notification.
+            if (scroll_position <= 5) {
+                $('#update-notification').removeClass('notification-show');
+            }
+        });
+    }
+
+    _fetch_older_feed() {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_FETCH_URL + '?after_id=' + this.oldest_local_pin_id + 
+                 '&offset=' + this.feed_offset,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var feed_array = JSON.parse(body)['data'];
+            self._append_to_feed(feed_array);
+            console.log(feed_array);
+
+            // re-enable feed scroll event after fetch
+            self._enable_feed_scroll_event();
+        });
+    }
+
+    _check_feed_update() {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_FETCH_URL + '?reverse_order=0',
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var feed_array = JSON.parse(body)['data'];
+            var array_length = feed_array.length;
+            for (var i = 0; i < array_length; i++) {
+                var feed_item = feed_array[i];
+                if (feed_item['type'] == 'moment') {
+                    var pin = new Pin(feed_item);
+                    console.log(pin.get_id());
+    
+                    // add extra 10 seconds tolerance when checking
+                    if (pin.get_id() != self.latest_local_pin_id &&
+                        pin.get_time() + 10 > self.latest_local_pin_time) {
+
+                        // get the first pin, and fetch the rest in _fetch_feed_update()
+                        var output = self._generate_feed_item_html(feed_item);
+                        self._fetch_feed_update(pin.get_id(), 0, output, pin);
+                    }
+                    break;
                 }
             }
-        }
-        if (stop_fetching) {
-            output = '<div class="update hidden">' + output + '</div>';
-            $('.feed').prepend(output);
+        });
+    }
 
-            // give images 2 seconds to load before calculate height
-            setTimeout(function() {
-                var scroll_top = $(window).scrollTop();
-                $('.update').removeClass('hidden');
-                // add .feed-item margin-bottom 12px
-                $(window).scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
+    // fetch_after_id: str; fetch_offset: int; server_latest_pin: Pin
+    _fetch_feed_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_FETCH_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var feed_array = JSON.parse(body)['data'];
+            var stop_fetching = false;
+            var pin_time;
+            console.log(fetch_after_id);
+            console.log(self.latest_local_pin_id);
+            console.log(fetch_offset);
+    
+            var array_length = feed_array.length;
+            for (var i = 0; i < array_length; i++) {
+                var feed_item = feed_array[i];
+                if (feed_item['type'] == 'moment') {
+                   var pin = new Pin(feed_item);
+    
+                    if (pin.get_id() == self.latest_local_pin_id ||
+                        pin.get_time() + 10 <= self.latest_local_pin_time) {
+    
+                        stop_fetching = true;
+                        break;
+                    }
+                    else {
+                        fetch_after_id = pin.get_id();
+                        output += self._generate_feed_item_html(feed_item);
+                    }
+                }
+            }
+            if (stop_fetching) {
+                self.latest_local_pin_id = server_latest_pin.get_id();
+                self.latest_local_pin_time = server_latest_pin.get_time();
+                self._report_latest_viewed_pin_id();
 
-                // display update notification
-                $('#update-notification').addClass('notification-show');
-            }, 2000);
-
-            // update latest_local_pin_id & latest_local_pin_time
-            localStorage.setItem('latest_local_pin_id', server_latest_pin.get_id());
-            report_latest_viewed_pin_id();
-            localStorage.setItem('latest_local_pin_time', server_latest_pin.get_time_str());
-        }
-        else {
-            // make recursive call to fetch more update
-            fetch_update(fetch_after_id, fetch_offset + 10, output, server_latest_pin);
-        }
-    });
-}
-
-// feed_item: dict
-function generate_feed_item_html(feed_item) {
-    var output = '';
-    if (feed_item['type'] == 'moment') {
-        var pin = new Pin(feed_item);
-        var author = new Author(feed_item['target']['author']);
-
-        output += '<div class="feed-item" data-id="' + pin.get_id() + '">';
-        output += '<div class="author">' + author.get_avatar_html() + 
-                  author.get_name_html() + '</div>';        
-        output += '<div class="time" data-time="' + pin.get_time_str() + '"></div>';
-        output += '<div class="statistics">';
-        if (author.is_self()) {
-            // include delete button
-            output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
-        }
-        output += pin.get_comments_count_html() +
-                  pin.get_repins_html() + pin.get_likes_html() + '</div>';
-
-        output += '<div class="content">' + pin.get_content_html();
-
-        // if this pin is a repin
-        if (feed_item['target']['origin_pin']) {
-            output += '<div class="origin-pin">';
-            if (feed_item['target']['origin_pin']['is_deleted']) {
-                output += feed_item['target']['origin_pin']['deleted_reason'];
+                output = '<div class="update hidden">' + output + '</div>';
+                $('.feed').prepend(output);
+    
+                // give images 2 seconds to load before calculate height
+                setTimeout(function() {
+                    var scroll_top = $(window).scrollTop();
+                    $('.update').removeClass('hidden');
+                    // add .feed-item margin-bottom 12px
+                    $(window).scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
+    
+                    // display feed update notification
+                    $('#update-notification').addClass('notification-show');
+                }, 2000);
             }
             else {
-                var origin_author = new Author(feed_item['target']['origin_pin']['author']);
-                output += '<div class="author">' + origin_author.get_name_html() + '</div>';
-
-                var origin_pin_item = {};
-                origin_pin_item['target'] = feed_item['target']['origin_pin'];
-                var origin_pin = new Pin(origin_pin_item);
-                output += '<div class="origin-pin-content">' + 
-                          origin_pin.get_content_html() + '</div>';
+                // make recursive call to fetch more update
+                self._fetch_feed_update(fetch_after_id, fetch_offset + 10, output, server_latest_pin);
             }
-            output += '</div>';
-        }
-
-        output += '</div></div>';
+        });
     }
-    return output;
-}
 
-function report_latest_viewed_pin_id() {
-    var latest_local_pin_id = localStorage.getItem('latest_local_pin_id');
-    var options = {
-        method: 'POST',
-        url: constants.PIN_VIEWS_REPORT_URL,
-        headers: auth.get_authorized_request_header(),
-        form: { pin_ids: latest_local_pin_id },
-        jar: true
-    };
-    request(options, function(error, response, body) {});
-}
+    _report_latest_viewed_pin_id() {
+        var options = {
+            method: 'POST',
+            url: constants.PIN_VIEWS_REPORT_URL,
+            headers: auth.get_authorized_request_header(),
+            form: { 'pin_ids': this.latest_local_pin_id },
+            jar: true
+        };
+        request(options, function(error, response, body) {});
+    }
 
-function display_self_avatar() {
-    var options = {
-        method: 'GET',
-        url: constants.SELF_URL,
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var body_dict = JSON.parse(body);
-        if ("error" in body_dict) {
-            display_self_avatar();
+    _append_to_feed(feed_array) {
+        var output = '';
+        var array_length = feed_array.length;
+        for (var i = 0; i < array_length; i++) {
+            var feed_item_dict = feed_array[i];
+            output += this._generate_feed_item_html(feed_item_dict);
         }
-        var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
-        $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
+        $('.feed').append(output);
 
-        // store self id
-        localStorage.setItem('self_id', body_dict['id']);
-    });
-}
+        this.oldest_local_pin_id = feed_array[array_length - 1]['target']['id'];
+        this.feed_offset += 10;
+    }
 
-exports.delete_pin = function(id) {
-    var options = {
-        method: 'DELETE',
-        url: constants.PIN_POST_URL + '/' + id,
-        headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        if (JSON.parse(body)['success']) {
-            var selector = '[data-id="' + id + '"]';
-            $(selector).remove();
+    _generate_feed_item_html(feed_item) {
+        var output = '';
+        if (feed_item['type'] == 'moment') {
+            var pin = new Pin(feed_item);
+            var author = new Author(feed_item['target']['author']);
+    
+            output += '<div class="feed-item" data-id="' + pin.get_id() + '">';
+            output += '<div class="author">' + author.get_avatar_html() + 
+                      author.get_name_html() + '</div>';        
+            output += '<div class="time" data-time="' + pin.get_time() + '"></div>';
+            output += '<div class="statistics">';
+            if (author.id == this.self_user_id) {
+                // include delete button
+                output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
+            }
+            output += pin.get_comments_count_html() +
+                      pin.get_repins_html() + pin.get_likes_html() + '</div>';
+    
+            output += '<div class="content">' + pin.get_content_html();
+    
+            // if this pin is a repin
+            if (feed_item['target']['origin_pin']) {
+                output += '<div class="origin-pin">';
+                if (feed_item['target']['origin_pin']['is_deleted']) {
+                    output += feed_item['target']['origin_pin']['deleted_reason'];
+                }
+                else {
+                    var origin_author = new Author(feed_item['target']['origin_pin']['author']);
+                    output += '<div class="author">' + origin_author.get_name_html() + '</div>';
+    
+                    var origin_pin_item = {};
+                    origin_pin_item['target'] = feed_item['target']['origin_pin'];
+                    var origin_pin = new Pin(origin_pin_item);
+                    output += '<div class="origin-pin-content">' + 
+                              origin_pin.get_content_html() + '</div>';
+                }
+                output += '</div>';
+            }
+    
+            output += '</div></div>';
         }
-    });
+        return output;
+    }
+
+    static delete_pin(id) {
+        var options = {
+            method: 'DELETE',
+            url: constants.PIN_POST_URL + '/' + id,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        request(options, function(error, response, body) {
+            if (JSON.parse(body)['success']) {
+                var selector = '[data-id="' + id + '"]';
+                $(selector).remove();
+            }
+        });
+    }
 }
