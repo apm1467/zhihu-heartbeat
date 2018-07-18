@@ -53,37 +53,37 @@ function log_in() {
 
 // update post time of each feed-item every second
 setInterval(function() {
+    const now = Math.round(Date.now() / 1000);
+
     $('.time').each(function () {
-        var seconds = parseInt($(this).attr('data-time'));
-        seconds += 1;
-        $(this).text(get_relative_time_str(seconds));
+        var post_time = parseInt($(this).attr('data-time'));
+        post_time += 1;
+        $(this).text(get_relative_time_str(post_time, now));
     });
 }, 1000);
 
-// seconds: int
-function get_relative_time_str(seconds) {
-    const sec_per_min = 60;
-    const sec_per_hour = sec_per_min * 60;
-    const sec_per_day = sec_per_hour * 24;
-    const sec_per_week = sec_per_day * 7;
+const sec_per_min = 60;
+const sec_per_hour = sec_per_min * 60;
+const sec_per_day = sec_per_hour * 24;
+const sec_per_week = sec_per_day * 7;
 
-    var now = Math.round(Date.now() / 1000);
-    var diff = now - seconds;
+function get_relative_time_str(post_time, now) {
+    var diff = now - post_time;
 
     if (diff < sec_per_min) {
-        return diff + ' 秒前';   
+        return diff + ' 秒前';
     }
     else if (diff < sec_per_hour) {
-        return Math.round(diff / sec_per_min) + ' 分前';   
+        return Math.round(diff / sec_per_min) + ' 分前';
     }
     else if (diff < sec_per_day ) {
-        return Math.round(diff / sec_per_hour) + ' 时前';   
+        return Math.round(diff / sec_per_hour) + ' 时前';
     }
     else if (diff < sec_per_week) {
-        return Math.round(diff / sec_per_day) + ' 日前';   
+        return Math.round(diff / sec_per_day) + ' 日前';
     }
     else {
-        date = new Date(seconds * 1000);
+        date = new Date(post_time * 1000);
         return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
     }
 }
