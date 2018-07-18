@@ -1,5 +1,8 @@
 var request = require('request');
 const constants = require('./constants');
+const remote = require('electron').remote;
+
+const current_window = remote.getCurrentWindow();
 
 
 exports.check_captcha = check_captcha;
@@ -93,8 +96,8 @@ function authenticate(email, password) {
         $('.login-form').addClass('hidden');
         $('.logo').removeClass('hidden');
 
-        const feed = require('./feed');
-        feed.fetch_initial_feed();
+        // notify renderer
+        current_window.webContents.send('auth_finished');
     });
 }
 
@@ -117,7 +120,7 @@ function reload_login_page(message) {
 
 
 exports.get_authorized_request_header = function () {
-    // append access_token to base_request_header => authorized_request_header
+    // append access_token to base_request_header
     var access_token = localStorage.getItem('access_token');
     var header = constants.BASE_HEADER;
     header['Authorization'] = 'Bearer ' + access_token;
