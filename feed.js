@@ -181,6 +181,7 @@ module.exports = class Feed {
         this.latest_local_pin_time = 0;
         this.oldest_local_pin_id = '';
         this.self_user_id = '';
+        this.server_latest_pin = null; // a Pin object
     }
 
     start() {
@@ -314,7 +315,9 @@ module.exports = class Feed {
 
                         // get the first pin, and fetch the rest in _fetch_feed_update()
                         var output = self._generate_feed_item_html(feed_item);
-                        self._fetch_feed_update(pin.get_id(), 0, output, pin);
+                        self._fetch_feed_update(pin.get_id(), 0, output);
+
+                        self.server_latest_pin = pin;
                     }
                     break;
                 }
@@ -322,8 +325,7 @@ module.exports = class Feed {
         });
     }
 
-    // fetch_after_id: str; fetch_offset: int; server_latest_pin: Pin
-    _fetch_feed_update(fetch_after_id, fetch_offset, output, server_latest_pin) {
+    _fetch_feed_update(fetch_after_id, fetch_offset, output) {
         var options = {
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
@@ -356,8 +358,8 @@ module.exports = class Feed {
                 }
             }
             if (stop_fetching) {
-                self.latest_local_pin_id = server_latest_pin.get_id();
-                self.latest_local_pin_time = server_latest_pin.get_time();
+                self.latest_local_pin_id = self.server_latest_pin.get_id();
+                self.latest_local_pin_time = self.server_latest_pin.get_time();
                 self._report_latest_viewed_pin_id();
 
                 output = '<div class="update hidden">' + output + '</div>';
@@ -376,7 +378,7 @@ module.exports = class Feed {
             }
             else {
                 // make recursive call to fetch more update
-                self._fetch_feed_update(fetch_after_id, fetch_offset + 10, output, server_latest_pin);
+                self._fetch_feed_update(fetch_after_id, fetch_offset + 10, output);
             }
         });
     }
