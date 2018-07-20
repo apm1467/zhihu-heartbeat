@@ -1,8 +1,7 @@
 var request = require('request');
 const constants = require('./constants');
-const remote = require('electron').remote;
 
-const current_window = remote.getCurrentWindow();
+const current_window = require('electron').remote.getCurrentWindow();
 
 
 exports.check_captcha = check_captcha;
@@ -63,7 +62,6 @@ exports.get_access_token = function(email, password, captcha_text) {
         });
     }
     else {
-        // authenticate directly
         authenticate(email, password);
     }
 }
@@ -111,11 +109,9 @@ function calculate_signature(auth_data) {
     return hmac.digest('hex');
 }
 
-function reload_login_page(message) {
-    localStorage.setItem('login_error', message);
-
-    var remote = require('electron').remote;
-    remote.getCurrentWindow().reload();
+function reload_login_page(err_message) {
+    localStorage.setItem('login_error', err_message);
+    current_window.reload();
 }
 
 

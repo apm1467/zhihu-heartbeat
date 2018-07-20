@@ -285,7 +285,6 @@ module.exports = class Feed {
         request(options, function(error, response, body) {
             var feed_array = JSON.parse(body)['data'];
             self._append_to_feed(feed_array);
-            console.log(feed_array);
 
             // re-enable feed scroll event after fetch
             self._enable_feed_scroll_event();
@@ -308,7 +307,7 @@ module.exports = class Feed {
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
                     console.log(pin.get_id());
-    
+
                     // add extra 10 seconds tolerance when checking
                     if (pin.get_id() != self.latest_local_pin_id &&
                         pin.get_time() + 10 > self.latest_local_pin_time) {
@@ -337,15 +336,13 @@ module.exports = class Feed {
             var stop_fetching = false;
             var pin_time;
             console.log(fetch_after_id);
-            console.log(self.latest_local_pin_id);
             console.log(fetch_offset);
     
             var array_length = feed_array.length;
             for (var i = 0; i < array_length; i++) {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
-                   var pin = new Pin(feed_item);
-    
+                    var pin = new Pin(feed_item);
                     if (pin.get_id() == self.latest_local_pin_id ||
                         pin.get_time() + 10 <= self.latest_local_pin_time) {
     
