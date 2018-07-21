@@ -180,40 +180,14 @@ module.exports = class Feed {
         this.latest_local_pin_id = '';
         this.latest_local_pin_time = 0;
         this.oldest_local_pin_id = '';
-        this.self_user_id = '';
         this.server_latest_pin = null; // a Pin object
     }
 
     start() {
         // async callback order:
-        // _get_self_user() => _fetch_initial_feed() => _enable_feed_scroll_event()
-
-        this._get_self_user();
-    }
-
-    _get_self_user() {
-        var options = {
-            method: 'GET',
-            url: constants.SELF_URL,
-            headers: auth.get_authorized_request_header(),
-            jar: true
-        };
-        var self = this;
-        request(options, function(error, response, body) {
-            var body_dict = JSON.parse(body);
-            if ("error" in body_dict) {
-                self._get_self_user();
-            }
-
-            self.self_user_id = body_dict['id'];
-
-            // display self avatar
-            var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
-            $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
-
-            // start fetching initial feed
-            self._fetch_initial_feed();
-        });
+        // _fetch_initial_feed() => _enable_feed_scroll_event()
+        this._fetch_initial_feed();
+        display_self_avatar();
     }
 
     _fetch_initial_feed() {
@@ -465,4 +439,23 @@ module.exports = class Feed {
             }
         });
     }
+}
+
+
+function display_self_avatar() {
+    var options = {
+        method: 'GET',
+        url: constants.SELF_URL,
+        headers: auth.get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var body_dict = JSON.parse(body);
+        if ("error" in body_dict) {
+            display_self_avatar();
+        }
+
+        var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
+        $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
+    });
 }

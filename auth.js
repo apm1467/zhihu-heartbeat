@@ -27,7 +27,6 @@ function get_captcha() {
         jar: true
     };
     request(options, function(error, response, body) {
-        console.log(response);
         if ('error' in JSON.parse(body)) {
             check_captcha();
             return;
@@ -94,6 +93,26 @@ function authenticate(email, password) {
         $('.login-form').addClass('hidden');
         $('.logo').removeClass('hidden');
 
+        get_self_user_id();
+    });
+}
+
+function get_self_user_id() {
+    var options = {
+        method: 'GET',
+        url: constants.SELF_URL,
+        headers: get_authorized_request_header(),
+        jar: true
+    };
+    request(options, function(error, response, body) {
+        var body_dict = JSON.parse(body);
+        if ("error" in body_dict) {
+            get_self_user_id();
+        }
+
+        self_user_id = body_dict['id'];
+        localStorage.setItem('self_user_id', self_user_id);
+
         // notify renderer
         current_window.webContents.send('auth_finished');
     });
@@ -115,7 +134,8 @@ function reload_login_page(err_message) {
 }
 
 
-exports.get_authorized_request_header = function () {
+exports.get_authorized_request_header = get_authorized_request_header;
+function get_authorized_request_header() {
     // append access_token to base_request_header
     var access_token = localStorage.getItem('access_token');
     var header = constants.BASE_HEADER;
