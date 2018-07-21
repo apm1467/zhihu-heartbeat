@@ -17,6 +17,8 @@
     "electron-reloader": "^0.2.0"
   },
   "dependencies": {
+    "hls.js": "^0.10.1",
+    "jquery": "^3.3.1",
     "request": "^2.87.0"
   },
   "build": {
