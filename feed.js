@@ -288,7 +288,7 @@ module.exports = class Feed {
                         pin.get_time() + 10 > self.latest_local_pin_time) {
 
                         // get the first pin, and fetch the rest in _fetch_feed_update()
-                        var output = self._generate_feed_item_html(feed_item);
+                        var output = generate_feed_item_html(feed_item);
                         self._fetch_feed_update(pin.get_id(), 0, output);
 
                         self.server_latest_pin = pin;
@@ -327,7 +327,7 @@ module.exports = class Feed {
                     }
                     else {
                         fetch_after_id = pin.get_id();
-                        output += self._generate_feed_item_html(feed_item);
+                        output += generate_feed_item_html(feed_item);
                     }
                 }
             }
@@ -373,56 +373,12 @@ module.exports = class Feed {
         var array_length = feed_array.length;
         for (var i = 0; i < array_length; i++) {
             var feed_item_dict = feed_array[i];
-            output += this._generate_feed_item_html(feed_item_dict);
+            output += generate_feed_item_html(feed_item_dict);
         }
         $('.feed').append(output);
 
         this.oldest_local_pin_id = feed_array[array_length - 1]['target']['id'];
         this.feed_offset += 10;
-    }
-
-    _generate_feed_item_html(feed_item) {
-        var output = '';
-        if (feed_item['type'] == 'moment') {
-            var pin = new Pin(feed_item);
-            var author = new Author(feed_item['target']['author']);
-    
-            output += '<div class="feed-item" data-id="' + pin.get_id() + '">';
-            output += '<div class="author">' + author.get_avatar_html() + 
-                      author.get_name_html() + '</div>';        
-            output += '<div class="time" data-time="' + pin.get_time() + '"></div>';
-            output += '<div class="statistics">';
-            if (author.id == this.self_user_id) {
-                // include delete button
-                output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
-            }
-            output += pin.get_comments_count_html() +
-                      pin.get_repins_html() + pin.get_likes_html() + '</div>';
-    
-            output += '<div class="content">' + pin.get_content_html();
-    
-            // if this pin is a repin
-            if (feed_item['target']['origin_pin']) {
-                output += '<div class="origin-pin">';
-                if (feed_item['target']['origin_pin']['is_deleted']) {
-                    output += feed_item['target']['origin_pin']['deleted_reason'];
-                }
-                else {
-                    var origin_author = new Author(feed_item['target']['origin_pin']['author']);
-                    output += '<div class="author">' + origin_author.get_name_html() + '</div>';
-    
-                    var origin_pin_item = {};
-                    origin_pin_item['target'] = feed_item['target']['origin_pin'];
-                    var origin_pin = new Pin(origin_pin_item);
-                    output += '<div class="origin-pin-content">' + 
-                              origin_pin.get_content_html() + '</div>';
-                }
-                output += '</div>';
-            }
-    
-            output += '</div></div>';
-        }
-        return output;
     }
 
     static delete_pin(id) {
@@ -458,4 +414,50 @@ function display_self_avatar() {
         var avatar = body_dict['avatar_url'].replace('_s', ''); // get large image
         $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
     });
+}
+
+function generate_feed_item_html(feed_item) {
+    var output = '';
+    if (feed_item['type'] == 'moment') {
+        var pin = new Pin(feed_item);
+        var author = new Author(feed_item['target']['author']);
+
+        output += '<div class="feed-item" data-id="' + pin.get_id() + '">';
+        output += '<div class="author">' + author.get_avatar_html() + 
+                  author.get_name_html() + '</div>';        
+        output += '<div class="time" data-time="' + pin.get_time() + '"></div>';
+        output += '<div class="statistics">';
+
+        const self_user_id = localStorage.getItem('self_user_id');
+        if (author.id == self_user_id) {
+            // include delete button
+            output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
+        }
+        output += pin.get_comments_count_html() +
+                  pin.get_repins_html() + pin.get_likes_html() + '</div>';
+
+        output += '<div class="content">' + pin.get_content_html();
+
+        // if this pin is a repin
+        if (feed_item['target']['origin_pin']) {
+            output += '<div class="origin-pin">';
+            if (feed_item['target']['origin_pin']['is_deleted']) {
+                output += feed_item['target']['origin_pin']['deleted_reason'];
+            }
+            else {
+                var origin_author = new Author(feed_item['target']['origin_pin']['author']);
+                output += '<div class="author">' + origin_author.get_name_html() + '</div>';
+
+                var origin_pin_item = {};
+                origin_pin_item['target'] = feed_item['target']['origin_pin'];
+                var origin_pin = new Pin(origin_pin_item);
+                output += '<div class="origin-pin-content">' + 
+                          origin_pin.get_content_html() + '</div>';
+            }
+            output += '</div>';
+        }
+
+        output += '</div></div>';
+    }
+    return output;
 }
