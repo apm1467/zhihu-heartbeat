@@ -275,7 +275,19 @@ module.exports = class Feed {
         };
         var self = this;
         request(options, function(error, response, body) {
-            var feed_array = JSON.parse(body)['data'];
+            var feed_array;
+            try {
+                feed_array = JSON.parse(body)['data'];
+            }
+            catch (err) {
+                console.warn(body);
+                return;
+            }
+            if (typeof feed_array == 'undefined') {
+                console.warn(body);
+                return;
+            }
+
             var array_length = feed_array.length;
             for (var i = 0; i < array_length; i++) {
                 var feed_item = feed_array[i];
