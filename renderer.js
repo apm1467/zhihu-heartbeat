@@ -6,6 +6,7 @@ const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
 const Feed = require('./feed');
 const publish = require('./publish');
+const constants = require('./constants');
 
 const current_window = remote.getCurrentWindow();
 
@@ -48,6 +49,35 @@ function log_in() {
 
     $('.login-form').removeClass('hidden');
 }
+
+// ------------------------------------------------------------
+
+// check app update
+var current_version = 'v' + app.getVersion();
+var options = {
+    method: 'GET',
+    url: constants.GITHUB_CHECK_UPDATE_URL,
+    headers: {'User-Agent': 'apm1467/zhihu-heartbeat'}
+};
+request(options, function(error, response, body) {
+    var latest_version = JSON.parse(body)['tag_name'];
+    if (current_version != latest_version) {
+        var prompt = '当前版本 ' + current_version + '，' + 
+                     '最新版本 ' + latest_version + '，要去下载吗？';
+        var options = {
+            title: '检查更新',
+            buttons: ['去下载', '取消'],
+            defaultId: 0,
+            cancelId: 1,
+            message: prompt
+        }
+        dialog.showMessageBox(current_window, options, function(response) {
+            if (response === 0) {
+                shell.openExternal(constants.GITHUB_DOWNLOAD_URL);
+            }
+        }); 
+    }
+});
 
 // ------------------------------------------------------------
 

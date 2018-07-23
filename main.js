@@ -1,12 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const request = require('request');
-const {app, BrowserWindow, Menu, dialog} = require('electron');
+const {app, BrowserWindow, Menu} = require('electron');
 const shell = require('electron').shell;
 try {
     require('electron-reloader')(module);
 } catch (err) {}
-const constants = require('./constants');
 
 const window_bounds_path = path.join(app.getPath('userData'), 'window_bounds.json');
 
@@ -155,33 +153,6 @@ app.once('ready', function() {
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-});
-
-// check update
-app.on('ready', function() {
-    var current_version = 'v' + app.getVersion();
-    var options = {
-        method: 'GET',
-        url: constants.GITHUB_CHECK_UPDATE_URL,
-        headers: {'User-Agent': 'apm1467/zhihu-heartbeat'}
-    };
-    request(options, function(error, response, body) {
-        var latest_version = JSON.parse(body)['tag_name'];
-        if (current_version != latest_version) {
-            var prompt = '当前版本 ' + current_version + '，' + 
-                         '最新版本 ' + latest_version + '，要去下载吗？';
-            var options = {
-                title: '检查更新',
-                buttons: ['去下载', '取消'],
-                defaultId: 0,
-                cancelId: 1,
-                message: prompt
-            }
-            if (dialog.showMessageBox(options) === 0) {
-                shell.openExternal(constants.GITHUB_DOWNLOAD_URL);
-            }
-        }
-    });
 });
 
 app.on('activate', function() {
