@@ -1,4 +1,4 @@
-var request = require('request');
+const request = require('request');
 const constants = require('./constants');
 const auth = require('./auth');
 
@@ -38,9 +38,10 @@ class Pin {
         }
 
         // handle text repin
-        if (feed_item['feed_type'] == 'repin' || 
-            feed_item['feed_type'] == 'repin_with_comment') {
-
+        if (
+            feed_item['feed_type'] == 'repin' || 
+            feed_item['feed_type'] == 'repin_with_comment'
+        ) {
             var origin_pin_id = feed_item['target']['origin_pin']['id'];
             var repin_id = feed_item['target']['repin']['id'];
 
@@ -160,7 +161,7 @@ class Pin {
                 }
                 output += '</div>'; // img-grid
             }
-            output += '</div>';
+            output += '</div>'; // images
         }
 
         if (this.video) {
@@ -245,7 +246,7 @@ module.exports = class Feed {
             }
 
             // Scroll to top to clear feed update notification.
-            if (scroll_position <= 5) {
+            else if (scroll_position <= 5) {
                 $('#update-notification').removeClass('notification-show');
             }
         });
@@ -261,10 +262,15 @@ module.exports = class Feed {
         };
         var self = this;
         request(options, function(error, response, body) {
-            var feed_array = JSON.parse(body)['data'];
-            self._append_to_feed(feed_array);
+            try {
+                var feed_array = JSON.parse(body)['data'];
+                self._append_to_feed(feed_array);   
+            }
+            catch (err) {
+                console.warn(body);
+            }
 
-            // re-enable feed scroll event after fetch
+            // re-enable feed scroll event
             self._enable_feed_scroll_event();
         });
     }
@@ -278,20 +284,15 @@ module.exports = class Feed {
         };
         var self = this;
         request(options, function(error, response, body) {
-            var feed_array;
             try {
-                feed_array = JSON.parse(body)['data'];
+                var feed_array = JSON.parse(body)['data'];
+                var array_length = feed_array.length;
             }
             catch (err) {
                 console.warn(body);
-                return;
-            }
-            if (typeof feed_array == 'undefined') {
-                console.warn(body);
-                return;
+                return; // give up
             }
 
-            var array_length = feed_array.length;
             for (var i = 0; i < array_length; i++) {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
@@ -326,7 +327,6 @@ module.exports = class Feed {
             var feed_array = JSON.parse(body)['data'];
             var stop_fetching = false;
             var pin_time;
-            console.log(fetch_after_id);
             console.log(fetch_offset);
     
             var array_length = feed_array.length;
@@ -441,15 +441,16 @@ function generate_feed_item_html(feed_item) {
         output += '<div class="author">' + author.get_avatar_html() + 
                   author.get_name_html() + '</div>';        
         output += '<div class="time" data-time="' + pin.get_time() + '"></div>';
-        output += '<div class="statistics">';
 
+        output += '<div class="statistics">';
         const self_user_id = localStorage.getItem('self_user_id');
         if (author.id == self_user_id) {
             // include delete button
             output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
         }
         output += pin.get_comments_count_html() +
-                  pin.get_repins_html() + pin.get_likes_html() + '</div>';
+                  pin.get_repins_html() + pin.get_likes_html();
+        output += '</div>'; // statistics
 
         output += '<div class="content">' + pin.get_content_html();
 
@@ -469,10 +470,11 @@ function generate_feed_item_html(feed_item) {
                 output += '<div class="origin-pin-content">' + 
                           origin_pin.get_content_html() + '</div>';
             }
-            output += '</div>';
+            output += '</div>'; // origin-pin
         }
 
-        output += '</div></div>';
+        output += '</div>'; // content
+        output += '</div>'; // feed-item
     }
     return output;
 }

@@ -1,4 +1,4 @@
-var request = require('request');
+const request = require('request');
 const constants = require('./constants');
 
 const current_window = require('electron').remote.getCurrentWindow();
