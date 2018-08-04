@@ -155,7 +155,10 @@ class Pin {
                 if (output.slice(-17) == '<div class="row">') {
                     output = output.slice(0, -17);
                 }
-                output += '</div>';
+                else {
+                    output += '</div>'; // row
+                }
+                output += '</div>'; // img-grid
             }
             output += '</div>';
         }
