@@ -174,7 +174,7 @@ $(document).on('click', '.self-avatar', function(event) {
 const shell = require('electron').shell;
 $(document).on('click', 'a[href^="http"]', function(event) {
     event.preventDefault();
-    shell.openExternal(this.href);
+    shell.openExternal(this.href, {activate: false});
 });
 
 // ------------------------------------------------------------
