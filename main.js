@@ -50,16 +50,16 @@ app.on('ready', function() {
                 return false;
             }
         });
+
+        app.on('activate', function() {
+            main_window.show();
+        });
     }
 
     // save window bounds
     main_window.on('close', function(event) {
         var bounds = main_window.getBounds();
         fs.writeFileSync(window_bounds_path, JSON.stringify(bounds));
-    });
-
-    main_window.on('closed', function() {
-        main_window = null;
     });
 });
 
@@ -153,12 +153,6 @@ app.once('ready', function() {
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-});
-
-app.on('activate', function() {
-    if (process.platform == 'darwin') {
-        main_window.show();
-    }
 });
 
 app.on('window-all-closed', function() {
