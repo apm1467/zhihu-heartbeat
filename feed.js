@@ -31,42 +31,36 @@ class Pin {
 
         var content_array = feed_item['target']['content'];
 
-        // handle text
+        // handle text & text repin
         this.text = '';
-        if (content_array[0]['type'] == 'text') {
-            this.text = content_array[0]['own_text'];
-        }
-
-        // handle text repin
         if (
+            content_array[0]['type'] == 'text' ||
             feed_item['feed_type'] == 'repin' || 
             feed_item['feed_type'] == 'repin_with_comment'
         ) {
-            var origin_pin_id = feed_item['target']['origin_pin']['id'];
-            var repin_id = feed_item['target']['repin']['id'];
+            this.text = content_array[0]['content']
+                .replace(/data-repin=["'][^"']*["']/g, 'class="repin_account"') // mark repin
+                .replace(/\sdata-\w+=["'][^"']*["']/g, '') // remove data-* attributes
+                .replace(/<\/a>:\s/g, '</a>：') // use full-width colon
+                .replace(/\sclass=["']member_mention["']/g, '')
+                .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '');
 
-            // there is text repin only when origin_pin and repin differ
-            if (origin_pin_id != repin_id) {
-                this.text = content_array[0]['content']
-                    .replace(/<\/a>:\s/g, '</a>：') // use full-width colon
-                    .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '')
-                    .replace(/\sdata-\w+=["'][^"']*["']/g, ''); // remove data-* attributes
+            // add repin sign before account names
+            const repin_sign = '<i class="fas fa-retweet"></i>';
 
-                /*
-                    add repin sign before account names
+            /*
+                an account name without data-* attributes looks like this:
+                <a href="..." class="repin_account">name</a>
 
-                    an account name without data-* attributes looks like this:
-                    <a href="..." class="member_mention">name</a>
+                2 possibilities: class comes first or href comes first 
+            */
 
-                    with 2 possibilities: class name comes first for url comes first 
-                */
-                var repin_sign = '<i class="fas fa-retweet"></i>';
+            // case 1: class first
+            this.text = this.text.replace(/<a\sclass="repin_account"/g, repin_sign + '<a');
 
-                // 1. possibility: class name first
-                this.text = this.text.replace(/<a\sclass=["']member_mention["']/g, repin_sign + '<a');
-
-                // 2. possibility: url first
-                var urls = this.text.match(/<a\shref=["'][^"']*["']\sclass=["']member_mention["']/g);
+            // case 2: href first
+            var urls = this.text.match(/<a\shref=["'][^"']*["']\sclass="repin_account"/g);
+            if (urls) {
                 for (var i = 0; i < urls.length; i++) {
                     this.text = this.text.replace(urls[i], repin_sign + urls[i]);
                 }
