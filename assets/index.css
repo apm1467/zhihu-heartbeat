@@ -1,7 +1,6 @@
 body {
     color: rgb(222, 222, 222);
     font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
-    overflow-x: hidden;
     margin: 0;
 }
 img {
@@ -132,6 +131,15 @@ a {
 .login-error {
     height: 0;
     transform: translate(0, 40px);
+}
+.feed-container {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 .feed {
     margin-top: 15px;

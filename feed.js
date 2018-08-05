@@ -230,17 +230,18 @@ module.exports = class Feed {
 
     _enable_feed_scroll_event() {
         var self = this;
-        $(window).scroll(function () {
-            var page_length = $(document).height();
-            var scroll_position = $(window).scrollTop();
-    
+        var container = $('.feed-container');
+        container.scroll(function () {
+            var page_length = container[0].scrollHeight;
+            var scroll_position = container.scrollTop();
+
             // Scroll down to fetch older feed.
             if (page_length - scroll_position < 3000) {
                 self._fetch_older_feed();
     
                 // Unbind scroll event so only one fetch request is sent.
                 // The scroll event will be re-enabled in _fetch_older_feed().
-                $(window).off('scroll');
+                container.off('scroll');
             }
 
             // Scroll to top to clear feed update notification.
@@ -354,10 +355,11 @@ module.exports = class Feed {
     
                 // give images 2 seconds to load before calculate height
                 setTimeout(function() {
-                    var scroll_top = $(window).scrollTop();
+                    var container = $('.feed-container');
+                    var scroll_top = container.scrollTop();
                     $('.update').removeClass('hidden');
                     // add .feed-item margin-bottom 12px
-                    $(window).scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
+                    container.scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
     
                     // display feed update notification
                     $('#update-notification').addClass('notification-show');
