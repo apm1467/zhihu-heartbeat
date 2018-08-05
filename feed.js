@@ -186,6 +186,15 @@ module.exports = class Feed {
         // _fetch_initial_feed() => _enable_feed_scroll_event()
         this._fetch_initial_feed();
         display_self_avatar();
+
+        // check feed update every few seconds
+        var self = this;
+        setInterval(
+            function() {
+                self._check_update();
+            }, 
+            constants.FEED_UPDATE_INTERVAL
+        );
     }
 
     _fetch_initial_feed() {
@@ -213,11 +222,6 @@ module.exports = class Feed {
 
             self._report_latest_viewed_pin_id();
             self._append_to_feed(feed_array);
-
-            // check feed update every few time
-            setInterval(function() {
-                self._check_feed_update();
-            }, constants.FEED_UPDATE_INTERVAL);
 
             // enable feed scroll event
             self._enable_feed_scroll_event();
@@ -269,7 +273,7 @@ module.exports = class Feed {
         });
     }
 
-    _check_feed_update() {
+    _check_update() {
         var options = {
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
@@ -297,9 +301,9 @@ module.exports = class Feed {
                     if (pin.get_id() != self.latest_local_pin_id &&
                         pin.get_time() + 10 > self.latest_local_pin_time) {
 
-                        // get the first pin, and fetch the rest in _fetch_feed_update()
+                        // get the first pin, and fetch the rest in _fetch_update()
                         var output = generate_feed_item_html(feed_item);
-                        self._fetch_feed_update(pin.get_id(), 0, output);
+                        self._fetch_update(pin.get_id(), 0, output);
 
                         self.server_latest_pin = pin;
                     }
@@ -309,7 +313,7 @@ module.exports = class Feed {
         });
     }
 
-    _fetch_feed_update(fetch_after_id, fetch_offset, output) {
+    _fetch_update(fetch_after_id, fetch_offset, output) {
         var options = {
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
@@ -361,7 +365,7 @@ module.exports = class Feed {
             }
             else {
                 // make recursive call to fetch more update
-                self._fetch_feed_update(fetch_after_id, fetch_offset + 10, output);
+                self._fetch_update(fetch_after_id, fetch_offset + 10, output);
             }
         });
     }
