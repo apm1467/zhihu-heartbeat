@@ -41,7 +41,7 @@ class Pin {
             this.text = content_array[0]['content']
                 .replace(/data-repin=["'][^"']*["']/g, 'class="repin_account"') // mark repin
                 .replace(/\sdata-\w+=["'][^"']*["']/g, '') // remove data-* attributes
-                .replace(/<\/a>:\s/g, '</a>：') // use full-width colon
+                .replace(/<\/a>:\s?/g, '</a>：') // use full-width colon
                 .replace(/\sclass=["']member_mention["']/g, '')
                 .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '');
 
@@ -172,7 +172,7 @@ class Pin {
 }
 
 
-module.exports = class Feed {
+class Feed {
     constructor() {
         this.feed_offset = 0; // needed when fetching older feed
         this.latest_local_pin_id = '';
@@ -413,6 +413,9 @@ module.exports = class Feed {
 }
 
 
+module.exports = { Pin, Feed };
+
+
 function display_self_avatar() {
     var options = {
         method: 'GET',
@@ -456,17 +459,20 @@ function generate_feed_item_html(feed_item) {
 
         // if this pin is a repin
         if (feed_item['target']['origin_pin']) {
-            output += '<div class="origin-pin">';
             if (feed_item['target']['origin_pin']['is_deleted']) {
+                output += '<div class="origin-pin">';
                 output += feed_item['target']['origin_pin']['deleted_reason'];
             }
             else {
-                var origin_author = new Author(feed_item['target']['origin_pin']['author']);
-                output += '<div class="author">' + origin_author.get_name_html() + '</div>';
-
                 var origin_pin_item = {};
                 origin_pin_item['target'] = feed_item['target']['origin_pin'];
                 var origin_pin = new Pin(origin_pin_item);
+
+                output += '<div class="origin-pin" data-id="' + origin_pin.get_id() + '">';
+
+                var origin_author = new Author(feed_item['target']['origin_pin']['author']);
+                output += '<div class="author">' + origin_author.get_name_html() + '</div>';
+                
                 output += '<div class="origin-pin-content">' + 
                           origin_pin.get_content_html() + '</div>';
             }

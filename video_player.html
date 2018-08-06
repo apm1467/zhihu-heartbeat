@@ -3,18 +3,25 @@
     <video id="video" width="100%" height="100%" controls></video>
 
     <script>
-        // get video url message from renderer.js
-        var ipc = require('electron').ipcRenderer;
-        ipc.on('video_url', function (event, url) {
+        const ipc = require('electron').ipcRenderer;
+        const Hls = require('hls.js');
+        const {BrowserWindow} = require('electron').remote;
 
-            // load video
-            var video = document.getElementById('video');
-            const Hls = require('hls.js');
-            var hls = new Hls();
-            hls.loadSource(url);
+        // get video url from renderer
+        ipc.on('video', function(event, video_url, window_id) {
+            const video = document.getElementById('video');
+            const hls = new Hls();
+            hls.loadSource(video_url);
             hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 video.play();
+            });
+
+            // report back on error
+            const ipc_event = event;
+            hls.on(Hls.Events.ERROR, function(event, data) {
+                console.log('video_outdated');
+                BrowserWindow.fromId(window_id).webContents.send('video_outdated');
             });
         });
     </script>

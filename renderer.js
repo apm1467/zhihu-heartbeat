@@ -4,9 +4,10 @@ const electron = require('electron');
 const remote = electron.remote;
 const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
-const Feed = require('./feed');
+const {Pin, Feed} = require('./feed');
 const publish = require('./publish');
 const constants = require('./constants');
+const auth = require('./auth');
 
 const current_window = remote.getCurrentWindow();
 
@@ -281,8 +282,7 @@ $(document).on('contextmenu', '.img', function(event) {
     save_img_menu.popup(current_window);
 });
 
-// accept a jQuery object
-function get_img_url(img_obj) {
+function get_img_url(img_obj) { // accept jQuery object
     var img_url;
     if (img_obj.hasClass('single-img')) {
         img_url = img_obj.attr('src');
@@ -301,6 +301,7 @@ function get_img_url(img_obj) {
 $(document).on('click', '.video', function(event) {
     $(this).addClass('darkened');
 
+    var pin_id = $(this).parent().parent().attr('data-id');
     var video_url = $(this).attr('data-url');
     var width = parseInt($(this).attr('data-width'));
     var height = parseInt($(this).attr('data-height'));
@@ -317,15 +318,27 @@ $(document).on('click', '.video', function(event) {
 
     // pass video url to player window
     win.webContents.on('did-finish-load', () => {
-        win.webContents.send('video_url', video_url);
+        win.webContents.send('video', video_url, current_window.id);
     });
 
-    win.once('ready-to-show', function () {
+    win.once('ready-to-show', function() {
         win.show();
         $('.video').removeClass('darkened'); // remove darkening
     });
 
-    win.on('closed', function () {
-        win = null;
+    // refresh video url on error
+    ipc.on('video_outdated', function(event) {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_URL + '/' + pin_id,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        request(options, function(error, response, body) {
+            var origin_pin_item = {};
+            origin_pin_item['target'] = JSON.parse(body);
+            var video_url = (new Pin(origin_pin_item)).video;
+            win.webContents.send('video', video_url, current_window.id);
+        });
     });
 });
