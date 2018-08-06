@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <script>window.$ = window.jQuery = require('jquery');</script>
     <link rel="stylesheet" href="./assets/fontawesome-5.1.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="./assets/index.css" />
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="title-bar"><div class="logo"><i class="fas fa-heartbeat"></i></div></div>
     <div id="update-notification">有更新</div>
 
     <div class="login-form hidden">
-      <h1>登录知乎</h1>
-      <div class="login-data">
-        <input type="text" class="email"  placeholder="邮箱">
-        <input type="password" class="password" placeholder="密码">
-      </div>
-      <div class="captcha hidden">
-        <input type="text" class="captcha-text" placeholder="验证码">
-      </div>
-      <button type="button" class="login-btn">登录</button>
-      <div class="login-error"></div>
+        <h1>登录知乎</h1>
+        <div class="login-data">
+            <input type="text" class="email"  placeholder="邮箱">
+            <input type="password" class="password" placeholder="密码">
+        </div>
+        <div class="captcha hidden">
+            <input type="text" class="captcha-text" placeholder="验证码">
+        </div>
+        <button type="button" class="login-btn">登录</button>
+        <div class="login-error"></div>
     </div>
 
     <div class="feed-container">
-      <div class="feed"></div>
+        <div class="feed"></div>
     </div>
-
+    
     <script>
-      require('./renderer.js')
+        require('./renderer.js')
     </script>
-  </body>
+</body>
 </html>

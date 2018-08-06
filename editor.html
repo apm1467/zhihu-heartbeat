@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <script>window.$ = window.jQuery = require('jquery');</script>
     <link rel="stylesheet" type="text/css" href="./assets/editor.css" />
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="title-bar">
-      <div class="title">新想法</div>
-      <div class="submit">发布</div>
-      <div class="sending hidden">发布中…</div>
+        <div class="title">新想法</div>
+        <div class="submit">发布</div>
+        <div class="sending hidden">发布中…</div>
     </div>
 
     <textarea autofocus></textarea>
 
     <script>
-      const remote = require('electron').remote;
-      const publish = require('./publish');
+        const remote = require('electron').remote;
+        const publish = require('./publish');
 
-      $('.submit').click(function() {
-          var text = $('textarea').val().trim();
-          if (text) {
-            // remove submit button, display sending text
-            $('.submit').fadeOut(200, function() {
-              $('.sending').fadeIn(200);
-            });
+        $('.submit').click(function() {
+            var text = $('textarea').val().trim();
+            if (text) {
+                // remove submit button, display sending text
+                $('.submit').fadeOut(200, function() {
+                    $('.sending').fadeIn(200);
+                });
 
-            publish.publish(text, remote.getCurrentWindow());
-          }
-      });
+                publish.publish(text, remote.getCurrentWindow());
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
