@@ -46,7 +46,7 @@ exports.publish = function (text, editor_window) {
 
         var options = {
             method: 'POST',
-            url: constants.PIN_POST_URL,
+            url: constants.PIN_URL,
             headers: auth.get_authorized_request_header(),
             jar: true,
             form: publish_form

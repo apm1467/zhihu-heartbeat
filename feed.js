@@ -360,7 +360,7 @@ module.exports = class Feed {
                     $('.update').removeClass('hidden');
                     // add .feed-item margin-bottom 12px
                     container.scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
-    
+
                     // display feed update notification
                     $('#update-notification').addClass('notification-show');
                 }, 2000);
@@ -399,7 +399,7 @@ module.exports = class Feed {
     static delete_pin(id) {
         var options = {
             method: 'DELETE',
-            url: constants.PIN_POST_URL + '/' + id,
+            url: constants.PIN_URL + '/' + id,
             headers: auth.get_authorized_request_header(),
             jar: true
         };
