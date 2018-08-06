@@ -355,11 +355,12 @@ class Feed {
     
                 // give images 2 seconds to load before calculate height
                 setTimeout(function() {
+                    $('.update').removeClass('hidden');
+
+                    // maintain scroll position on the timeline
                     var container = $('.feed-container');
                     var scroll_top = container.scrollTop();
-                    $('.update').removeClass('hidden');
-                    // add .feed-item margin-bottom 12px
-                    container.scrollTop(scroll_top + $('.update').outerHeight(true) + 12);
+                    container.scrollTop(scroll_top + $('.update').outerHeight(true));
 
                     // display feed update notification
                     $('#update-notification').addClass('notification-show');

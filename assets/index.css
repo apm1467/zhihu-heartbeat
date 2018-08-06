@@ -142,13 +142,13 @@ a {
     overflow-y: scroll;
 }
 .feed {
-    margin-top: 15px;
-    margin-left: 20px;
-    margin-right: 20px;
+    width: 100%;
 }
 .feed-item {
-    margin-bottom: 12px;
     position: relative;
+    padding-top: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 .feed-item a {
     cursor: default;
@@ -166,23 +166,22 @@ a {
     font-weight: 600;
     font-size: 18px;
     margin-left: 50px;
-    color: inherit;
+    color: white;
 }
 .time, .statistics {
+    cursor: default;
     position: absolute;
-    right: 5px;
-    top: 4px;
+    right: 25px;
     color: rgb(160, 160, 160);
     font-size: 14px;
     user-select: none;
 }
 .time {
-    top: 3px;
+    top: 15px;
 }
 .statistics {
+    top: 16px;
     display: none;
-    cursor: default;
-    top: 4px;
 }
 .statistics span {
     margin-left: 7px;
@@ -205,8 +204,8 @@ a {
     line-height: 1.6em;
     margin-top: 5px;
     margin-left: 50px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgb(102, 102, 102);
+    padding-bottom: 11px;
+    border-bottom: 1px solid rgb(72, 72, 72);
 }
 .content .fa-retweet {
     margin-right: 3px;
@@ -231,7 +230,7 @@ a {
 .images, .video {
     line-height: 0;
     margin-top: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 9px;
     width: 100%;
     text-align: center;
     border-radius: 8px;
