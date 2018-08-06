@@ -22,17 +22,21 @@ class Author {
 
 class Pin {
     constructor(feed_item) {
-        this.id = feed_item['target']['id'];
-        this.time = feed_item['target']['updated'];
+        var target = feed_item['target'] ? feed_item['target'] : feed_item;
 
-        this.likes = feed_item['target']['reaction_count'];
-        this.repins = feed_item['target']['repin_count'];
-        this.comments_count = feed_item['target']['comment_count'];
+        this.id = target['id'];
+        this.author = new Author(target['author']);
+        this.time = target['updated']; // int
+        this.likes = target['reaction_count'];
+        this.repins = target['repin_count'];
+        this.comments_count = target['comment_count'];
+        this.text = '';
+        this.image_array = [];
+        this.video = ''; // video url
 
-        var content_array = feed_item['target']['content'];
+        var content_array = target['content'];
 
         // handle text & text repin
-        this.text = '';
         if (
             content_array[0]['type'] == 'text' ||
             feed_item['feed_type'] == 'repin' || 
@@ -65,13 +69,12 @@ class Pin {
                     this.text = this.text.replace(urls[i], repin_sign + urls[i]);
                 }
             }
+
+            // make sure text does not contain script tags
+            this.text = this.text.replace(/<script/ig, '');
         }
 
-        // make sure text does not contain script tags
-        this.text = this.text.replace(/<script/ig, '');
-
         // handle media
-        var image_array = [];
         var array_length = content_array.length;
         for (var i = 0; i < array_length; i++) {
             if (content_array[i]['type'] == 'link') {
@@ -81,7 +84,7 @@ class Pin {
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
             if (content_array[i]['type'] == 'image') {
-                image_array.push(content_array[i]['url']);
+                this.image_array.push(content_array[i]['url']);
             }
             else if (content_array[i]['type'] == 'video') {
                 this.video_thumbnail = content_array[i]['thumbnail'];
@@ -92,12 +95,12 @@ class Pin {
                         this.video = playlist[j]['url'];
                         this.video_height = playlist[j]['height'];
                         this.video_width = playlist[j]['width'];
+                        break;
                     }
                 }
             }
         }
-        this.image_count = image_array.length;
-        this.image_array = image_array;
+        this.image_count = this.image_array.length;
     }
 
     get_id() {
@@ -214,8 +217,8 @@ class Feed {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
-                    self.latest_local_pin_id = pin.get_id();
-                    self.latest_local_pin_time = pin.get_time();
+                    self.latest_local_pin_id = pin.id;
+                    self.latest_local_pin_time = pin.time;
                     break;
                 }
             }
@@ -296,15 +299,15 @@ class Feed {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
-                    console.log(pin.get_id());
+                    console.log(pin.id);
 
                     // add extra 10 seconds tolerance when checking
-                    if (pin.get_id() != self.latest_local_pin_id &&
-                        pin.get_time() + 10 > self.latest_local_pin_time) {
+                    if (pin.id != self.latest_local_pin_id &&
+                        pin.time + 10 > self.latest_local_pin_time) {
 
                         // get the first pin, and fetch the rest in _fetch_update()
                         var output = generate_feed_item_html(feed_item);
-                        self._fetch_update(pin.get_id(), 0, output);
+                        self._fetch_update(pin.id, 0, output);
 
                         self.server_latest_pin = pin;
                     }
@@ -333,21 +336,21 @@ class Feed {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
-                    if (pin.get_id() == self.latest_local_pin_id ||
-                        pin.get_time() + 10 <= self.latest_local_pin_time) {
+                    if (pin.id == self.latest_local_pin_id ||
+                        pin.time + 10 <= self.latest_local_pin_time) {
     
                         stop_fetching = true;
                         break;
                     }
                     else {
-                        fetch_after_id = pin.get_id();
+                        fetch_after_id = pin.id;
                         output += generate_feed_item_html(feed_item);
                     }
                 }
             }
             if (stop_fetching) {
-                self.latest_local_pin_id = self.server_latest_pin.get_id();
-                self.latest_local_pin_time = self.server_latest_pin.get_time();
+                self.latest_local_pin_id = self.server_latest_pin.id;
+                self.latest_local_pin_time = self.server_latest_pin.time;
                 self._report_latest_viewed_pin_id();
 
                 output = '<div class="update hidden">' + output + '</div>';
