@@ -1,17 +1,21 @@
 # Zhihu Heartbeat
 
-（非官方）知乎想法桌面端，兼容 macOS 与 Windows，用以替代官方没有发布的知乎想法网页版。点击[这里](https://github.com/apm1467/zhihu-heartbeat/releases/latest)下载。
+（非官方）知乎想法桌面端，兼容 macOS 与 Windows，用以替代知乎想法网页版。点击[这里](https://github.com/apm1467/zhihu-heartbeat/releases/latest)下载。
 
 ## 功能
 
-- 阅读体验流畅
-- 时间线自动刷新
+本软件可以：
+
+- 提供流畅的阅读体验
+- 自动获取时间线更新
 - 发布或删除新想法
-- 用大屏幕打开高清图片和视频
+- 打开高清图片和视频
+- 查看评论
+- 表达我对桌面操作系统的[喜爱](https://overcast.fm/+CdRRhGxw/1:30:56)
 
 ## macOS
 
-第一次运行可能需要在「系统偏好设置」=>「安全性与隐私」 中点击允许。
+第一次运行可能需要在「系统偏好设置」→「安全性与隐私」中点击允许。
 
 ![](https://user-images.githubusercontent.com/10210967/43783097-2bc4b7c2-9a61-11e8-93fa-f41b1f0d1486.png)
 
@@ -37,4 +41,4 @@
 - OAuth 登录部分参照了开源项目 [Zhihu-OAuth](https://github.com/7sDream/zhihu-oauth) 的[方法](http://zhihu-oauth.readthedocs.io/zh_CN/latest/for-dev/oauth/game.html)
 - 本软件图标和界面均使用了 [Font Awesome](https://fontawesome.com) 的免费图标字体
 - 视频播放部分使用了 [hls.js](https://github.com/video-dev/hls.js/) 开源库
-- 感谢知乎，希望不要封我
+- 感谢知乎
