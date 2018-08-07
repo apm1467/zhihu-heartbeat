@@ -13,13 +13,15 @@
 
 第一次运行可能需要在「系统偏好设置」=>「安全性与隐私」 中点击允许。
 
-![](./screenshoots/mac-1.png)
+![](https://user-images.githubusercontent.com/10210967/43783097-2bc4b7c2-9a61-11e8-93fa-f41b1f0d1486.png)
 
-![](./screenshoots/mac-2.png)
+![](https://user-images.githubusercontent.com/10210967/43783098-2be3a6b4-9a61-11e8-999b-c72543723996.png)
+
+![](https://user-images.githubusercontent.com/10210967/43783099-2c053a86-9a61-11e8-89fb-c6c1ac16d24e.png)
 
 ## Windows
 
-![](./screenshoots/windows.png)
+![](https://user-images.githubusercontent.com/10210967/43783981-540f8584-9a63-11e8-9f5d-27c07ce1f36e.png)
 
 ## 构建方法
 
