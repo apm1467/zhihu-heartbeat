@@ -12,6 +12,9 @@ a {
 p {
     margin: 0;
 }
+p + p {
+    margin-top: 0.8em;
+}
 .title-bar {
     -webkit-app-region: drag;
     height: 40px;
@@ -62,6 +65,12 @@ p {
 }
 .child-comments {
     padding-left: 50px;
+}
+.author {
+    max-width: 300px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .avatar {
     border-radius: 50%;

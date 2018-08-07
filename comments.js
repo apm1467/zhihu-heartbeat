@@ -99,6 +99,48 @@ module.exports = class Comments {
         request(options, function(error, response, body) {
             var data_array = JSON.parse(body)['data'];
             self._append_to_list(data_array);
+
+            // enable comments scroll event
+            self._enable_comments_scroll_event()
+        });
+    }
+
+    _enable_comments_scroll_event() {
+        var self = this;
+        var container = $('.comments-container');
+        container.scroll(function () {
+            var page_length = container[0].scrollHeight;
+            var scroll_position = container.scrollTop();
+
+            // scroll down to fetch older comments
+            if (page_length - scroll_position < 2000) {
+                self._fetch_older_comments();
+
+                // unbind scroll event
+                container.off('scroll');
+            }
+        });
+    }
+
+    _fetch_older_comments() {
+        var options = {
+            method: 'GET',
+            url: this.url + '&offset=' + this.offset,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            try {
+                var data_array = JSON.parse(body)['data'];
+                self._append_to_list(data_array);   
+            }
+            catch (err) {
+                console.warn(body);
+            }
+
+            // re-enable comments scroll event
+            self._enable_comments_scroll_event();
         });
     }
 
