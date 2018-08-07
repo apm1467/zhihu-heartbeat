@@ -160,6 +160,34 @@ $(document).on('click', '.feed-item', function(event) {
     }
 });
 
+// double click feed item to open comments window
+$(document).on('dblclick', '.feed-item', function(event) {
+    // remove double click text selection
+    window.getSelection().empty();
+
+    var pin_id = $(this).attr('data-id');
+
+    var win = new BrowserWindow({
+        width: 450,
+        minWidth: 400,
+        maxWidth: 600,
+        height: 800,
+        titleBarStyle: 'hiddenInset',
+        backgroundColor: "#333333",
+        fullscreenable: false,
+        show: false,
+        useContentSize: true
+    });
+
+    win.loadFile('comments.html');
+
+    win.webContents.on('did-finish-load', function() {
+        // pass pin_id to comments window
+        win.webContents.send('pin_id', pin_id);
+        win.show();
+    });
+});
+
 // ------------------------------------------------------------
 
 // click self avatar to open logout menu

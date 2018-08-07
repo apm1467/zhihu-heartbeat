@@ -1,0 +1,124 @@
+const request = require('request');
+const remote = require('electron').remote;
+const {BrowserWindow} = remote;
+const constants = require('./constants');
+const auth = require('./auth');
+const {Pin} = require('./feed');
+
+
+class Author {
+    constructor(author_item) {
+        this.name = author_item['member']['name'];
+        this.avatar = author_item['member']['avatar_url'];
+        this.url = author_item['member']['url'].replace('api.', '');
+    }
+
+    get_name_html() {
+        return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
+    }
+    get_html() {
+        var output = '';
+        output += '<a href="' + this.url +'">' +
+                  '<img class="avatar" src="' + this.avatar + '"></a>';
+        output += this.get_name_html();
+        return output;
+    }
+}
+
+class Comment {
+    constructor(comment_item) {
+        this.id = comment_item['id'];
+        this.time = comment_item['created_time'];
+        this.content = comment_item['content'];
+        this.likes = comment_item['vote_count'];
+        this.author = new Author(comment_item['author']);
+        if (comment_item['reply_to_author']) {
+            this.reply_to_author = new Author(comment_item['reply_to_author']);
+        }
+    }
+
+    get_html() {
+        var output = '';
+
+        output += '<div class="comment-item">';
+        output += '<div class="author">';
+        output += this.author.get_html();
+        if (this.reply_to_author) {
+            output += '<span><i class="fas fa-long-arrow-alt-right"></i></span>'
+            output += this.reply_to_author.get_name_html();
+        }
+        output += '</div>'; // author
+        output += '<div class="statistics">' +
+                  '<span><i class="far fa-heart"></i>' + this.likes + '</span>' +
+                  '</div>';
+        output += '<div class="content">';
+        output += this.content;
+        output += '</div>'; // content
+        output += '</div>'; // comment-item
+
+        return output;
+    }
+}
+
+
+module.exports = class Comments {
+    constructor(pin_id) {
+        this.pin_id = pin_id;
+        this.url = constants.PIN_URL + '/' + pin_id + 
+                   '/root_comments?limit=20&reverse_order=0';
+        this.offset = 0; // needed when fetching older comments
+    }
+
+    start() {
+        this._fetch_pin();
+        this._fetch_initial_comments();
+    }
+
+    _fetch_pin() {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_URL + '/' + this.pin_id,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        request(options, function(error, response, body) {
+            var pin = new Pin(JSON.parse(body));
+            var output = pin.get_html();
+            $('.pin').append(output);
+        });
+    }
+
+    _fetch_initial_comments() {
+        var options = {
+            method: 'GET',
+            url: this.url,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        var self = this;
+        request(options, function(error, response, body) {
+            var data_array = JSON.parse(body)['data'];
+            self._append_to_list(data_array);
+        });
+    }
+
+    _append_to_list(data_array) {
+        var output = '';
+        for (var i = 0; i < data_array.length; i++) {
+            var comment = new Comment(data_array[i]);
+            output += comment.get_html();
+
+            var child_comments = data_array[i]['child_comments'];
+            if (child_comments) {
+                output += '<div class="child-comments">';
+                for (var j = 0; j < child_comments.length; j++) {
+                    var comment = new Comment(child_comments[j]);
+                    output += comment.get_html();
+                }
+                output += '</div>'; // child-comments
+            }
+        }
+        $('.comments').append(output);
+        this.offset += 20;
+    }
+}

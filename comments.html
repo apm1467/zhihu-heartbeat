@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <link rel="stylesheet" href="./assets/fontawesome-5.1.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./assets/comments.css" />
+</head>
+
+<body style="-webkit-app-region: drag;">
+
+    <div class="title-bar">
+        <div class="title">详情</div>
+    </div>
+
+    <div class="comments-container">
+        <div class="pin"></div>
+        <div class="comments"></div>
+    </div>
+
+    <script>
+        const ipc = require('electron').ipcRenderer;
+        const Comments = require('./comments.js');
+
+        // get pin id from renderer
+        ipc.on('pin_id', function(event, pin_id) {
+            var comments = new Comments(pin_id);
+            comments.start();
+        });
+
+        // open links in external browser
+        const shell = require('electron').shell;
+        $(document).on('click', 'a[href^="http"]', function(event) {
+            event.preventDefault();
+            shell.openExternal(this.href, {activate: false});
+        });
+    </script>
+</body>
+</html>

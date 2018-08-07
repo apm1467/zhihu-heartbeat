@@ -1,0 +1,210 @@
+body {
+    color: rgb(222, 222, 222);
+    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
+    margin: 0;
+}
+a {
+    color: rgb(106, 175, 253);
+    text-decoration: none;
+    word-break: break-all;
+    cursor: default;
+}
+p {
+    margin: 0;
+}
+.title-bar {
+    -webkit-app-region: drag;
+    height: 40px;
+    width: 100%;
+    background-color: rgb(77, 77, 77);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+}
+.title {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    user-select: none;
+    margin-top: 10px;
+    color: rgb(160, 160, 160);
+}
+.comments-container {
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.pin, .comment-item {
+    position: relative;
+    padding-top: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.pin .content {
+    max-height: 110px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.pin .content:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgb(51, 51, 51));
+}
+.comments {
+    padding-top: 5px;
+    border-top: 1px solid rgb(72, 72, 72);
+}
+.child-comments {
+    padding-left: 50px;
+}
+.avatar {
+    border-radius: 50%;
+    border: 1px solid rgb(102, 102, 102);
+    height: 42px;
+    width: 42px;
+    position: absolute;
+    transform: translate(0, 2px);
+    user-select: none;
+}
+.name {
+    font-weight: 600;
+    font-size: 18px;
+    color: white;
+    margin-left: 50px;
+}
+span + .name {
+    margin-left: 0;
+}
+.author span {
+    color: rgb(160, 160, 160);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.statistics {
+    cursor: default;
+    position: absolute;
+    right: 25px;
+    top: 16px;
+    color: rgb(160, 160, 160);
+    font-size: 14px;
+    user-select: none;
+}
+.statistics span {
+    margin-left: 7px;
+}
+.statistics i {
+    margin-right: 3px;
+}
+.content .fa-retweet {
+    margin-right: 3px;
+    color: rgb(160, 160, 160);
+}
+.content {
+    font-size: 17px;
+    line-height: 1.6em;
+    margin-top: 5px;
+    margin-left: 50px;
+}
+.comment-item .content {
+    padding-bottom: 11px;
+    border-bottom: 1px solid rgb(72, 72, 72);
+}
+
+/* ------------------------------------------------------------ */
+/* render the pin */
+
+.origin-pin {
+    font-size: 16px;
+    line-height: 1.55em;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 2px;
+    border-left: 2px solid rgb(102, 102, 102);
+}
+.origin-pin .name {
+    display: inline-block;
+    margin-left: 0;
+    margin-bottom: 6px;
+    font-size: 17px;
+}
+.link-title {
+    margin-top: 15px;
+    line-height: 1.4em;
+    color: rgb(190, 190, 190);
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    cursor: default;
+}
+.link {
+    display: block;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.images, .video {
+    line-height: 0;
+    margin-top: 10px;
+    margin-bottom: 9px;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.img + .img {
+    margin-left: 3px;
+}
+.single-img, .video .thumbnail {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+}
+.double-img, .img-grid .img {
+    display: inline-block;
+    background-position: center center;
+    background-size: cover;
+}
+.double-img {
+    width: calc(50% - 1.5px);;
+    height: 250px;
+}
+.img-grid .img {
+    position: relative;
+    width: calc(33.33% - 2px);
+    height: auto;
+}
+.img-grid .img:before{
+    content: "";
+    display: inline-block;
+    padding-top: 100%;
+}
+.img-grid .row {
+    line-height: 0;
+    text-align: left;
+    margin: 0 auto;
+    width: 100%;
+}
+.img-grid .row + .row {
+    margin-top: 3px;
+}
+.video {
+    position: relative;
+}
+.video div {
+    font-size: 23px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);; 
+}
