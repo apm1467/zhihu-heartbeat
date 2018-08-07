@@ -88,7 +88,9 @@ exports.PIN_PUBLISH_CONTENT_FORM = [
     }
 ];
 
-exports.FEED_UPDATE_INTERVAL = 20000; // millisecond
+exports.FEED_UPDATE_INTERVAL = 20000; // 20 sec
+
+exports.PIN_STATISTICS_UPDATE_INTERVAL = 600000; // 10 min
 
 exports.GITHUB_REPO_URL = 'https://github.com/apm1467/zhihu-heartbeat/';
 

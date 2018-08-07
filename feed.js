@@ -442,6 +442,26 @@ class Feed {
             }
         });
     }
+
+    static update_pin_statistics(id) {
+        var options = {
+            method: 'GET',
+            url: constants.PIN_URL + '/' + id,
+            headers: auth.get_authorized_request_header(),
+            jar: true
+        };
+        request(options, function(error, response, body) {
+            try {
+                var pin = new Pin(JSON.parse(body));
+            }
+            catch (err) {
+                console.warn(body);
+                return;
+            }
+            var selector = '.feed-item[data-id="' + id + '"] > .statistics';
+            $(selector).replaceWith(pin.get_statistics_html());
+        });
+    }
 }
 
 

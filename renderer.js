@@ -88,7 +88,6 @@ setInterval(function() {
 
     $('.time').each(function () {
         var post_time = parseInt($(this).attr('data-time'));
-        post_time += 1;
         $(this).text(get_relative_time_str(post_time, now));
     });
 }, 1000);
@@ -118,6 +117,16 @@ function get_relative_time_str(post_time, now) {
         return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
     }
 }
+
+// ------------------------------------------------------------
+
+// update statistics of each feed-item every 10 min
+setInterval(function() {
+    $('.feed-item').each(function () {
+        Feed.update_pin_statistics($(this).attr('data-id'));
+        console.log('statistics updated');
+    });
+}, constants.PIN_STATISTICS_UPDATE_INTERVAL);
 
 // ------------------------------------------------------------
 
