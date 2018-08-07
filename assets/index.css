@@ -149,9 +149,19 @@ a {
     padding-top: 13px;
     padding-left: 20px;
     padding-right: 20px;
+    transition: background-color 0.06s;
 }
 .feed-item a {
     cursor: default;
+}
+.item-clicked {
+    background-color: rgb(66, 66, 66);
+    border-top: 1px solid rgb(80, 80, 80);
+    margin-top: -1px;
+}
+.item-clicked + .feed-item {
+    border-top: 1px solid rgb(80, 80, 80);
+    margin-top: -1px;
 }
 .avatar {
     border-radius: 50%;

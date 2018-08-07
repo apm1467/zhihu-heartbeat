@@ -146,6 +146,22 @@ $(document).on('click', '.delete-btn', function(event) {
 
 // ------------------------------------------------------------
 
+// click feed item to add focus
+$(document).on('click', '.feed-item', function(event) {
+    var feed_item = $(this);
+
+    // not trigger this event when clicking links or images
+    if ($(event.target).is('a, a span, .img, .thumbnail'))
+        return;
+
+    if (!feed_item.hasClass('item-clicked')) {
+        $('.feed-item').removeClass('item-clicked');
+        feed_item.addClass('item-clicked');
+    }
+});
+
+// ------------------------------------------------------------
+
 // click self avatar to open logout menu
 const logout_menu = Menu.buildFromTemplate([
     {
