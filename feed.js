@@ -26,6 +26,7 @@ class Author {
 class Pin {
     constructor(feed_item) {
         var target = feed_item['target'] ? feed_item['target'] : feed_item;
+        this.source_dict = target;
 
         this.id = target['id'];
         this.author = new Author(target['author']);
@@ -170,6 +171,33 @@ class Pin {
             output += '</div>';
         }
 
+        return output;
+    }
+    get_html() {
+        var output = '<div class="author">' + this.author.get_avatar_html() + 
+                  this.author.get_name_html() + '</div>';
+        output += '<div class="time" data-time="' + this.time + '"></div>';
+        output += this.get_statistics_html();
+
+        output += '<div class="content">' + this.get_content_html();
+
+        // if this pin is a repin
+        if (this.source_dict['origin_pin']) {
+            if (this.source_dict['origin_pin']['is_deleted']) {
+                output += '<div class="origin-pin">';
+                output += this.source_dict['origin_pin']['deleted_reason'];
+            }
+            else {
+                var origin_pin = new Pin(this.source_dict['origin_pin']);
+                output += '<div class="origin-pin" data-id="' + origin_pin.id + '">';
+                output += '<div class="author">' + origin_pin.author.get_name_html() + '</div>';
+                output += '<div class="origin-pin-content">' + 
+                          origin_pin.get_content_html() + '</div>';
+            }
+            output += '</div>'; // origin-pin
+        }
+
+        output += '</div>'; // content
         return output;
     }
 }
@@ -442,32 +470,8 @@ function generate_feed_item_html(feed_item) {
     var output = '';
     if (feed_item['type'] == 'moment') {
         var pin = new Pin(feed_item);
-
         output += '<div class="feed-item" data-id="' + pin.id + '">';
-        output += '<div class="author">' + pin.author.get_avatar_html() + 
-                  pin.author.get_name_html() + '</div>';        
-        output += '<div class="time" data-time="' + pin.time + '"></div>';
-        output += pin.get_statistics_html();
-
-        output += '<div class="content">' + pin.get_content_html();
-
-        // if this pin is a repin
-        if (feed_item['target']['origin_pin']) {
-            if (feed_item['target']['origin_pin']['is_deleted']) {
-                output += '<div class="origin-pin">';
-                output += feed_item['target']['origin_pin']['deleted_reason'];
-            }
-            else {
-                var origin_pin = new Pin(feed_item['target']['origin_pin']);
-                output += '<div class="origin-pin" data-id="' + origin_pin.id + '">';
-                output += '<div class="author">' + origin_pin.author.get_name_html() + '</div>';
-                output += '<div class="origin-pin-content">' + 
-                          origin_pin.get_content_html() + '</div>';
-            }
-            output += '</div>'; // origin-pin
-        }
-
-        output += '</div>'; // content
+        output += pin.get_html();
         output += '</div>'; // feed-item
     }
     return output;
