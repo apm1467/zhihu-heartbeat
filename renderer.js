@@ -171,6 +171,10 @@ $(document).on('click', '.feed-item', function(event) {
 
 // double click feed item to open comments window
 $(document).on('dblclick', '.feed-item', function(event) {
+    // not trigger this event when clicking links or images
+    if ($(event.target).is('a, a span, .img, .thumbnail'))
+        return;
+
     // remove double click text selection
     window.getSelection().empty();
 
@@ -235,6 +239,10 @@ $(document).on('click', 'a[href^="http"]', function(event) {
 
 // click to open feed images in new window
 $(document).on('click', '.img', function(event) {
+    // prevent opening window multiple times on double click
+    if ($(this).hasClass('darkened'))
+        return;
+
     // darken the image thumbnail while load image window
     $(this).addClass('darkened');
 
@@ -352,6 +360,10 @@ function get_img_url(img_obj) { // accept jQuery object
 
 // open video in new window
 $(document).on('click', '.video', function(event) {
+    // prevent opening window multiple times on double click
+    if ($(this).hasClass('darkened'))
+        return;
+
     $(this).addClass('darkened');
 
     var pin_id = $(this).parent().parent().attr('data-id');
@@ -370,7 +382,7 @@ $(document).on('click', '.video', function(event) {
     win.loadFile('video_player.html');
 
     // pass video url to player window
-    win.webContents.on('did-finish-load', () => {
+    win.webContents.on('did-finish-load', function() {
         win.webContents.send('video', video_url, current_window.id);
     });
 
@@ -388,9 +400,7 @@ $(document).on('click', '.video', function(event) {
             jar: true
         };
         request(options, function(error, response, body) {
-            var origin_pin_item = {};
-            origin_pin_item['target'] = JSON.parse(body);
-            var video_url = (new Pin(origin_pin_item)).video;
+            var video_url = (new Pin(JSON.parse(body))).video;
             win.webContents.send('video', video_url, current_window.id);
         });
     });
