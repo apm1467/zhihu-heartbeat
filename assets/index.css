@@ -17,6 +17,9 @@ a {
     text-decoration: none;
     word-break: break-all;
 }
+a:active {
+    color: rgb(36, 105, 183);
+}
 .title-bar {
     -webkit-app-region: drag;
     height: 50px;
