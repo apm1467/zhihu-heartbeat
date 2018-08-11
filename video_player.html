@@ -18,8 +18,11 @@
             });
 
             // report back on error
-            const ipc_event = event;
             hls.on(Hls.Events.ERROR, function(event, data) {
+                console.log(data);
+                if (!data.fatal)
+                    return;
+
                 console.log('video outdated');
                 hls.destroy();
                 video.pause();
