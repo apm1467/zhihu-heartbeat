@@ -10,14 +10,14 @@
         // get video url from renderer
         ipc.on('video', function(event, video_url, window_id) {
             const video = document.getElementById('video');
-            const hls = new Hls();
+            const hls = new Hls({fragLoadingMaxRetry: 1});
             hls.loadSource(video_url);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 video.play();
             });
 
-            // report back on error
+            // report back if video url is outdated
             hls.on(Hls.Events.ERROR, function(event, data) {
                 console.log(data);
                 if (!data.fatal)
