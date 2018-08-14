@@ -157,14 +157,18 @@ a:active {
 .feed-item a {
     cursor: default;
 }
-.item-clicked {
+.feed-item.focus {
     background-color: rgb(66, 66, 66);
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
 }
-.item-clicked + .feed-item {
+.feed-item.focus + .feed-item {
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
+}
+.feed-item.loading {
+    background-color: rgb(30, 30, 30);
+    color: rgb(200, 200, 200);
 }
 .avatar {
     border-radius: 50%;

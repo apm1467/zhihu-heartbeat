@@ -163,9 +163,9 @@ $(document).on('click', '.feed-item', function(event) {
     if ($(event.target).is('a, a span, .img, .thumbnail'))
         return;
 
-    if (!feed_item.hasClass('item-clicked')) {
-        $('.feed-item').removeClass('item-clicked');
-        feed_item.addClass('item-clicked');
+    if (!feed_item.hasClass('focus')) {
+        $('.feed-item').removeClass('focus');
+        feed_item.addClass('focus');
     }
 });
 
@@ -178,7 +178,10 @@ $(document).on('dblclick', '.feed-item', function(event) {
     // remove double click text selection
     window.getSelection().empty();
 
-    var pin_id = $(this).attr('data-id');
+    var feed_item = $(this);
+    feed_item.addClass('loading');
+
+    var pin_id = feed_item.attr('data-id');
 
     var win = new BrowserWindow({
         width: 450,
@@ -197,6 +200,8 @@ $(document).on('dblclick', '.feed-item', function(event) {
     win.webContents.on('did-finish-load', function() {
         // pass pin_id to comments window
         win.webContents.send('pin_id', pin_id);
+
+        feed_item.removeClass('loading');
         win.show();
     });
 });
