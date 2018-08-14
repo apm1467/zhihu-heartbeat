@@ -90,6 +90,7 @@ a:active {
     transform: translate(-50%, -50%);
     text-align: center;
     width: 250px;
+    z-index: 1;
 }
 .login-form h1 {
     margin-bottom: 50px;
