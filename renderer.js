@@ -156,7 +156,7 @@ $(document).on('click', '.delete-btn', function(event) {
 // ------------------------------------------------------------
 
 // click feed item to add focus
-$(document).on('click', '.feed-item', function(event) {
+$(document).on('click contextmenu', '.feed-item', function(event) {
     var feed_item = $(this);
 
     // not trigger this event when clicking links or images
@@ -175,10 +175,29 @@ $(document).on('dblclick', '.feed-item', function(event) {
     if ($(event.target).is('a, a span, .img, .thumbnail'))
         return;
 
-    // remove double click text selection
-    window.getSelection().empty();
+    var feed_item = $(this);
+    open_comments_window(feed_item);
+});
+
+// right click on feed item to open comments window
+$(document).on('contextmenu', '.feed-item', function(event) {
+    if ($(event.target).is('.img'))
+        return;
 
     var feed_item = $(this);
+    const feed_item_menu = Menu.buildFromTemplate([
+        {
+            label: '详情',
+            click: function() {
+                open_comments_window(feed_item);
+            }
+        }
+    ]);
+    feed_item_menu.popup(current_window);
+});
+
+function open_comments_window(feed_item) { // accept jQuery object
+    window.getSelection().empty();
     feed_item.addClass('loading');
 
     var pin_id = feed_item.attr('data-id');
@@ -204,7 +223,7 @@ $(document).on('dblclick', '.feed-item', function(event) {
         feed_item.removeClass('loading');
         win.show();
     });
-});
+}
 
 // ------------------------------------------------------------
 
