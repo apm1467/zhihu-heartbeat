@@ -1,6 +1,10 @@
+const remote = require('electron').remote;
+const {dialog} = remote;
 const request = require('request');
 const constants = require('./constants');
 const auth = require('./auth');
+
+const current_window = remote.getCurrentWindow();
 
 
 exports.open_editor = function () {
@@ -52,10 +56,16 @@ exports.publish = function (text, editor_window) {
             form: publish_form
         };
         request(options, function(error, response, body) {
-            console.log(body);
             if (!('error' in JSON.parse(body))) {
                 // only close editor window after request succeeds
                 editor_window.close();
+            }
+            else {
+                console.log(response);
+                dialog.showMessageBox(current_window, {
+                    type: 'error',
+                    message: JSON.parse(body)['error']
+                });
             }
         });
     });
