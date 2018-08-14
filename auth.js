@@ -86,32 +86,14 @@ function authenticate(email, password) {
             return;
         }
 
-        var access_expire = time + body_dict['expires_in'] * 1000;
         localStorage.setItem('access_token', body_dict['access_token']);
+        localStorage.setItem('self_user_id', body_dict['uid']);
+
+        var access_expire = time + body_dict['expires_in'] * 1000;
         localStorage.setItem('access_expire_time', access_expire.toString());
 
         $('.login-form').addClass('hidden');
         $('.logo').removeClass('hidden');
-
-        get_self_user_id();
-    });
-}
-
-function get_self_user_id() {
-    var options = {
-        method: 'GET',
-        url: constants.SELF_URL,
-        headers: get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var body_dict = JSON.parse(body);
-        if ("error" in body_dict) {
-            get_self_user_id();
-        }
-
-        self_user_id = body_dict['id'];
-        localStorage.setItem('self_user_id', self_user_id);
 
         // notify renderer
         current_window.webContents.send('auth_finished');
