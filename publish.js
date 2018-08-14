@@ -16,7 +16,7 @@ exports.open_editor = function () {
         useContentSize: true
     });
 
-    win.loadFile('editor.html');
+    win.loadFile('pin_editor.html');
 
     win.once('ready-to-show', function () {
         win.show();
@@ -52,6 +52,7 @@ exports.publish = function (text, editor_window) {
             form: publish_form
         };
         request(options, function(error, response, body) {
+            console.log(body);
             if (!('error' in JSON.parse(body))) {
                 // only close editor window after request succeeds
                 editor_window.close();
