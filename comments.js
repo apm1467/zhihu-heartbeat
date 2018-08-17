@@ -82,9 +82,15 @@ module.exports = class Comments {
             jar: true
         };
         request(options, function(error, response, body) {
-            var pin = new Pin(JSON.parse(body));
-            var output = pin.get_html();
-            $('.pin').append(output);
+            var parsed = JSON.parse(body);
+
+            if (parsed['error']) {
+                $('.pin').append(parsed['error']['message']);
+                return;
+            }
+
+            var pin = new Pin(parsed);
+            $('.pin').append(pin.get_html());
         });
     }
 
