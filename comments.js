@@ -42,10 +42,14 @@ class Comment {
 
         output += '<div class="comment-item">';
         output += '<div class="author">';
+        output += '<span class="comment-author">'
         output += this.author.get_html();
+        output += '</span>'; // comment-author
         if (this.reply_to_author) {
-            output += '<span><i class="fas fa-long-arrow-alt-right"></i></span>'
+            output += '<i class="fas fa-long-arrow-alt-right arraw"></i>'
+            output += '<span class="comment-author">'
             output += this.reply_to_author.get_name_html();
+            output += '</span>'; // comment-author
         }
         output += '</div>'; // author
         output += '<div class="statistics">' +

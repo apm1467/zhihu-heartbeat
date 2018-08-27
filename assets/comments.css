@@ -82,7 +82,7 @@ p + p {
     transform: translate(0, 2px);
     user-select: none;
 }
-.avatar:hover {
+.pin .author:hover .avatar, .comment-author:hover .avatar {
     box-shadow: 0px 0 7px rgb(180, 180, 180);
 }
 .name {
@@ -91,13 +91,13 @@ p + p {
     color: rgb(222, 222, 222);
     margin-left: 50px;
 }
-.name:hover {
+.pin .author:hover .name, .comment-author:hover .name {
     color: white;
 }
-span + .name {
+.arraw + .comment-author .name {
     margin-left: 0;
 }
-.author span {
+.author .arraw {
     color: rgb(160, 160, 160);
     margin-left: 10px;
     margin-right: 10px;
