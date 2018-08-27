@@ -107,7 +107,8 @@ span + .name {
     position: absolute;
     right: 25px;
     top: 16px;
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
+    font-weight: 600;
     font-size: 14px;
     user-select: none;
 }

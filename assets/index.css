@@ -199,14 +199,16 @@ a:active {
     cursor: default;
     position: absolute;
     right: 25px;
-    color: rgb(160, 160, 160);
     font-size: 14px;
     user-select: none;
 }
 .time {
+    color: rgb(160, 160, 160);
     top: 15px;
 }
 .statistics {
+    color: rgb(122, 122, 122);
+    font-weight: 600;
     top: 16px;
     display: none;
 }
