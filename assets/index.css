@@ -171,6 +171,9 @@ a:active {
     background-color: rgb(30, 30, 30);
     color: rgb(200, 200, 200);
 }
+.author {
+    display: inline-block;
+}
 .avatar {
     border-radius: 50%;
     border: 1px solid rgb(102, 102, 102);
@@ -180,10 +183,16 @@ a:active {
     transform: translate(0, 2px);
     user-select: none;
 }
+.author:hover .avatar {
+    box-shadow: 0px 0 7px rgb(180, 180, 180);
+}
 .name {
     font-weight: 600;
     font-size: 18px;
     margin-left: 50px;
+    color: rgb(222, 222, 222);
+}
+.author:hover .name {
     color: white;
 }
 .time, .statistics {

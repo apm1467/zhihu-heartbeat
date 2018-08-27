@@ -67,6 +67,7 @@ p + p {
     padding-left: 50px;
 }
 .author {
+    display: inline-block;
     max-width: 300px;
     white-space: nowrap; 
     overflow: hidden;
@@ -81,11 +82,17 @@ p + p {
     transform: translate(0, 2px);
     user-select: none;
 }
+.avatar:hover {
+    box-shadow: 0px 0 7px rgb(180, 180, 180);
+}
 .name {
     font-weight: 600;
     font-size: 18px;
-    color: white;
+    color: rgb(222, 222, 222);
     margin-left: 50px;
+}
+.name:hover {
+    color: white;
 }
 span + .name {
     margin-left: 0;
@@ -126,7 +133,7 @@ span + .name {
 }
 
 /* ------------------------------------------------------------ */
-/* render the pin */
+/* render pin */
 
 .origin-pin {
     font-size: 16px;
