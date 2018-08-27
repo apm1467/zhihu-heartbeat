@@ -3,7 +3,6 @@ const remote = require('electron').remote;
 const {BrowserWindow} = remote;
 const constants = require('./constants');
 const auth = require('./auth');
-const {Pin} = require('./feed');
 
 
 class Author {
@@ -66,36 +65,17 @@ class Comment {
 
 
 module.exports = class Comments {
-    constructor(pin_id) {
+    constructor(pin_id, pin_html) {
         this.pin_id = pin_id;
+        this.pin_html = pin_html;
         this.url = constants.PIN_URL + '/' + pin_id + 
                    '/root_comments?limit=20&reverse_order=0';
         this.offset = 0; // needed when fetching older comments
     }
 
     start() {
-        this._fetch_pin();
+        $('.pin').append(this.pin_html);
         this._fetch_initial_comments();
-    }
-
-    _fetch_pin() {
-        var options = {
-            method: 'GET',
-            url: constants.PIN_URL + '/' + this.pin_id,
-            headers: auth.get_authorized_request_header(),
-            jar: true
-        };
-        request(options, function(error, response, body) {
-            var parsed = JSON.parse(body);
-
-            if (parsed['error']) {
-                $('.pin').append(parsed['error']['message']);
-                return;
-            }
-
-            var pin = new Pin(parsed);
-            $('.pin').append(pin.get_html());
-        });
     }
 
     _fetch_initial_comments() {

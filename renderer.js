@@ -4,7 +4,7 @@ const electron = require('electron');
 const remote = electron.remote;
 const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
-const {Pin, Feed} = require('./feed');
+const Feed = require('./feed');
 const publish = require('./publish');
 const constants = require('./constants');
 const auth = require('./auth');
@@ -201,6 +201,7 @@ function open_comments_window(feed_item) { // accept jQuery object
     feed_item.addClass('loading');
 
     var pin_id = feed_item.attr('data-id');
+    var pin_html = feed_item.html()
 
     var win = new BrowserWindow({
         width: 450,
@@ -218,7 +219,7 @@ function open_comments_window(feed_item) { // accept jQuery object
 
     win.webContents.on('did-finish-load', function() {
         // pass pin_id to comments window
-        win.webContents.send('pin_id', pin_id);
+        win.webContents.send('pin', pin_id, pin_html);
 
         feed_item.removeClass('loading');
         win.show();

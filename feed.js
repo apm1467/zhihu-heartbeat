@@ -203,7 +203,7 @@ class Pin {
 }
 
 
-class Feed {
+module.exports = class Feed {
     constructor() {
         this.feed_offset = 0; // needed when fetching older feed
         this.latest_local_pin_id = '';
@@ -466,9 +466,6 @@ class Feed {
         });
     }
 }
-
-
-module.exports = { Pin, Feed };
 
 
 function display_self_avatar() {

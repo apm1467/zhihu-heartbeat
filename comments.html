@@ -22,9 +22,9 @@
         const ipc = require('electron').ipcRenderer;
         const Comments = require('./comments.js');
 
-        // get pin id from renderer
-        ipc.on('pin_id', function(event, pin_id) {
-            var comments = new Comments(pin_id);
+        // get pin_id & pin_html from renderer
+        ipc.on('pin', function(event, pin_id, pin_html) {
+            var comments = new Comments(pin_id, pin_html);
             comments.start();
         });
 

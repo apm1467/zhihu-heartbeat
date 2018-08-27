@@ -102,6 +102,9 @@ p + p {
     margin-left: 10px;
     margin-right: 10px;
 }
+.time {
+    display: none;
+}
 .statistics {
     cursor: default;
     position: absolute;
@@ -125,7 +128,7 @@ p + p {
 .content {
     font-size: 17px;
     line-height: 1.6em;
-    margin-top: 5px;
+    margin-top: 3px;
     margin-left: 50px;
 }
 .comment-item .content {
