@@ -20,6 +20,10 @@ a {
 a:active {
     color: rgb(36, 105, 183);
 }
+
+/* ------------------------------------------------------------ */
+/* title bar */
+
 .title-bar {
     -webkit-app-region: drag;
     height: 50px;
@@ -83,6 +87,10 @@ a:active {
 .notification-show {
     top: 46px !important;
 }
+
+/* ------------------------------------------------------------ */
+/* login page */
+
 .login-form {
     position: absolute;
     top: 50%;
@@ -136,6 +144,10 @@ a:active {
     height: 0;
     transform: translate(0, 40px);
 }
+
+/* ------------------------------------------------------------ */
+/* feed timeline */
+
 .feed-container {
     position: absolute;
     top: 50px;
