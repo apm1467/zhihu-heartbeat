@@ -393,6 +393,9 @@ class Feed {
                     var scroll_top = container.scrollTop();
                     container.scrollTop(scroll_top + $('.update').outerHeight(true));
 
+                    // remove outer .update div
+                    $('.update').children().unwrap();
+
                     // display feed update notification
                     $('#update-notification').addClass('notification-show');
                 }, 2000);
