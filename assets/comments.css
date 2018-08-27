@@ -166,7 +166,7 @@ span + .name {
     margin-bottom: 9px;
     width: 100%;
     text-align: center;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
 }
 .img + .img {
