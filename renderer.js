@@ -210,6 +210,7 @@ function open_comments_window(feed_item) { // accept jQuery object
         height: 800,
         titleBarStyle: 'hiddenInset',
         backgroundColor: "#333333",
+        autoHideMenuBar: true,
         fullscreenable: false,
         show: false,
         useContentSize: true
@@ -317,6 +318,7 @@ $(document).on('click', '.img', function(event) {
             height: win_height,
             width: win_width,
             backgroundColor: "#000",
+            autoHideMenuBar: true,
             fullscreenable: false,
             useContentSize: true
         });
@@ -402,6 +404,7 @@ $(document).on('click', '.video', function(event) {
         height: height,
         width: width,
         backgroundColor: "#000",
+        autoHideMenuBar: true,
         useContentSize: true
     });
     win.loadFile('video_player.html');

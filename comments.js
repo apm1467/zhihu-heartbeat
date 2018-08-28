@@ -1,6 +1,4 @@
 const request = require('request');
-const remote = require('electron').remote;
-const {BrowserWindow} = remote;
 const constants = require('./constants');
 const auth = require('./auth');
 
@@ -38,7 +36,6 @@ class Comment {
 
     get_html() {
         var output = '';
-
         output += '<div class="comment-item">';
         output += '<div class="author">';
         output += '<span class="comment-author">'
@@ -58,7 +55,6 @@ class Comment {
         output += this.content;
         output += '</div>'; // content
         output += '</div>'; // comment-item
-
         return output;
     }
 }

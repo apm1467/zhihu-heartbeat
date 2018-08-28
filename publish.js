@@ -1,5 +1,5 @@
 const remote = require('electron').remote;
-const {dialog} = remote;
+const {dialog, BrowserWindow} = remote;
 const request = require('request');
 const constants = require('./constants');
 const auth = require('./auth');
@@ -8,7 +8,6 @@ const current_window = remote.getCurrentWindow();
 
 
 exports.open_editor = function () {
-    const {BrowserWindow} = require('electron').remote;
     var win = new BrowserWindow({
         show: false,
         resizable: false,
@@ -16,6 +15,7 @@ exports.open_editor = function () {
         width: 400,
         titleBarStyle: 'hiddenInset',
         maximizable: false,
+        autoHideMenuBar: true,
         backgroundColor: "#333333",
         useContentSize: true
     });
