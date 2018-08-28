@@ -381,20 +381,21 @@ module.exports = class Feed {
                 self.latest_local_pin_time = self.server_latest_pin.time;
                 self._report_latest_viewed_pin_id();
 
-                output = '<div class="update hidden">' + output + '</div>';
+                output = '<div id="update" class="hidden">' + output + '</div>';
                 $('.feed').prepend(output);
-    
-                // give images 2 seconds to load before calculate height
-                setTimeout(function() {
-                    $('.update').removeClass('hidden');
 
-                    // maintain scroll position on the timeline
+                // give update 2 seconds to load
+                setTimeout(function() {
+                    var update = $('#update');
                     var container = $('.feed-container');
                     var scroll_top = container.scrollTop();
-                    container.scrollTop(scroll_top + $('.update').outerHeight(true));
+
+                    update.removeClass('hidden');
+                    // maintain scroll bar position
+                    container.scrollTop(scroll_top + update.outerHeight(true));
 
                     // remove outer .update div
-                    $('.update').children().unwrap();
+                    update.children().unwrap();
 
                     // display feed update notification
                     $('#update-notification').addClass('notification-show');
