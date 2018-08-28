@@ -11,7 +11,7 @@ img {
     overflow: hidden;
 }
 .darkened {
-    filter: brightness(50%);
+    filter: brightness(50%) !important;
 }
 a {
     color: rgb(106, 175, 253);
