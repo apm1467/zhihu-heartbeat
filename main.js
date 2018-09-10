@@ -5,6 +5,7 @@ const shell = require('electron').shell;
 try {
     require('electron-reloader')(module);
 } catch (err) {}
+const constants = require('./constants')
 
 const window_bounds_path = path.join(app.getPath('userData'), 'window_bounds.json');
 
