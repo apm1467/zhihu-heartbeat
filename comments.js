@@ -1,63 +1,7 @@
 const request = require('request');
 const constants = require('./constants');
 const auth = require('./auth');
-
-
-class Author {
-    constructor(author_item) {
-        this.name = author_item['member']['name'];
-        this.avatar = author_item['member']['avatar_url'];
-        this.url = author_item['member']['url'].replace('api.', '');
-    }
-
-    get_name_html() {
-        return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
-    }
-    get_html() {
-        var output = '';
-        output += '<a href="' + this.url +'">' +
-                  '<img class="avatar" src="' + this.avatar + '"></a>';
-        output += this.get_name_html();
-        return output;
-    }
-}
-
-class Comment {
-    constructor(comment_item) {
-        this.id = comment_item['id'];
-        this.time = comment_item['created_time'];
-        this.content = comment_item['content'];
-        this.likes = comment_item['vote_count'];
-        this.author = new Author(comment_item['author']);
-        if (comment_item['reply_to_author']) {
-            this.reply_to_author = new Author(comment_item['reply_to_author']);
-        }
-    }
-
-    get_html() {
-        var output = '';
-        output += '<div class="comment-item">';
-        output += '<div class="author">';
-        output += '<span class="comment-author">'
-        output += this.author.get_html();
-        output += '</span>'; // comment-author
-        if (this.reply_to_author) {
-            output += '<i class="fas fa-long-arrow-alt-right arraw"></i>'
-            output += '<span class="comment-author">'
-            output += this.reply_to_author.get_name_html();
-            output += '</span>'; // comment-author
-        }
-        output += '</div>'; // author
-        output += '<div class="statistics">' +
-                  '<span><i class="far fa-heart"></i>' + this.likes + '</span>' +
-                  '</div>';
-        output += '<div class="content">';
-        output += this.content;
-        output += '</div>'; // content
-        output += '</div>'; // comment-item
-        return output;
-    }
-}
+const {Comment} = require('./models');
 
 
 module.exports = class Comments {
