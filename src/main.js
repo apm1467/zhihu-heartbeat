@@ -35,7 +35,7 @@ app.on('ready', function() {
         main_window.setBounds(bounds);
     }
 
-    main_window.loadFile('index.html');
+    main_window.loadFile('src/index.html');
 
     // hide the main window instead of closing in on macOS
     if (process.platform === 'darwin') {

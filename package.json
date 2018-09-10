@@ -2,7 +2,7 @@
   "name": "Heartbeat",
   "version": "1.1.2",
   "description": "（非官方）知乎想法桌面端",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",

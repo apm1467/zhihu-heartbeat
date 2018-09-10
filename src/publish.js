@@ -20,7 +20,7 @@ exports.open_editor = function () {
         useContentSize: true
     });
 
-    win.loadFile('pin_editor.html');
+    win.loadFile('src/pin_editor.html');
 
     win.once('ready-to-show', function () {
         win.show();

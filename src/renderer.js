@@ -217,7 +217,7 @@ function open_comments_window(feed_item) { // accept jQuery object
         useContentSize: true
     });
 
-    win.loadFile('comments.html');
+    win.loadFile('src/comments.html');
 
     win.webContents.on('did-finish-load', function() {
         // pass pin_id to comments window
@@ -408,7 +408,7 @@ $(document).on('click', '.video', function(event) {
         autoHideMenuBar: true,
         useContentSize: true
     });
-    win.loadFile('video_player.html');
+    win.loadFile('src/video_player.html');
 
     // pass video url to player window
     win.webContents.on('did-finish-load', function() {
