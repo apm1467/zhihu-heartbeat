@@ -41,8 +41,7 @@ module.exports = class Feed {
             var feed_array = JSON.parse(body)['data'];
     
             // get latest pin id & time
-            var array_length = feed_array.length;
-            for (var i = 0; i < array_length; i++) {
+            for (var i = 0; i < feed_array.length; i++) {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
@@ -160,8 +159,7 @@ module.exports = class Feed {
             var pin_time;
             console.log(fetch_offset);
     
-            var array_length = feed_array.length;
-            for (var i = 0; i < array_length; i++) {
+            for (var i = 0; i < feed_array.length; i++) {
                 var feed_item = feed_array[i];
                 if (feed_item['type'] == 'moment') {
                     var pin = new Pin(feed_item);
@@ -220,16 +218,13 @@ module.exports = class Feed {
         request(options, function(error, response, body) {});
     }
 
-    _append_to_feed(feed_array) {
+    _append_to_feed(items) {
         var output = '';
-        var array_length = feed_array.length;
-        for (var i = 0; i < array_length; i++) {
-            var feed_item_dict = feed_array[i];
-            output += generate_feed_item_html(feed_item_dict);
-        }
+        for (var i = 0; i < items.length; i++)
+            output += generate_feed_item_html(items[i]);
         $('.feed').append(output);
 
-        this.oldest_local_pin_id = feed_array[array_length - 1]['target']['id'];
+        this.oldest_local_pin_id = items[items.length - 1]['target']['id'];
         this.feed_offset += 10;
     }
 

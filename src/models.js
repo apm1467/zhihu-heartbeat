@@ -33,7 +33,7 @@ class Pin {
         this.repins = target['repin_count'];
         this.comments_count = target['comment_count'];
         this.text = '';
-        this.image_array = [];
+        this.images = [];
         this.video = ''; // video url
 
         var content_array = target['content'];
@@ -75,8 +75,7 @@ class Pin {
         }
 
         // handle media
-        var array_length = content_array.length;
-        for (var i = 0; i < array_length; i++) {
+        for (var i = 0; i < content_array.length; i++) {
             if (content_array[i]['type'] == 'link') {
                 var url = content_array[i]['url'];
                 url = '<a class="link" href="' + url + '">' + url + '</a>';
@@ -84,13 +83,12 @@ class Pin {
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
             if (content_array[i]['type'] == 'image') {
-                this.image_array.push(content_array[i]['url']);
+                this.images.push(content_array[i]['url']);
             }
             else if (content_array[i]['type'] == 'video') {
                 this.video_thumbnail = content_array[i]['thumbnail'];
                 var playlist = content_array[i]['playlist'];
-                var playlist_length = playlist.length;
-                for (var j = 0; j < playlist_length; j++) {
+                for (var j = 0; j < playlist.length; j++) {
                     if (playlist[j]['quality'] == 'hd') {
                         this.video = playlist[j]['url'];
                         this.video_height = playlist[j]['height'];
@@ -100,7 +98,6 @@ class Pin {
                 }
             }
         }
-        this.image_count = this.image_array.length;
     }
 
     get_statistics_html() {
@@ -122,25 +119,25 @@ class Pin {
             output += '<div class="text">' + this.text + '</div>';
         }
 
-        if (this.image_count > 0) {
+        var image_count = this.images.length;
+        if (image_count) {
             output += '<div class="images">';
-            if (this.image_count == 1) {
+            if (image_count == 1) {
                 // <img class="img single-img" src="...">
-                output += '<img class="img single-img" src="' + this.image_array[0] + '">';
+                output += '<img class="img single-img" src="' + this.images[0] + '">';
             }
-            else if (this.image_count == 2) {
+            else if (image_count == 2) {
                 for (var i = 0; i < 2; i++) {
                     // <div class="img double-img" style="background-image: url('...');"></div>
                     output += '<div class="img double-img" style="background-image: url(\''
-                              + this.image_array[i] + '\');"></div>';
+                              + this.images[i] + '\');"></div>';
                 }
             }
-            else if (this.image_count >= 3) {
+            else {
                 output += '<div class="img-grid"><div class="row">';
-                for (var i = 0; i < this.image_count; i++) {
-                    // <div class="img" style="background-image: url('...');"></div>
+                for (var i = 0; i < image_count; i++) {
                     output += '<div class="img" style="background-image: url(\''
-                              + this.image_array[i] + '\');"></div>';
+                              + this.images[i] + '\');"></div>';
                     // change to new row after every 3 images
                     if (i > 1 && (i + 1) % 3 == 0) {
                         output += '</div><div class="row">';
