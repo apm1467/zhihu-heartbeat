@@ -6,10 +6,19 @@
         const {BrowserWindow} = require('electron').remote;
         const ipc = require('electron').ipcRenderer;
         const Hls = require('hls.js');
+        const video = document.getElementById('video');
 
         // get video url from renderer
         ipc.on('video', function(event, video_url, window_id) {
-            const video = document.getElementById('video');
+
+            // play mp4
+            if (video_url.endsWith(".mp4")) {
+                video.src = video_url;
+                video.play();
+                return;
+            }
+
+            // play m3u
             const hls = new Hls({fragLoadingMaxRetry: 1});
             hls.loadSource(video_url);
             hls.attachMedia(video);
@@ -20,6 +29,7 @@
             // report back if video url is outdated
             hls.on(Hls.Events.ERROR, function(event, data) {
                 console.log(data);
+                console.log(video_url);
                 if (!data.fatal)
                     return;
 
