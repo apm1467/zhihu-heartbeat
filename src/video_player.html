@@ -12,7 +12,7 @@
         ipc.on('video', function(event, video_url, window_id) {
 
             // play mp4
-            if (video_url.endsWith(".mp4")) {
+            if (video_url.includes(".mp4")) {
                 video.src = video_url;
                 video.play();
                 return;
