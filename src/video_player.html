@@ -9,12 +9,11 @@
         const video = document.getElementById('video');
 
         // get video url from renderer
-        ipc.on('video', function(event, video_url, window_id) {
+        ipc.on('video', function(event, video_url, renderer_window_id) {
 
             // play mp4
             if (video_url.includes(".mp4")) {
-                video.src = video_url;
-                video.play();
+                play_mp4();
                 return;
             }
 
@@ -26,18 +25,31 @@
                 video.play();
             });
 
-            // report back if video url is outdated
             hls.on(Hls.Events.ERROR, function(event, data) {
                 console.log(data);
-                console.log(video_url);
-                if (!data.fatal)
-                    return;
-
-                console.log('video outdated');
-                hls.destroy();
-                video.pause();
-                BrowserWindow.fromId(window_id).webContents.send('video_outdated');
+                if (data.fatal)
+                    report_video_outdated();
             });
+
+
+            async function play_mp4() {
+                video.src = video_url;
+                try {
+                    await video.play();
+                }
+                catch (err) {
+                    report_video_outdated();
+                }
+                return;
+            }
+
+            // request updated video url from renderer 
+            function report_video_outdated() {
+                console.log(video_url);
+                console.log('video outdated');
+                video.pause();
+                BrowserWindow.fromId(renderer_window_id).webContents.send('video_outdated');
+            }
         });
     </script>
 
