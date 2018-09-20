@@ -2,6 +2,7 @@ const fs = require('fs');
 const request = require('request');
 const electron = require('electron');
 const remote = electron.remote;
+const shell = electron.shell;
 const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
 const Feed = require('./feed');
@@ -239,6 +240,12 @@ const logout_menu = Menu.buildFromTemplate([
         }
     },
     {
+        label: '意见反馈',
+        click: function() {
+            shell.openExternal(constants.GITHUB_ISSUES_URL);
+        }
+    },
+    {
         type: 'separator'
     },
     {
@@ -256,7 +263,6 @@ $(document).on('click', '.self-avatar', function(event) {
 // ------------------------------------------------------------
 
 // open links in external browser
-const shell = require('electron').shell;
 $(document).on('click', 'a[href^="http"]', function(event) {
     event.preventDefault();
     shell.openExternal(this.href, {activate: false});

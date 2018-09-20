@@ -94,6 +94,8 @@ exports.PIN_STATISTICS_UPDATE_INTERVAL = 600000; // 10 min
 
 exports.GITHUB_REPO_URL = 'https://github.com/apm1467/zhihu-heartbeat/';
 
+exports.GITHUB_ISSUES_URL = 'https://github.com/apm1467/zhihu-heartbeat/issues';
+
 exports.GITHUB_DOWNLOAD_URL = 'https://github.com/apm1467/zhihu-heartbeat/releases/latest';
 
 exports.GITHUB_CHECK_UPDATE_URL = 'https://api.github.com/repos/apm1467/zhihu-heartbeat/releases/latest';
