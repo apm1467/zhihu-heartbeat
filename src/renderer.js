@@ -305,7 +305,7 @@ $(document).on('click', '.img', function(event) {
                 win_height = Math.ceil(win_width / aspect_ratio);
             }
             else {
-                // normal aspect ratio; display image on screen enitrely
+                // normal aspect ratio; display image on screen entirely
                 img_html_attr = 'width="100%" height="100%"';
                 win_height = Math.min(max_window_h, this.height);
                 win_width = Math.ceil(win_height * aspect_ratio);
@@ -393,17 +393,19 @@ function get_img_url(img_obj) { // accept jQuery object
 // ------------------------------------------------------------
 
 // open video in new window
-$(document).on('click', '.video', function(event) {
+$(document).on('click', '.video .thumbnail', function(event) {
+    var video = $(this).parent();
+
     // prevent opening window multiple times on double click
-    if ($(this).hasClass('darkened'))
+    if (video.hasClass('darkened'))
         return;
 
-    $(this).addClass('darkened');
+    video.addClass('darkened');
 
-    var pin_id = $(this).parent().parent().attr('data-id');
-    var video_url = $(this).attr('data-url');
-    var width = parseInt($(this).attr('data-width'));
-    var height = parseInt($(this).attr('data-height'));
+    var pin_id = video.parent().parent().attr('data-id');
+    var video_url = video.attr('data-url');
+    var width = parseInt(video.attr('data-width'));
+    var height = parseInt(video.attr('data-height'));
 
     var win = new BrowserWindow({
         titleBarStyle: 'hidden',
