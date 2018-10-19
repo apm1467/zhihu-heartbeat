@@ -5,7 +5,7 @@ class PinAuthor {
     constructor(author_dict) {
         this.id = author_dict['id'];
         this.name = author_dict['name'];
-        this.avatar = author_dict['avatar_url'];
+        this.avatar = author_dict['avatar_url'].replace('_s', '_l');
         this.url = constants.BASE_WEB_URL + author_dict['url'];
     }
 
@@ -198,7 +198,7 @@ class Pin {
 class CommentAuthor {
     constructor(author_dict) {
         this.name = author_dict['member']['name'];
-        this.avatar = author_dict['member']['avatar_url'];
+        this.avatar = author_dict['member']['avatar_url'].replace('_s', '_l');
         this.url = author_dict['member']['url'].replace('api.', '');
     }
 
