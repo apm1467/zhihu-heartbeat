@@ -1,4 +1,4 @@
-const request = require('request');
+const request = require('request-promise');
 const constants = require('./constants');
 const auth = require('./auth');
 const {Comment} = require('./models');
@@ -13,29 +13,25 @@ module.exports = class Comments {
         this.offset = 0; // needed when fetching older comments
     }
 
-    start() {
+    async start() {
         $('.pin').append(this.pin_html);
-        this._fetch_initial_comments();
+        await this._fetch_initial_comments();
+        this._enable_scroll_event();
     }
 
-    _fetch_initial_comments() {
+    async _fetch_initial_comments() {
         var options = {
             method: 'GET',
             url: this.url,
             headers: auth.get_authorized_request_header(),
-            jar: true
+            jar: true,
+            json: true
         };
-        var self = this;
-        request(options, function(error, response, body) {
-            var data_array = JSON.parse(body)['data'];
-            self._append_to_list(data_array);
-
-            // enable comments scroll event
-            self._enable_comments_scroll_event()
-        });
+        var res = await request(options);
+        this._append_to_list(res['data']);
     }
 
-    _enable_comments_scroll_event() {
+    _enable_scroll_event() {
         var self = this;
         var container = $('.comments-container');
         container.scroll(function () {
@@ -44,47 +40,43 @@ module.exports = class Comments {
 
             // scroll down to fetch older comments
             if (page_length - scroll_position < 2000) {
-                self._fetch_older_comments();
-
-                // unbind scroll event
+                // only send one fetch request
                 container.off('scroll');
+                self._fetch_older_comments()
+                    .then(() => self._enable_scroll_event());
             }
         });
     }
 
-    _fetch_older_comments() {
+    async _fetch_older_comments() {
         var options = {
             method: 'GET',
             url: this.url + '&offset=' + this.offset,
             headers: auth.get_authorized_request_header(),
-            jar: true
+            jar: true,
+            json: true
         };
-        var self = this;
-        request(options, function(error, response, body) {
-            try {
-                var data_array = JSON.parse(body)['data'];
-                self._append_to_list(data_array);   
-            }
-            catch (err) {
-                console.warn(body);
-            }
-
-            // re-enable comments scroll event
-            self._enable_comments_scroll_event();
-        });
+        var res = await request(options);
+        try {
+            var data = res['data'];
+            self._append_to_list(data);   
+        }
+        catch (err) {
+            console.warn(res);
+        }
     }
 
-    _append_to_list(data_array) {
+    _append_to_list(data) {
         var output = '';
-        for (var i = 0; i < data_array.length; i++) {
-            var comment = new Comment(data_array[i]);
+        for (const item of data) {
+            var comment = new Comment(item);
             output += comment.get_html();
 
-            var child_comments = data_array[i]['child_comments'];
-            if (child_comments) {
+            var child_items = item['child_comments'];
+            if (child_items) {
                 output += '<div class="child-comments">';
-                for (var j = 0; j < child_comments.length; j++) {
-                    var comment = new Comment(child_comments[j]);
+                for (const child_item of child_items) {
+                    var comment = new Comment(child_item);
                     output += comment.get_html();
                 }
                 output += '</div>'; // child-comments
