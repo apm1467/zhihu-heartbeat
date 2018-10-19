@@ -19,7 +19,8 @@
   "dependencies": {
     "hls.js": "^0.10.1",
     "jquery": "^3.3.1",
-    "request": "^2.87.0"
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
   },
   "build": {
     "appId": "ch.yige.zhihu-heartbeat",
