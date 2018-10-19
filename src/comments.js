@@ -34,7 +34,7 @@ module.exports = class Comments {
     _enable_scroll_event() {
         var self = this;
         var container = $('.comments-container');
-        container.scroll(function () {
+        container.scroll(async function() {
             var page_length = container[0].scrollHeight;
             var scroll_position = container.scrollTop();
 
@@ -42,8 +42,8 @@ module.exports = class Comments {
             if (page_length - scroll_position < 2000) {
                 // only send one fetch request
                 container.off('scroll');
-                self._fetch_older_comments()
-                    .then(() => self._enable_scroll_event());
+                await self._fetch_older_comments();
+                self._enable_scroll_event();
             }
         });
     }

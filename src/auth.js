@@ -57,7 +57,7 @@ exports.get_access_token = async function(email, password, captcha_text) {
             return;
         }
     }
-    authenticate(email, password);
+    await authenticate(email, password);
 }
 
 async function authenticate(email, password) {
@@ -88,9 +88,6 @@ async function authenticate(email, password) {
 
     $('.login-form').addClass('hidden');
     $('.logo').removeClass('hidden');
-
-    // notify renderer
-    current_window.webContents.send('auth_finished');
 }
 
 function calculate_signature(auth_data) {

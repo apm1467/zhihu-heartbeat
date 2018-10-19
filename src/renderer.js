@@ -1,5 +1,5 @@
 const fs = require('fs');
-const request = require('request');
+const request = require('request-promise');
 const electron = require('electron');
 const remote = electron.remote;
 const shell = electron.shell;
@@ -15,7 +15,7 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// initialize the main window
+// login & fetch initial feed
 {
     var login_error = localStorage.getItem('login_error');
     if (login_error) {
@@ -23,36 +23,26 @@ const current_window = remote.getCurrentWindow();
         localStorage.removeItem('login_error');
     }
 
-    const feed = new Feed();
-
-    var access_expire_time = localStorage.getItem('access_expire_time');
-    if (access_expire_time < Date.now()) {
+    var feed = new Feed();
+    var access_expire = localStorage.getItem('access_expire_time');
+    if (access_expire < Date.now())
         log_in();
-
-        // wait for message from auth
-        ipc.on('auth_finished', function (event) {
-            feed.start();
-        });
-    }
-    else {
+    else
         feed.start();
-    }
 
     function log_in() {
         $('.logo').addClass('hidden');
-
-        const auth = require('./auth');
         auth.check_captcha();
+        $('.login-form').removeClass('hidden');
 
-        $('.login-btn').click(function () {
+        $('.login-btn').click(async function() {
             $(this).fadeTo(200, 0);
             var email = $('.email').val();
             var password = $('.password').val();
             var captcha_text = $('.captcha-text').val();
-            auth.get_access_token(email, password, captcha_text);
+            await auth.get_access_token(email, password, captcha_text);
+            feed.start();
         });
-
-        $('.login-form').removeClass('hidden');
     }
 }
 
@@ -64,10 +54,11 @@ const current_window = remote.getCurrentWindow();
     var options = {
         method: 'GET',
         url: constants.GITHUB_CHECK_UPDATE_URL,
-        headers: {'User-Agent': 'apm1467/zhihu-heartbeat'}
+        headers: {'User-Agent': 'apm1467/zhihu-heartbeat'},
+        json: true
     };
     request(options, function(error, response, body) {
-        var latest_version = JSON.parse(body)['tag_name'];
+        var latest_version = body['tag_name'];
         if (current_version != latest_version) {
             var prompt = '当前版本 ' + current_version + '，' + 
                          '最新版本 ' + latest_version + '，要去下载吗？';
@@ -79,10 +70,9 @@ const current_window = remote.getCurrentWindow();
                 message: prompt
             }
             dialog.showMessageBox(current_window, options, function(response) {
-                if (response === 0) {
+                if (response === 0)
                     shell.openExternal(constants.GITHUB_DOWNLOAD_URL);
-                }
-            }); 
+            });
         }
     });
 }
@@ -143,9 +133,7 @@ const current_window = remote.getCurrentWindow();
 
 // click logo to publish new pin
 {
-    $('.logo').click(function () {
-        publish.open_editor();
-    });
+    $('.logo').click(() => publish.open_editor());
 }
 
 // ------------------------------------------------------------
@@ -437,7 +425,7 @@ const current_window = remote.getCurrentWindow();
         var width = parseInt(video.attr('data-width'));
         var height = parseInt(video.attr('data-height'));
 
-        var win = new BrowserWindow({
+        var player_win = new BrowserWindow({
             titleBarStyle: 'hidden',
             show: false,
             height: height,
@@ -446,30 +434,30 @@ const current_window = remote.getCurrentWindow();
             autoHideMenuBar: true,
             useContentSize: true
         });
-        win.loadFile('src/video_player.html');
+        player_win.loadFile('src/video_player.html');
 
         // pass video url to player window
-        win.webContents.on('did-finish-load', function() {
-            win.webContents.send('video', video_url, current_window.id);
+        player_win.webContents.on('did-finish-load', function() {
+            player_win.webContents.send('video', video_url, current_window.id);
         });
 
-        win.once('ready-to-show', function() {
-            win.show();
+        player_win.once('ready-to-show', function() {
+            player_win.show();
             $('.video').removeClass('darkened'); // remove darkening
         });
 
         // refresh video url on error
-        ipc.on('video_outdated', function(event) {
+        ipc.on('video_outdated', async function(event) {
             var options = {
                 method: 'GET',
                 url: constants.PIN_URL + '/' + pin_id,
                 headers: auth.get_authorized_request_header(),
-                jar: true
+                jar: true,
+                json: true
             };
-            request(options, function(error, response, body) {
-                var video_url = (new Pin(JSON.parse(body))).video;
-                win.webContents.send('video', video_url, current_window.id);
-            });
+            var res = await request(options);
+            var video_url = (new Pin(res)).video;
+            player_win.webContents.send('video', video_url, current_window.id);
         });
     });
 }

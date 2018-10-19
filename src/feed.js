@@ -53,7 +53,7 @@ module.exports = class Feed {
     _enable_scroll_event() {
         var container = $('.feed-container');
         var self = this;
-        container.scroll(() => {
+        container.scroll(async function() {
             var page_length = container[0].scrollHeight;
             var scroll_position = container.scrollTop();
 
@@ -61,14 +61,13 @@ module.exports = class Feed {
             if (page_length - scroll_position < 3000) {
                 // only send one fetch request
                 container.off('scroll');
-                self._fetch_older_feed()
-                    .then(() => self._enable_scroll_event());
+                await self._fetch_older_feed();
+                self._enable_scroll_event();
             }
 
             // remove update notification when scroll to top
-            else if (scroll_position <= 5) {
+            else if (scroll_position <= 5)
                 $('#update-notification').removeClass('notification-show');
-            }
         });
     }
 
