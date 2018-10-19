@@ -186,6 +186,11 @@ const current_window = remote.getCurrentWindow();
         }
     });
 
+    // click title bar to remove focus
+    $(document).on('click contextmenu', '.title-bar', function(event) {
+        $('.feed-item').removeClass('focus');
+    });
+
     // double click feed item to open comments window
     $(document).on('dblclick', '.feed-item', function(event) {
         // not trigger this event when clicking links or images

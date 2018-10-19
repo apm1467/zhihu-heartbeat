@@ -1,7 +1,9 @@
 body {
-    color: rgb(222, 222, 222);
+    color: rgb(204, 204, 204);
     font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
     margin: 0;
+    cursor: default;
+    user-select: none;
 }
 img {
     -webkit-user-drag: none;
@@ -67,7 +69,6 @@ a:active {
     float: right;
     margin-right: 10px;
     margin-top: 6px;
-    user-select: none;
 }
 #update-notification {
     color: rgb(220, 220, 220);
@@ -103,7 +104,6 @@ a:active {
 }
 .login-form h1 {
     margin-bottom: 50px;
-    user-select: none;
     cursor: default;
 }
 .captcha {
@@ -172,9 +172,17 @@ a:active {
     cursor: default;
 }
 .feed-item.focus {
-    background-color: rgb(66, 66, 66);
+    background-color: rgb(64, 64, 64);
+    color: rgb(220, 220, 220);
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
+    cursor: auto;
+}
+.feed-item.focus .content {
+    user-select: text;
+}
+.feed-item.focus .name {
+    color: rgb(220, 220, 220);
 }
 .feed-item.focus + .feed-item {
     border-top: 1px solid rgb(80, 80, 80);
@@ -203,7 +211,8 @@ a:active {
     font-weight: 600;
     font-size: 18px;
     margin-left: 50px;
-    color: rgb(222, 222, 222);
+    color: rgb(204, 204, 204);
+    user-select: none;
 }
 .author:hover .name {
     color: white;
@@ -256,7 +265,7 @@ a:active {
 .link-title {
     margin-top: 15px;
     line-height: 1.4em;
-    color: rgb(190, 190, 190);
+    color: rgb(160, 160, 160);
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
