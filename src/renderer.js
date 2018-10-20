@@ -438,26 +438,12 @@ const current_window = remote.getCurrentWindow();
 
         // pass video url to player window
         player_win.webContents.on('did-finish-load', function() {
-            player_win.webContents.send('video', video_url, current_window.id);
+            player_win.webContents.send('video', video_url, pin_id);
         });
 
         player_win.once('ready-to-show', function() {
             player_win.show();
             $('.video').removeClass('darkened'); // remove darkening
-        });
-
-        // refresh video url on error
-        ipc.on('video_outdated', async function(event) {
-            var options = {
-                method: 'GET',
-                url: constants.PIN_URL + '/' + pin_id,
-                headers: auth.get_authorized_request_header(),
-                jar: true,
-                json: true
-            };
-            var res = await request(options);
-            var video_url = (new Pin(res)).video;
-            player_win.webContents.send('video', video_url, current_window.id);
         });
     });
 }

@@ -3,17 +3,27 @@
     <video id="video" width="100%" height="100%" controls></video>
 
     <script>
-        const {BrowserWindow} = require('electron').remote;
         const ipc = require('electron').ipcRenderer;
         const Hls = require('hls.js');
+        const request = require('request-promise');
+        const {Pin} = require('./models');
+        const auth = require('./auth');
+        const constants = require('./constants');
+
+        const current_window = require('electron').remote.getCurrentWindow();
         const video = document.getElementById('video');
 
         // get video url from renderer
-        ipc.on('video', function(event, video_url, renderer_window_id) {
-
+        ipc.on('video', async function(event, video_url, pin_id) {
             // play mp4
             if (video_url.includes(".mp4")) {
-                play_mp4();
+                video.src = video_url;
+                try {
+                    await video.play();
+                }
+                catch (err) {
+                    refresh_video_url();
+                }
                 return;
             }
 
@@ -28,26 +38,23 @@
             hls.on(Hls.Events.ERROR, function(event, data) {
                 console.log(data);
                 if (data.fatal)
-                    report_video_outdated();
+                    refresh_video_url();
             });
 
-
-            async function play_mp4() {
-                video.src = video_url;
-                try {
-                    await video.play();
-                }
-                catch (err) {
-                    report_video_outdated();
-                }
-            }
-
-            // request updated video url from renderer 
-            function report_video_outdated() {
+            async function refresh_video_url() {
                 console.log(video_url);
                 console.log('video outdated');
                 video.pause();
-                BrowserWindow.fromId(renderer_window_id).webContents.send('video_outdated');
+
+                var res = await request({
+                    method: 'GET',
+                    url: constants.PIN_URL + '/' + pin_id,
+                    headers: auth.get_authorized_request_header(),
+                    jar: true,
+                    json: true
+                });
+                var video_url = (new Pin(res)).video;
+                current_window.webContents.send('video', video_url, pin_id);
             }
         });
     </script>
