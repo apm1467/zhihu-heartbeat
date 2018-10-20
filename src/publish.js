@@ -1,6 +1,6 @@
 const remote = require('electron').remote;
 const {dialog, BrowserWindow} = remote;
-const request = require('request');
+const request = require('request-promise');
 const constants = require('./constants');
 const auth = require('./auth');
 
@@ -31,44 +31,41 @@ exports.open_editor = function () {
     });
 }
 
-exports.publish = function (text, editor_window) {
-    var options = {
+exports.publish = async function (text, editor_window) {
+    var token_res = await request({
         method: 'GET',
         url: constants.PIN_TOKEN_URL,
         headers: auth.get_authorized_request_header(),
-        jar: true
-    };
-    request(options, function(error, response, body) {
-        var pin_token = JSON.parse(body)['token'];
-        var publish_form = constants.PIN_PUBLISH_FORM;
-        publish_form['token'] = pin_token;
+        jar: true,
+        json: true
+    });
+    var token = token_res['token'];
+    var publish_form = constants.PIN_PUBLISH_FORM;
+    publish_form['token'] = token;
 
-        var content_form = constants.PIN_PUBLISH_CONTENT_FORM;
-        content_form[0]['randomTag'] = generate_random_tag();
-        content_form[0]['content'] = escape_html(text);
-        publish_form['content'] = JSON.stringify(content_form);
+    var content_form = constants.PIN_PUBLISH_CONTENT_FORM;
+    content_form[0]['randomTag'] = generate_random_tag();
+    content_form[0]['content'] = escape_html(text);
+    publish_form['content'] = JSON.stringify(content_form);
 
-        var options = {
-            method: 'POST',
+    var publish_res = await request({
+        method: 'POST',
             url: constants.PIN_URL,
             headers: auth.get_authorized_request_header(),
+            form: publish_form,
             jar: true,
-            form: publish_form
-        };
-        request(options, function(error, response, body) {
-            if (!('error' in JSON.parse(body))) {
-                // only close editor window after request succeeds
-                editor_window.close();
-            }
-            else {
-                console.log(response);
-                dialog.showMessageBox(current_window, {
-                    type: 'error',
-                    message: JSON.parse(body)['error']
-                });
-            }
-        });
+            json: true
     });
+
+    if ('error' in publish_res) {
+        console.log(response);
+        dialog.showMessageBox(current_window, {
+            type: 'error',
+            message: publish_res['error']
+        });
+    }
+    else
+        editor_window.close();
 }
 
 function escape_html(text) {
