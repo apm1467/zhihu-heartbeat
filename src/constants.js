@@ -99,4 +99,4 @@ exports.GITHUB_ISSUES_URL = GITHUB_REPO_URL + '/issues';
 
 exports.GITHUB_DOWNLOAD_URL = GITHUB_REPO_URL +  '/releases/latest';
 
-exports.GITHUB_CHECK_UPDATE_URL = 'https://api.github.com/repos/apm1467/zhihu-heartbeat/releases/latest';
+exports.GITHUB_CHECK_UPDATE_URL = 'https://raw.githubusercontent.com/apm1467/zhihu-heartbeat/master/version';

@@ -49,24 +49,17 @@ const current_window = remote.getCurrentWindow();
 
 // check app update
 {
-    var current_version = 'v' + app.getVersion();
-    var options = {
-        method: 'GET',
-        url: constants.GITHUB_CHECK_UPDATE_URL,
-        headers: {'User-Agent': 'apm1467/zhihu-heartbeat'},
-        json: true
-    };
-    request(options, function(error, response, body) {
-        var latest_version = body['tag_name'];
+    request(constants.GITHUB_CHECK_UPDATE_URL, function(error, response, body) {
+        var latest_version = body;
+        var current_version = app.getVersion();
         if (current_version != latest_version) {
-            var prompt = '当前版本 ' + current_version + '，' + 
-                         '最新版本 ' + latest_version + '，要去下载吗？';
             var options = {
                 title: '检查更新',
                 buttons: ['去下载', '取消'],
                 defaultId: 0,
                 cancelId: 1,
-                message: prompt
+                message: '当前版本 ' + current_version + '，' + 
+                         '最新版本 ' + latest_version + '，要去下载吗？'
             }
             dialog.showMessageBox(current_window, options, function(response) {
                 if (response === 0)
