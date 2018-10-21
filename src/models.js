@@ -29,9 +29,9 @@ class Pin {
         this.id = target['id'];
         this.author = new PinAuthor(target['author']);
         this.time = target['updated']; // int
-        this.likes = target['reaction_count'];
-        this.repins = target['repin_count'];
-        this.comments_count = target['comment_count'];
+        this.num_likes = target['reaction_count'];
+        this.num_repins = target['repin_count'];
+        this.num_comments = target['comment_count'];
         this.text = '';
         this.images = [];
         this.video = ''; // video url
@@ -68,31 +68,30 @@ class Pin {
             // case 2: href first
             var urls = this.text.match(/<a\shref=["'][^"']*["']\sclass="repin_account"/g);
             if (urls) {
-                for (var i = 0; i < urls.length; i++) {
-                    this.text = this.text.replace(urls[i], repin_sign + urls[i]);
-                }
-            }   
+                for (const url of urls)
+                    this.text = this.text.replace(url, repin_sign + url);
+            }
         }
 
         // handle media
-        for (var i = 0; i < content_array.length; i++) {
-            if (content_array[i]['type'] == 'link') {
-                var url = content_array[i]['url'];
+        for (const item of content_array) {
+            if (item['type'] == 'link') {
+                var url = item['url'];
                 url = '<a class="link" href="' + url + '">' + url + '</a>';
-                var title = content_array[i]['title'];
+                var title = item['title'];
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
-            if (content_array[i]['type'] == 'image') {
-                this.images.push(content_array[i]['url']);
+            if (item['type'] == 'image') {
+                this.images.push(item['url']);
             }
-            else if (content_array[i]['type'] == 'video') {
-                this.video_thumbnail = content_array[i]['thumbnail'];
-                var playlist = content_array[i]['playlist'];
-                for (var j = 0; j < playlist.length; j++) {
-                    if (playlist[j]['quality'] == 'hd') {
-                        this.video = playlist[j]['url'];
-                        this.video_height = playlist[j]['height'];
-                        this.video_width = playlist[j]['width'];
+            if (item['type'] == 'video') {
+                this.video_thumbnail = item['thumbnail'];
+                var playlist = item['playlist'];
+                for (const video of playlist) {
+                    if (video['quality'] == 'hd') {
+                        this.video = video['url'];
+                        this.video_height = video['height'];
+                        this.video_width = video['width'];
                         break;
                     }
                 }
@@ -106,9 +105,9 @@ class Pin {
             // include delete button
             output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
         }
-        output += '<span><i class="far fa-comment"></i>' + this.comments_count + '</span>';
-        output += '<span><i class="fas fa-retweet"></i>' + this.repins + '</span>';
-        output += '<span><i class="far fa-heart"></i>' + this.likes + '</span>';
+        output += '<span><i class="far fa-comment"></i>' + this.num_comments + '</span>';
+        output += '<span><i class="fas fa-retweet"></i>' + this.num_repins + '</span>';
+        output += '<span><i class="far fa-heart"></i>' + this.num_likes + '</span>';
         output += '</div>'; // statistics
         return output;
     }
@@ -219,7 +218,7 @@ class Comment {
         this.id = comment_item['id'];
         this.time = comment_item['created_time'];
         this.content = comment_item['content'];
-        this.likes = comment_item['vote_count'];
+        this.num_likes = comment_item['vote_count'];
         this.author = new CommentAuthor(comment_item['author']);
         if (comment_item['reply_to_author']) {
             this.reply_to_author = new CommentAuthor(comment_item['reply_to_author']);
@@ -241,7 +240,7 @@ class Comment {
         }
         output += '</div>'; // author
         output += '<div class="statistics">' +
-                  '<span><i class="far fa-heart"></i>' + this.likes + '</span>' +
+                  '<span><i class="far fa-heart"></i>' + this.num_likes + '</span>' +
                   '</div>';
         output += '<div class="content">';
         output += this.content;

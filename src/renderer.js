@@ -1,12 +1,11 @@
 const fs = require('fs');
-const request = require('request-promise');
+const request = require('request');
 const electron = require('electron');
 const remote = electron.remote;
 const shell = electron.shell;
 const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
 const Feed = require('./feed');
-const {Pin} = require('./models');
 const publish = require('./publish');
 const constants = require('./constants');
 const auth = require('./auth');

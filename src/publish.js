@@ -1,13 +1,10 @@
-const remote = require('electron').remote;
-const {dialog, BrowserWindow} = remote;
+const {dialog, BrowserWindow} = require('electron').remote;
 const request = require('request-promise');
 const constants = require('./constants');
 const auth = require('./auth');
 
-const current_window = remote.getCurrentWindow();
 
-
-exports.open_editor = function () {
+exports.open_editor = function() {
     var win = new BrowserWindow({
         show: false,
         resizable: false,
@@ -19,19 +16,12 @@ exports.open_editor = function () {
         backgroundColor: "#333333",
         useContentSize: true
     });
-
     win.loadFile('src/pin_editor.html');
-
-    win.once('ready-to-show', function () {
-        win.show();
-    });
-
-    win.on('closed', function () {
-        win = null;
-    });
+    win.once('ready-to-show', () => win.show());
+    win.on('closed', () => win = null);
 }
 
-exports.publish = async function (text, editor_window) {
+exports.publish = async function(text, editor_window) {
     var token_res = await request({
         method: 'GET',
         url: constants.PIN_TOKEN_URL,
@@ -40,12 +30,13 @@ exports.publish = async function (text, editor_window) {
         json: true
     });
     var token = token_res['token'];
-    var publish_form = constants.PIN_PUBLISH_FORM;
-    publish_form['token'] = token;
 
     var content_form = constants.PIN_PUBLISH_CONTENT_FORM;
     content_form[0]['randomTag'] = generate_random_tag();
     content_form[0]['content'] = escape_html(text);
+
+    var publish_form = constants.PIN_PUBLISH_FORM;
+    publish_form['token'] = token;
     publish_form['content'] = JSON.stringify(content_form);
 
     var publish_res = await request({
@@ -56,10 +47,9 @@ exports.publish = async function (text, editor_window) {
             jar: true,
             json: true
     });
-
     if ('error' in publish_res) {
         console.log(response);
-        dialog.showMessageBox(current_window, {
+        dialog.showMessageBox(editor_window, {
             type: 'error',
             message: publish_res['error']
         });
