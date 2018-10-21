@@ -82,10 +82,10 @@ const current_window = remote.getCurrentWindow();
 {
     setInterval(function() {
         const now = Math.round(Date.now() / 1000);
-
-        $('.time').each(function () {
-            var post_time = parseInt($(this).attr('data-time'));
-            $(this).text(get_relative_time_str(post_time, now));
+        $('.time').each(function() {
+            var time_feld = $(this);
+            var post_time = parseInt(time_feld.attr('data-time'));
+            time_feld.text(get_relative_time_str(post_time, now));
         });
     }, 1000);
 
@@ -96,23 +96,17 @@ const current_window = remote.getCurrentWindow();
 
     function get_relative_time_str(post_time, now) {
         var diff = now - post_time;
-
-        if (diff < sec_per_min) {
+        if (diff < sec_per_min)
             return diff + ' 秒前';
-        }
-        else if (diff < sec_per_hour) {
+        if (diff < sec_per_hour)
             return Math.round(diff / sec_per_min) + ' 分前';
-        }
-        else if (diff < sec_per_day ) {
+        if (diff < sec_per_day )
             return Math.round(diff / sec_per_hour) + ' 时前';
-        }
-        else if (diff < sec_per_week) {
+        if (diff < sec_per_week)
             return Math.round(diff / sec_per_day) + ' 日前';
-        }
-        else {
-            date = new Date(post_time * 1000);
-            return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
-        }
+        // fall back to display full date
+        date = new Date(post_time * 1000);
+        return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
     }
 }
 
@@ -197,9 +191,7 @@ const current_window = remote.getCurrentWindow();
         const feed_item_menu = Menu.buildFromTemplate([
             {
                 label: '详情',
-                click: function() {
-                    open_comments_window(feed_item);
-                }
+                click: () => open_comments_window(feed_item)
             }
         ]);
         feed_item_menu.popup(current_window);
@@ -244,22 +236,16 @@ const current_window = remote.getCurrentWindow();
     const logout_menu = Menu.buildFromTemplate([
         {
             label: '重载界面',
-            click: function() {
-                current_window.reload();
-            }
+            click: () => current_window.reload()
         },
         {
             label: '意见反馈',
-            click: function() {
-                shell.openExternal(constants.GITHUB_ISSUES_URL);
-            }
+            click: () => shell.openExternal(constants.GITHUB_ISSUES_URL)
         },
-        {
-            type: 'separator'
-        },
+        { type: 'separator' },
         {
             label: '登出知乎',
-            click: function() {
+            click: () => {
                 localStorage.clear();
                 current_window.reload();
             }
