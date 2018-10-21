@@ -18,7 +18,10 @@ module.exports = class Feed {
         display_self_avatar();
         await this._fetch_initial_feed();
         this._enable_scroll_event();
-        setInterval(this._check_update, constants.FEED_UPDATE_INTERVAL);
+        setInterval(
+            () => this._check_update(), 
+            constants.FEED_UPDATE_INTERVAL
+        );
     }
 
     async _fetch_initial_feed() {
