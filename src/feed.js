@@ -25,14 +25,13 @@ module.exports = class Feed {
     }
 
     async _fetch_initial_feed() {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         if (res['data'] === undefined) {
             console.warn(res);
             return;
@@ -75,16 +74,14 @@ module.exports = class Feed {
     }
 
     async _fetch_older_feed() {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?after_id=' + this.local_oldest_pin_id + 
                  '&offset=' + this.feed_offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
-
+        });
         if (res['data'])
             this._append_to_feed(res['data']);
         else
@@ -92,14 +89,13 @@ module.exports = class Feed {
     }
 
     async _check_update() {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         if (res['data'] === undefined) {
             console.warn(res);
             return;
@@ -129,15 +125,14 @@ module.exports = class Feed {
 
     async _fetch_update(fetch_after_id, fetch_offset, output) {
         console.log(fetch_offset);
-        var options = {
+        var res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + 
                  '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         var feed_array = res['data'];
         var stop_fetching = false;
 
@@ -191,14 +186,13 @@ module.exports = class Feed {
     }
 
     _report_latest_viewed_pin_id() {
-        var options = {
+        request({
             method: 'POST',
             url: constants.PIN_VIEWS_REPORT_URL,
             headers: auth.get_authorized_request_header(),
             form: { 'pin_ids': this.local_latest_pin_id },
             jar: true
-        };
-        request(options);
+        });
     }
 
     _append_to_feed(items) {
@@ -212,14 +206,13 @@ module.exports = class Feed {
     }
 
     static async delete_pin(id) {
-        var options = {
+        var res = await request({
             method: 'DELETE',
             url: constants.PIN_URL + '/' + id,
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         if (res['success']) {
             var selector = '[data-id="' + id + '"]';
             $(selector).remove();
@@ -227,14 +220,13 @@ module.exports = class Feed {
     }
 
     static async update_pin_statistics(id) {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: constants.PIN_URL + '/' + id,
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         try {
             var pin = new Pin(res);
         }
@@ -250,15 +242,13 @@ module.exports = class Feed {
 
 
 async function display_self_avatar() {
-    var options = {
+    var res = await request({
         method: 'GET',
         url: constants.SELF_URL,
         headers: auth.get_authorized_request_header(),
         json: true,
         jar: true
-    };
-    var res = await request(options);
-    
+    });
     if ("error" in res) {
         display_self_avatar();
         return;
