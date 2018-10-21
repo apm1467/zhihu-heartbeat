@@ -284,124 +284,123 @@ const current_window = remote.getCurrentWindow();
 
 // open timeline images
 {
-    // click to open feed images in new window
+    // click to open images in new window
     $(document).on('click', '.img', function(event) {
+        img = $(this);
+
         // prevent opening window multiple times on double click
-        if ($(this).hasClass('darkened'))
+        if (img.hasClass('darkened'))
             return;
 
-        // darken the image thumbnail while load image window
-        $(this).addClass('darkened');
-
-        var img = new Image();
-        img.src = get_img_url($(this));
-        img.onload = function() {
-            // calculate image window size
-            var win_height = this.height;
-            var win_width = this.width;
-            var img_html_attr = '';
-
-            // get current screen size
-            const current_screen = electron.screen.getDisplayMatching(current_window.getBounds());
-            const screen_w = current_screen.workAreaSize.width;
-            const screen_h = current_screen.workAreaSize.height;
-
-            // image is larger than screen
-            if (screen_w < this.width || screen_h < this.height) {
-                const max_window_w = Math.ceil(screen_w * 0.95);
-                const max_window_h = Math.ceil(screen_h * 0.9);
-
-                var aspect_ratio = this.width / this.height;
-                if (aspect_ratio <= 0.45) {
-                    // image is very tall; allow scroll in vertical direction
-                    img_html_attr = 'width="100%"';
-                    win_width = Math.min(max_window_w, this.width);
-                    win_height = Math.ceil(win_width / aspect_ratio);
-                }
-                else {
-                    // normal aspect ratio; display image on screen entirely
-                    img_html_attr = 'width="100%" height="100%"';
-                    win_height = Math.min(max_window_h, this.height);
-                    win_width = Math.ceil(win_height * aspect_ratio);
-
-                    if (win_width > screen_w) {
-                        // image is very wide; adjust window size according to screen width
-                        win_width = max_window_w;
-                        win_height = Math.ceil(win_width / aspect_ratio);
-                    }
-                }
-            }
-
-            // open image window
-            var win = new BrowserWindow({
-                titleBarStyle: 'hidden',
-                show: false,
-                height: win_height,
-                width: win_width,
-                backgroundColor: "#000",
-                autoHideMenuBar: true,
-                fullscreenable: false,
-                useContentSize: true
-            });
-
-            win.loadURL('data:text/html,' +
-                        '<body style="-webkit-app-region: drag; margin: 0;">' +
-                        '<img draggable="false" ' + img_html_attr + ' src="' + this.src + '">' +
-                        '</body>');
-
-            win.once('ready-to-show', function () {
-                win.show();
-                $('.img').removeClass('darkened');
-            });
-
-            win.on('closed', function () {
-                win = null;
-            });
-        };
+        // darken the image thumbnail while opening image window
+        img.addClass('darkened');
+        open_img_window(get_img_url(img).replace(/_[a-z]+/, '_qhd')); 
     });
 
-    // right click to save feed images
+    // right click context menu
     $(document).on('contextmenu', '.img', function(event) {
-        var img_url = get_img_url($(this));
+        var img_url = get_img_url($(this)).replace(/_[a-z]+/, '');
         var desktop_path = app.getPath('desktop') + '/';
         var file_name = Date.now() + '.jpg';
-        const save_img_menu = Menu.buildFromTemplate([
+        const img_menu = Menu.buildFromTemplate([
+            {
+                label: '打开原图',
+                click: () => {
+                    $(this).addClass('darkened');
+                    open_img_window(img_url);
+                }
+            },
+            { type: 'separator' },
             {
                 label: '保存原图到桌面',
-                click: function() {
-                    request(img_url).pipe(fs.createWriteStream(desktop_path + file_name));
-                }
+                click: () =>
+                    request(img_url).pipe(fs.createWriteStream(desktop_path + file_name))
             },
             {
                 label: '保存原图到…',
-                click: function() {
+                click: () => {
                     current_window.focus();
                     var path = dialog.showSaveDialog({
                         title: '保存原图',
                         defaultPath: file_name,
                         filters: [{ extensions: ['jpg'] }]
                     });
-                    if (path) {
+                    if (path)
                         request(img_url).pipe(fs.createWriteStream(path));
-                    }
                 }
             }
         ]);
-
-        save_img_menu.popup(current_window);
+        img_menu.popup(current_window);
     });
 
-    function get_img_url(img_obj) { // accept jQuery object
-        var img_url;
-        if (img_obj.hasClass('single-img')) {
-            img_url = img_obj.attr('src');
+    function get_img_url(img_jquery) {
+        if (img_jquery.hasClass('single-img'))
+            return img_jquery.attr('src');
+        else
+            return img_jquery.css('background-image').slice(4, -1).replace(/"/g, "");
+    }
+
+    function open_img_window(img_url) {
+        var img = new Image();
+        img.src = img_url;
+        img.onload = function() {
+            var {win_w, win_h} = calculate_img_window_size(this.width, this.height);
+            var win = new BrowserWindow({
+                titleBarStyle: 'hidden',
+                show: false,
+                height: win_h,
+                width: win_w,
+                backgroundColor: "#000",
+                autoHideMenuBar: true,
+                fullscreenable: false,
+                useContentSize: true
+            });
+            win.loadURL('data:text/html,' +
+                        '<body style="-webkit-app-region: drag; margin: 0;">' +
+                        '<img draggable="false" ' +
+                        'width="' + win_w + '" height="auto" src="' + this.src + '">' +
+                        '</body>');
+            win.once('ready-to-show', () => {
+                win.show();
+                $('.img').removeClass('darkened');
+            });
+            win.on('closed', () => win = null);
+        }
+    }
+
+    function calculate_img_window_size(img_w, img_h) {
+        var current_screen = electron.screen.getDisplayMatching(current_window.getBounds());
+        var screen_w = current_screen.workAreaSize.width;
+        var screen_h = current_screen.workAreaSize.height;
+        var max_w = Math.ceil(screen_w * 0.95);
+        var max_h = Math.ceil(screen_h * 0.9);
+        var output_w;
+        var output_h;
+
+        if (max_w < img_w || max_h < img_h) {
+            var aspect_ratio = img_w / img_h;
+            if (aspect_ratio <= 0.45) {
+                // image is very tall; allow scroll in vertical direction
+                output_w = Math.min(max_w, img_w);
+                output_h = Math.ceil(output_w / aspect_ratio);
+            }
+            else {
+                // normal aspect ratio; display entire image on screen
+                output_h = Math.min(max_h, img_h);
+                output_w = Math.ceil(output_h * aspect_ratio);
+
+                if (output_w > screen_w) {
+                    // image is very wide; adjust window size according to screen width
+                    output_w = max_w;
+                    output_h = Math.ceil(output_w / aspect_ratio);
+                }
+            }
         }
         else {
-            img_url = img_obj.css('background-image').slice(4, -1).replace(/"/g, "");
+            output_w = img_w;
+            output_h = img_h;
         }
-        img_url = img_url.replace(/_[a-z]+/, ""); // get original image
-
-        return img_url;
+        return {win_w: output_w, win_h: output_h};
     }
 }
 
