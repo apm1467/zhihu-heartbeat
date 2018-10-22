@@ -109,58 +109,56 @@ class Pin {
         output += '</div>'; // statistics
         return output;
     }
+    _get_text_html() {
+        return this.text ? `<div class="text">${this.text}</div>` : '';
+    }
+    _get_image_html() {
+        var num_images = this.images.length;
+        if (num_images == 0)
+            return '';
+
+        var output = '<div class="images">';
+
+        if (num_images == 1)
+            output += '<img class="img single-img" src="' + this.images[0] + '">';
+        else if (num_images == 2)
+            for (const url of this.images)
+                output += `<div class="img double-img" 
+                            style="background-image: url('${url}');"></div>`;
+        else {
+            output += '<div class="img-grid"><div class="row">';
+            for (const [index, url] of this.images) {
+                output += `<div class="img" 
+                            style="background-image: url('${url}');"></div>`;
+                // change to new row after every 3 images
+                if (index > 1 && (index + 1) % 3 == 0)
+                    output += '</div><div class="row">';
+            }
+            // remove the last <div class="row"> opening tag
+            if (output.endsWith('<div class="row">'))
+                output = output.slice(0, -17);
+            else
+                output += '</div>'; // row
+            output += '</div>'; // img-grid
+        }
+
+        output += '</div>'; // images
+        return output;
+    }
+    _get_video_html() {
+        if (this.video == '')
+            return '';
+        return `<div class="video" data-url="${this.video}" 
+                data-width="${this.video_width}" data-height="${this.video_height}">
+                <img class="thumbnail" src="${this.video_thumbnail}">
+                <div class="far fa-play-circle"></div>
+                </div>`;
+    }
     get_content_html() {
         var output = '';
-
-        if (this.text) {
-            output += '<div class="text">' + this.text + '</div>';
-        }
-
-        var image_count = this.images.length;
-        if (image_count) {
-            output += '<div class="images">';
-            if (image_count == 1) {
-                // <img class="img single-img" src="...">
-                output += '<img class="img single-img" src="' + this.images[0] + '">';
-            }
-            else if (image_count == 2) {
-                for (var i = 0; i < 2; i++) {
-                    // <div class="img double-img" style="background-image: url('...');"></div>
-                    output += '<div class="img double-img" style="background-image: url(\''
-                              + this.images[i] + '\');"></div>';
-                }
-            }
-            else {
-                output += '<div class="img-grid"><div class="row">';
-                for (var i = 0; i < image_count; i++) {
-                    output += '<div class="img" style="background-image: url(\''
-                              + this.images[i] + '\');"></div>';
-                    // change to new row after every 3 images
-                    if (i > 1 && (i + 1) % 3 == 0) {
-                        output += '</div><div class="row">';
-                    }
-                }
-                // remove the last <div class="row"> opening tag
-                if (output.slice(-17) == '<div class="row">') {
-                    output = output.slice(0, -17);
-                }
-                else {
-                    output += '</div>'; // row
-                }
-                output += '</div>'; // img-grid
-            }
-            output += '</div>'; // images
-        }
-
-        if (this.video) {
-            output += '<div class="video" data-url="' + this.video + '" ' + 
-                      'data-width="' + this.video_width + '" ' + 
-                      'data-height="' + this.video_height + '">';
-            output += '<img class="thumbnail" src="' + this.video_thumbnail + '">';
-            output += '<div class="far fa-play-circle"></div>';
-            output += '</div>';
-        }
-
+        output += this._get_text_html();
+        output += this._get_image_html();
+        output += this._get_video_html();
         return output;
     }
     get_html() {
@@ -232,12 +230,10 @@ class CommentAuthor {
     }
 
     get_name_html() {
-        return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
+        return `<a class="name" href="${this.url}">${this.name}</a>`;
     }
     get_html() {
-        var output = '';
-        output += '<a href="' + this.url +'">' +
-                  '<img class="avatar" src="' + this.avatar + '"></a>';
+        output = `<a href="${this.url}"><img class="avatar" src="${this.avatar}"></a>`;
         output += this.get_name_html();
         return output;
     }
