@@ -16,12 +16,13 @@
         // get video url from renderer
         ipc.on('video', async function(event, video_url, pin_id) {
             // play mp4
-            if (video_url.includes(".mp4")) {
+            if (video_url.includes('.mp4')) {
                 video.src = video_url;
                 try {
                     await video.play();
                 }
                 catch (err) {
+                    console.log(err);
                     refresh_video_url();
                 }
                 return;
@@ -42,8 +43,7 @@
             });
 
             async function refresh_video_url() {
-                console.log(video_url);
-                console.log('video outdated');
+                console.log('refreshing video url');
                 video.pause();
 
                 var res = await request({

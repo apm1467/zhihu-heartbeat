@@ -160,3 +160,6 @@ app.once('ready', function() {
 app.on('window-all-closed', function() {
     app.quit();
 });
+
+// allow video auto play
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
