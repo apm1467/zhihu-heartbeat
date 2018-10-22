@@ -32,6 +32,7 @@ class Pin {
         this.author = new PinAuthor(target['author']);
         this.time = target['updated']; // int
         this.num_likes = target['reaction_count'];
+        this.is_liked = target['virtuals']['reaction_type'] == 'like';
         this.num_repins = target['repin_count'];
         this.num_comments = target['comment_count'];
         this.text = '';
@@ -103,9 +104,14 @@ class Pin {
             // include delete button
             output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
         }
-        output += '<span><i class="far fa-comment"></i>' + this.num_comments + '</span>';
-        output += '<span><i class="fas fa-retweet"></i>' + this.num_repins + '</span>';
-        output += '<span><i class="far fa-heart"></i>' + this.num_likes + '</span>';
+        output += `<span class="num-comments">
+                   <i class="far fa-comment"></i>${this.num_comments}</span>`;
+        output += `<span class="num-repins">
+                   <i class="fas fa-retweet"></i>${this.num_repins}</span>`;
+        // show solid heart if the pin is liked by the user; otherwise show regular heart
+        output += `<span class="num-likes">
+                   <i class="${this.is_liked ? 'fas' : 'far'} fa-heart"></i>${this.num_likes}
+                   </span>`;
         output += '</div>'; // statistics
         return output;
     }
@@ -202,6 +208,31 @@ class Pin {
             $(selector).remove();
         }
     }
+
+    static async like(pin_id) {
+        var res = await request({
+            method: 'POST',
+            url: `${constants.PIN_URL}/${pin_id}/reactions?type=like`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        if (res['success'])
+            await Pin.update_statistics(pin_id);
+    }
+
+    static async unlike(pin_id) {
+        var res = await request({
+            method: 'DELETE',
+            url: `${constants.PIN_URL}/${pin_id}/reactions`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        if (res['success'])
+            await Pin.update_statistics(pin_id);
+    }
+
     static async update_statistics(pin_id) {
         var res = await request({
             method: 'GET',
@@ -233,9 +264,8 @@ class CommentAuthor {
         return `<a class="name" href="${this.url}">${this.name}</a>`;
     }
     get_html() {
-        output = `<a href="${this.url}"><img class="avatar" src="${this.avatar}"></a>`;
-        output += this.get_name_html();
-        return output;
+        return `<a href="${this.url}"><img class="avatar" src="${this.avatar}"></a>
+                ${this.get_name_html()}`;
     }
 }
 

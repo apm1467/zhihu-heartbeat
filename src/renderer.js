@@ -124,7 +124,7 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// click delete button to open delete pin menu
+// click delete button to delete pin
 {
     $(document).on('click', '.delete-btn', function(event) {
         var clicked_btn = $(this);
@@ -139,6 +139,24 @@ const current_window = remote.getCurrentWindow();
             }
         ]);
         delete_menu.popup(current_window);
+    });
+}
+
+// ------------------------------------------------------------
+
+// click heart button to like pin
+{
+    $(document).on('click', '.num-likes', async function(event) {
+        var clicked_btn = $(this);
+        var pin_id = clicked_btn.parent().parent().attr('data-id');
+        console.log(pin_id);
+        var is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+        clicked_btn.fadeTo(200, 0);
+        if (is_liked)
+            await Pin.unlike(pin_id);
+        else
+            await Pin.like(pin_id);
+        clicked_btn.fadeTo(200, 1);
     });
 }
 

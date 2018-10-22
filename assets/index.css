@@ -244,6 +244,24 @@ a:active {
     margin-right: 3px;
     color: rgb(220, 80, 60);
 }
+.statistics .num-likes:hover {
+    color: rgb(160, 160, 160);
+    background-color: rgb(80, 80, 80);
+    border-radius: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 1px;
+    padding-right: 4px;
+    margin-left: 6px;
+    margin-right: -4px;
+}
+.statistics .num-likes:hover .far.fa-heart {
+    color: rgb(220, 80, 60);
+}
+.statistics .fas.fa-heart {
+    color: rgb(220, 80, 60);
+    font-size: 13px;
+}
 .feed-item:hover > .time {
     display: none;
 }
