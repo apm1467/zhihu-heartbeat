@@ -89,14 +89,10 @@ class Pin {
             if (item['type'] == 'video') {
                 this.video_thumbnail = item['thumbnail'];
                 var playlist = item['playlist'];
-                for (const video of playlist) {
-                    if (video['quality'] == 'hd') {
-                        this.video = video['url'];
-                        this.video_height = video['height'];
-                        this.video_width = video['width'];
-                        break;
-                    }
-                }
+                var video = playlist.find((el) => el['quality'] == 'hd');
+                this.video = video['url'];
+                this.video_height = video['height'];
+                this.video_width = video['width'];
             }
         }
     }

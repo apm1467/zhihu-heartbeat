@@ -36,17 +36,13 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        var feed_array = res['data'];
+        var feed_array = res['data']
+            .filter((el) => el['type'] == 'moment');
 
         // get latest pin id & time
-        for (const feed_item of feed_array) {
-            if (feed_item['type'] == 'moment') {
-                var pin = new Pin(feed_item);
-                this.local_latest_pin_id = pin.id;
-                this.local_latest_pin_time = pin.time;
-                break;
-            }
-        }
+        var pin = new Pin(feed_array[0]);
+        this.local_latest_pin_id = pin.id;
+        this.local_latest_pin_time = pin.time;
 
         this._report_latest_viewed_pin_id();
         this._append_to_feed(feed_array);
@@ -100,31 +96,27 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        var feed_array = res['data'];
+        var feed_item = res['data']
+            .find((el) => el['type'] == 'moment');
 
-        for (const feed_item of feed_array) {
-            if (feed_item['type'] == 'moment') {
-                var pin = new Pin(feed_item);
-                console.log(pin.id);
+        var pin = new Pin(feed_item);
+        console.log(pin.id);
+        if (
+            pin.id != this.local_latest_pin_id &&
+            pin.time + 10 > this.local_latest_pin_time // 10 sec tolerance
+        ) {
+            this.server_latest_pin_id = pin.id;
+            this.server_latest_pin_time = pin.time;
 
-                if (
-                    pin.id != this.local_latest_pin_id &&
-                    pin.time + 10 > this.local_latest_pin_time // 10 sec tolerance
-                ) {
-                    this.server_latest_pin_id = pin.id;
-                    this.server_latest_pin_time = pin.time;
-
-                    // get the first pin, and fetch the rest in _fetch_update()
-                    var output = generate_feed_item_html(feed_item);
-                    this._fetch_update(pin.id, 0, output);
-                }
-                break;
-            }
+            // get the first pin, and fetch the rest in _fetch_update()
+            var output = generate_feed_item_html(feed_item);
+            this._fetch_update(pin.id, 0, output);
         }
     }
 
     async _fetch_update(fetch_after_id, fetch_offset, output) {
         console.log(fetch_offset);
+        var stop_fetching = false;
         var res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + 
@@ -133,23 +125,21 @@ module.exports = class Feed {
             jar: true,
             json: true
         });
-        var feed_array = res['data'];
-        var stop_fetching = false;
+        var feed_array = res['data']
+            .filter(el => el['type'] == 'moment');
 
         for (const feed_item of feed_array) {
-            if (feed_item['type'] == 'moment') {
-                var pin = new Pin(feed_item);
-                if (
-                    pin.id == this.local_latest_pin_id ||
-                    pin.time + 10 <= this.local_latest_pin_time
-                ) {
-                    stop_fetching = true;
-                    break;
-                }
-                else {
-                    fetch_after_id = pin.id;
-                    output += generate_feed_item_html(feed_item);
-                }
+            var pin = new Pin(feed_item);
+            if (
+                pin.id == this.local_latest_pin_id ||
+                pin.time + 10 <= this.local_latest_pin_time
+            ) {
+                stop_fetching = true;
+                break;
+            }
+            else {
+                fetch_after_id = pin.id;
+                output += generate_feed_item_html(feed_item);
             }
         }
         if (stop_fetching) {
@@ -226,11 +216,9 @@ async function display_self_avatar() {
 
 function generate_feed_item_html(feed_item) {
     var output = '';
-    if (feed_item['type'] == 'moment') {
-        var pin = new Pin(feed_item);
-        output += '<div class="feed-item" data-id="' + pin.id + '">';
-        output += pin.get_html();
-        output += '</div>'; // feed-item
-    }
+    var pin = new Pin(feed_item);
+    output += '<div class="feed-item" data-id="' + pin.id + '">';
+    output += pin.get_html();
+    output += '</div>'; // feed-item
     return output;
 }
