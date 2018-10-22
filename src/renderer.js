@@ -6,6 +6,7 @@ const shell = electron.shell;
 const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu, MenuItem} = remote;
 const Feed = require('./feed');
+const {Pin} = require('./models');
 const publish = require('./publish');
 const constants = require('./constants');
 const auth = require('./auth');
@@ -108,9 +109,8 @@ const current_window = remote.getCurrentWindow();
 // update statistics of each feed-item every 10 min
 {
     setInterval(function() {
-        $('.feed-item').each(function () {
-            Feed.update_pin_statistics($(this).attr('data-id'));
-            console.log('statistics updated');
+        $('.feed-item').each(function() {
+            Pin.update_statistics($(this).attr('data-id'));
         });
     }, constants.PIN_STATISTICS_UPDATE_INTERVAL);
 }
@@ -134,7 +134,7 @@ const current_window = remote.getCurrentWindow();
                 click: function() {
                     clicked_btn.fadeOut(200);
                     var pin_id = clicked_btn.parent().parent().attr('data-id');
-                    Feed.delete_pin(pin_id);
+                    Pin.delete(pin_id);
                 }
             }
         ]);

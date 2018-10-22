@@ -1,3 +1,5 @@
+const request = require('request-promise');
+const auth = require('./auth');
 const constants = require('./constants');
 
 
@@ -191,6 +193,38 @@ class Pin {
 
         output += '</div>'; // content
         return output;
+    }
+
+    static async delete(pin_id) {
+        var res = await request({
+            method: 'DELETE',
+            url: constants.PIN_URL + '/' + pin_id,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        if (res['success']) {
+            var selector = '[data-id="' + pin_id + '"]';
+            $(selector).remove();
+        }
+    }
+    static async update_statistics(pin_id) {
+        var res = await request({
+            method: 'GET',
+            url: constants.PIN_URL + '/' + pin_id,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        try {
+            var pin = new Pin(res);
+        }
+        catch (err) {
+            console.warn(res);
+            return;
+        }
+        var selector = '.feed-item[data-id="' + pin_id + '"] > .statistics';
+        $(selector).replaceWith(pin.get_statistics_html());
     }
 }
 
