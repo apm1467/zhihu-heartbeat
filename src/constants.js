@@ -60,8 +60,7 @@ const BASE_HEADER = {
 };
 exports.BASE_HEADER = BASE_HEADER;
 
-// combine two dicts
-exports.LOGIN_REQUEST_HEADER = Object.assign({}, CAPTCHA_REQUEST_HEADER, BASE_HEADER);
+exports.LOGIN_REQUEST_HEADER = {...CAPTCHA_REQUEST_HEADER, ...BASE_HEADER};
 
 exports.PIN_PUBLISH_FORM = {
     'source_pin_id': 0,

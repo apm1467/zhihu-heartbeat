@@ -62,12 +62,14 @@ exports.get_access_token = async function(email, password, captcha_text) {
 }
 
 async function authenticate(email, password) {
-    var auth_data = constants.AUTH_DATA;
     var time = Date.now();
-    auth_data['timestamp'] = time;
-    auth_data['signature'] = calculate_signature(auth_data);
-    auth_data['username'] = email;
-    auth_data['password'] = password;
+    var auth_data = {
+        ...constants.AUTH_DATA,
+        signature: calculate_signature(time),
+        timestamp: time,
+        username: email,
+        password: password
+    }
 
     var res = await request({
         method: 'POST',
@@ -91,10 +93,10 @@ async function authenticate(email, password) {
     $('.logo').removeClass('hidden');
 }
 
-function calculate_signature(auth_data) {
+function calculate_signature(time) {
+    var {grant_type, client_id, source} = constants.AUTH_DATA;
     var hmac = crypto.createHmac('sha1', constants.APP_SECRET);
-    var msg = auth_data['grant_type'] + auth_data['client_id'] + auth_data['source'] 
-        + auth_data['timestamp'];
+    var msg = grant_type + client_id + source + time;
     hmac.update(msg);
     return hmac.digest('hex');
 }
@@ -106,9 +108,6 @@ function reload_login_page(err_message) {
 
 
 exports.get_authorized_request_header = function() {
-    // append access_token to base_request_header
-    var access_token = localStorage.getItem('access_token');
-    var header = constants.BASE_HEADER;
-    header['Authorization'] = 'Bearer ' + access_token;
-    return header;
+    var access_token = 'Bearer ' + localStorage.getItem('access_token');
+    return {...constants.BASE_HEADER, Authorization: access_token};
 }
