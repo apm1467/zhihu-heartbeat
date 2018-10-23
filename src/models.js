@@ -52,7 +52,7 @@ class Pin {
                 .replace(/data-repin=["'][^"']*["']/g, 'class="repin_account"') // mark repin
                 .replace(/\sdata-\w+=["'][^"']*["']/g, '') // remove data-* attributes
                 .replace(/<\/a>:\s?/g, '</a>：') // use full-width colon
-                .replace(/\sclass=["']member_mention["']/g, '')
+                .replace(/\s+class=["']member_mention["']/g, '')
                 .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '');
 
             // add repin sign before account names
@@ -66,13 +66,15 @@ class Pin {
             */
 
             // case 1: class first
-            this.text = this.text.replace(/<a\sclass="repin_account"/g, repin_sign + '<a');
+            this.text = this.text.replace(/<a\s+class="repin_account"/g, repin_sign + '<a');
 
             // case 2: href first
-            var urls = this.text.match(/<a\shref=["'][^"']*["']\sclass="repin_account"/g);
-            if (urls) {
-                for (const url of urls)
-                    this.text = this.text.replace(url, repin_sign + url);
+            var tags = this.text.match(/<a\s+href=["'][^"']*["']\s+class="repin_account"/g);
+            if (tags) {
+                for (const tag of tags) {
+                    var url = tag.replace('class="repin_account"', '');
+                    this.text = this.text.replace(tag, repin_sign + url);
+                }
             }
         }
 
