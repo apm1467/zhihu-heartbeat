@@ -22,10 +22,29 @@
         const ipc = require('electron').ipcRenderer;
         const Comments = require('./comments.js');
 
-        // get pin_id & pin_html from renderer
+        // display pin
         ipc.on('pin', function(event, pin_id, pin_html) {
             var comments = new Comments(pin_id, pin_html);
             comments.start();
+
+            // collapse pin content
+            var pin_content = $('.pin .content');
+            var has_img = pin_content.find('.img, .thumbnail').length !== 0;
+
+            // imgs haven't been loaded yet; the height must be added manually
+            // all imgs have max-height 250; add 100px tolerance to handle window resize
+            var height = pin_content.outerHeight() + (has_img ? 350 : 100);
+            if (height > 210) {
+                pin_content.css('max-height', height);
+                pin_content.addClass('collapse');
+
+                // click pin to toggle collapse
+                $(document).on('click', '.pin', function(event) {
+                    if ($(event.target).is('a, a span, .avatar'))
+                        return;
+                    $('.pin .content').toggleClass('collapse');
+                });
+            }
         });
 
         // open links in external browser

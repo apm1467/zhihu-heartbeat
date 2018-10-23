@@ -49,11 +49,15 @@ p + p {
     padding-right: 20px;
 }
 .pin .content {
-    max-height: 110px;
-    overflow: hidden;
     margin-bottom: 15px;
+    transition: max-height 0.3s ease-in;
+    overflow: hidden;
 }
-.pin .content:after {
+.pin .content.collapse {
+    transition: max-height 0.3s ease-out;
+    max-height: 110px !important;
+}
+.pin .content.collapse:after {
     content: "";
     position: absolute;
     bottom: 0;
