@@ -108,17 +108,24 @@ p + p {
     margin-left: 10px;
     margin-right: 10px;
 }
-.time {
-    display: none;
-}
-.statistics {
+.time, .statistics {
     cursor: default;
     position: absolute;
     right: 25px;
+    font-size: 14px;
+}
+.time {
+    color: rgb(160, 160, 160);
+    top: 15px;
+}
+.statistics {
     top: 16px;
     color: rgb(122, 122, 122);
     font-weight: 600;
     font-size: 14px;
+}
+.pin .statistics {
+    display: none;
 }
 .statistics span {
     margin-left: 7px;

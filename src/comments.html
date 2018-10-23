@@ -27,6 +27,16 @@
             var comments = new Comments(pin_id, pin_html);
             comments.start();
 
+            // display pin post date
+            var time_field = $('.pin .time');
+            var post_time = parseInt(time_field.attr('data-time'));
+            var date = new Date(post_time * 1000);
+            var minutes = date.getMinutes();
+            if (minutes < 10)
+                minutes = "0" + minutes;
+            time_field.text(`${date.getMonth()} 月 ${date.getDate()} 日 
+                             ${date.getHours()}:${minutes}`);
+
             // collapse pin content
             var pin_content = $('.pin .content');
             var has_img = pin_content.find('.img, .thumbnail').length !== 0;
