@@ -212,7 +212,7 @@ const current_window = remote.getCurrentWindow();
         feed_item.addClass('loading');
 
         var pin_id = feed_item.attr('data-id');
-        var pin_html = feed_item.html()
+        var pin_html = feed_item.html();
 
         var win = new BrowserWindow({
             width: 450,
@@ -226,9 +226,7 @@ const current_window = remote.getCurrentWindow();
             show: false,
             useContentSize: true
         });
-
         win.loadFile('src/comments.html');
-
         win.webContents.on('did-finish-load', function() {
             // pass pin_id to comments window
             win.webContents.send('pin', pin_id, pin_html);

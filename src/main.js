@@ -10,7 +10,7 @@ const constants = require('./constants')
 const window_bounds_path = path.join(app.getPath('userData'), 'window_bounds.json');
 
 
-let main_window = null;
+var main_window = null;
 
 // create main window
 app.on('ready', function() {
@@ -31,9 +31,8 @@ app.on('ready', function() {
         var bounds = JSON.parse(fs.readFileSync(window_bounds_path, 'utf8'));
     }
     catch (err) {}
-    if (bounds) {
+    if (bounds)
         main_window.setBounds(bounds);
-    }
 
     main_window.loadFile('src/index.html');
 

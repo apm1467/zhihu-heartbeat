@@ -8,8 +8,7 @@ module.exports = class Comments {
     constructor(pin_id, pin_html) {
         this.pin_id = pin_id;
         this.pin_html = pin_html;
-        this.url = constants.PIN_URL + '/' + pin_id + 
-                   '/root_comments?limit=20&reverse_order=0';
+        this.url = `${constants.PIN_URL}/${pin_id}/root_comments?limit=20&reverse_order=0`;
         this.offset = 0; // needed when fetching older comments
     }
 
