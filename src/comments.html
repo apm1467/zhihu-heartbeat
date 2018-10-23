@@ -34,6 +34,20 @@
             event.preventDefault();
             shell.openExternal(this.href, {activate: false});
         });
+
+        // click heart button to like comment
+        const {Comment} = require('./models');
+        $(document).on('click', '.comment-item .num-likes', async function(event) {
+            var clicked_btn = $(this);
+            var comment_id = clicked_btn.parent().parent().attr('data-id');
+            var is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+            clicked_btn.fadeTo(200, 0);
+            if (is_liked)
+                await Comment.unlike(comment_id);
+            else
+                await Comment.like(comment_id);
+            clicked_btn.fadeTo(200, 1);
+        });
     </script>
 </body>
 </html>

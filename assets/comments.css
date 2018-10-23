@@ -121,6 +121,24 @@ p + p {
 .statistics i {
     margin-right: 3px;
 }
+.statistics .fas.fa-heart {
+    color: rgb(220, 80, 60);
+    font-size: 13px;
+}
+.comment-item .statistics .num-likes:hover {
+    color: rgb(160, 160, 160);
+    background-color: rgb(80, 80, 80);
+    border-radius: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: -4px;
+}
+.comment-item .statistics .num-likes:hover .far.fa-heart {
+    color: rgb(220, 80, 60);
+}
+
 .content .fa-retweet {
     margin-right: 3px;
     color: rgb(160, 160, 160);

@@ -275,34 +275,60 @@ class Comment {
         this.time = comment_item['created_time'];
         this.content = comment_item['content'];
         this.num_likes = comment_item['vote_count'];
+        this.is_liked = comment_item['voting'];
         this.author = new CommentAuthor(comment_item['author']);
-        if (comment_item['reply_to_author']) {
+        if (comment_item['reply_to_author'])
             this.reply_to_author = new CommentAuthor(comment_item['reply_to_author']);
-        }
     }
 
     get_html() {
         var output = '';
-        output += '<div class="comment-item">';
-        output += '<div class="author">';
-        output += '<span class="comment-author">'
-        output += this.author.get_html();
-        output += '</span>'; // comment-author
+        output += `<div class="comment-item" data-id="${this.id}">
+                   <div class="author">
+                   <span class="comment-author">${this.author.get_html()}</span>`;
         if (this.reply_to_author) {
-            output += '<i class="fas fa-long-arrow-alt-right arraw"></i>'
-            output += '<span class="comment-author">'
-            output += this.reply_to_author.get_name_html();
-            output += '</span>'; // comment-author
+            output += `<i class="fas fa-long-arrow-alt-right arraw"></i>
+                       <span class="comment-author">${this.reply_to_author.get_name_html()}</span>`;
         }
         output += '</div>'; // author
-        output += '<div class="statistics">' +
-                  '<span><i class="far fa-heart"></i>' + this.num_likes + '</span>' +
-                  '</div>';
-        output += '<div class="content">';
-        output += this.content;
-        output += '</div>'; // content
+        // show solid heart if the comment is liked by the user; otherwise show regular heart
+        output += `<div class="statistics"><span class="num-likes">
+                   <i class="${this.is_liked ? 'fas' : 'far'} fa-heart"></i>${this.num_likes}
+                   </span></div>`;
+        output += `<div class="content">${this.content}</div>`;
         output += '</div>'; // comment-item
         return output;
+    }
+
+    static async like(comment_id) {
+        var res = await request({
+            method: 'POST',
+            url: `${constants.COMMENT_URL}/${comment_id}/voters`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        if (res['voting']) {
+            // show solid heart
+            var selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
+            $(selector).html(`<i class="fas fa-heart"></i>${res['vote_count']}`);
+        }
+    }
+
+    static async unlike(comment_id) {
+        var self_id = localStorage.getItem('self_user_id')
+        var res = await request({
+            method: 'DELETE',
+            url: `${constants.COMMENT_URL}/${comment_id}/voters/${self_id}`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        if (!res['voting']) {
+            // show regular heart
+            var selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
+            $(selector).html(`<i class="far fa-heart"></i>${res['vote_count']}`);
+        }
     }
 }
 

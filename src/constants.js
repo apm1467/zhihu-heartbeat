@@ -13,6 +13,8 @@ exports.PIN_VIEWS_REPORT_URL = BASE_URL + '/pins/views';
 
 exports.PIN_TOKEN_URL = BASE_URL + '/pins/token';
 
+exports.COMMENT_URL = BASE_URL + '/comments';
+
 exports.BASE_WEB_URL = 'https://www.zhihu.com';
 
 exports.SELF_URL = BASE_URL + '/people/self';

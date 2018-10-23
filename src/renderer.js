@@ -149,7 +149,6 @@ const current_window = remote.getCurrentWindow();
     $(document).on('click', '.num-likes', async function(event) {
         var clicked_btn = $(this);
         var pin_id = clicked_btn.parent().parent().attr('data-id');
-        console.log(pin_id);
         var is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
         clicked_btn.fadeTo(200, 0);
         if (is_liked)
