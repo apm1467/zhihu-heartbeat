@@ -20,14 +20,13 @@ module.exports = class Comments {
     }
 
     async _fetch_initial_comments() {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: this.url,
             headers: auth.get_authorized_request_header(),
             jar: true,
             json: true
-        };
-        var res = await request(options);
+        });
         this._append_to_list(res['data']);
     }
 
@@ -49,14 +48,14 @@ module.exports = class Comments {
     }
 
     async _fetch_older_comments() {
-        var options = {
+        var res = await request({
             method: 'GET',
             url: this.url + '&offset=' + this.offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
-        };
-        var res = await request(options);
+        });
         try {
             var data = res['data'];
             self._append_to_list(data);   

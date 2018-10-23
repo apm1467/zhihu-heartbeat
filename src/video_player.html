@@ -51,6 +51,7 @@
                     url: constants.PIN_URL + '/' + pin_id,
                     headers: auth.get_authorized_request_header(),
                     jar: true,
+                    simple: false,
                     json: true
                 });
                 var video_url = (new Pin(res)).video;

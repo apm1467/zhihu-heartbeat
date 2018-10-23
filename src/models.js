@@ -203,6 +203,7 @@ class Pin {
             url: constants.PIN_URL + '/' + pin_id,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['success']) {
@@ -217,6 +218,7 @@ class Pin {
             url: `${constants.PIN_URL}/${pin_id}/reactions?type=like`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['success'])
@@ -229,6 +231,7 @@ class Pin {
             url: `${constants.PIN_URL}/${pin_id}/reactions`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['success'])
@@ -241,6 +244,7 @@ class Pin {
             url: constants.PIN_URL + '/' + pin_id,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         try {
@@ -308,6 +312,7 @@ class Comment {
             url: `${constants.COMMENT_URL}/${comment_id}/voters`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['voting']) {
@@ -324,6 +329,7 @@ class Comment {
             url: `${constants.COMMENT_URL}/${comment_id}/voters/${self_id}`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (!res['voting']) {

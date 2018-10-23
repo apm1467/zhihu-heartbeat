@@ -45,6 +45,7 @@ exports.publish = async function(text, editor_window) {
             headers: auth.get_authorized_request_header(),
             form: publish_form,
             jar: true,
+            simple: false,
             json: true
     });
     if ('error' in publish_res) {

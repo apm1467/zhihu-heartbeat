@@ -30,6 +30,7 @@ module.exports = class Feed {
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['data'] === undefined) {
@@ -72,14 +73,19 @@ module.exports = class Feed {
     async _fetch_older_feed() {
         var res = await request({
             method: 'GET',
-            url: constants.PIN_FETCH_URL + '?after_id=' + this.local_oldest_pin_id + 
-                 '&offset=' + this.feed_offset,
+            url: `${constants.PIN_FETCH_URL}?after_id=${this.local_oldest_pin_id}&
+                  offset=${this.feed_offset}`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
-        if (res['data'])
-            this._append_to_feed(res['data']);
+        if (res['data']) {
+            var feed_items = res['data']
+                .filter((el) => el['type'] == 'moment')
+            console.log(feed_items);
+            this._append_to_feed(feed_items);
+        }
         else
             console.warn(res);
     }
@@ -90,6 +96,7 @@ module.exports = class Feed {
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         if (res['data'] === undefined) {
@@ -160,7 +167,7 @@ module.exports = class Feed {
                     update.removeClass('hidden');
                     // maintain scroll bar position
                     container.scrollTop(scroll_top + update.outerHeight(true));
-    
+
                     // remove outer .update div
                     update.children().unwrap();
     
@@ -203,13 +210,13 @@ async function display_self_avatar() {
         url: constants.SELF_URL,
         headers: auth.get_authorized_request_header(),
         json: true,
+        simple: false,
         jar: true
     });
     if ("error" in res) {
         display_self_avatar();
         return;
     }
-
     var avatar = res['avatar_url'].replace('_s', ''); // get large image
     $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
 }

@@ -7,27 +7,27 @@ const current_window = require('electron').remote.getCurrentWindow();
 
 exports.check_captcha = check_captcha;
 async function check_captcha() {
-    var options = {
+    var res = await request({
         method: 'GET',
         url: constants.CAPTCHA_URL,
         headers: constants.CAPTCHA_REQUEST_HEADER,
         jar: true,
+        simple: false,
         json: true
-    };
-    var res = await request(options);
+    });
     if (res['show_captcha'])
         get_captcha();
 }
 
 async function get_captcha() {
-    var options = {
+    var res = await request({
         method: 'PUT',
         url: constants.CAPTCHA_URL,
         headers: constants.LOGIN_REQUEST_HEADER,
         jar: true,
+        simple: false,
         json: true
-    };
-    var res = await request(options);
+    });
     if ('error' in res) {
         check_captcha();
         return;
@@ -49,6 +49,7 @@ exports.get_access_token = async function(email, password, captcha_text) {
             headers: constants.LOGIN_REQUEST_HEADER,
             form: { input_text: captcha_text },
             jar: true,
+            simple: false,
             json: true
         };
         var res = await request(options);
@@ -68,14 +69,14 @@ async function authenticate(email, password) {
     auth_data['username'] = email;
     auth_data['password'] = password;
 
-    var options = {
+    var res = await request({
         method: 'POST',
         url: constants.SIGN_IN_URL,
         form: auth_data,
         jar: true,
+        simple: false,
         json: true
-    };
-    var res = await request(options);
+    });
     if (res['error']) {
         reload_login_page(res['error']['message']);
         return;
