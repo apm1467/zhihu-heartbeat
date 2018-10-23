@@ -133,7 +133,7 @@ class Pin {
                             style="background-image: url('${url}');"></div>`;
         else {
             output += '<div class="img-grid"><div class="row">';
-            for (const [index, url] of this.images) {
+            for (const [index, url] of this.images.entries()) {
                 output += `<div class="img" 
                             style="background-image: url('${url}');"></div>`;
                 // change to new row after every 3 images
