@@ -316,9 +316,6 @@ a:active {
     display: inline-block;
     background-position: center center;
     background-size: cover;
-
-    /* bypass Chrome border-radius bug */
-    filter: brightness(100%);
 }
 .double-img {
     width: calc(50% - 1.5px);;
