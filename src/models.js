@@ -158,7 +158,8 @@ class Pin {
             return '';
         return `<div class="video" data-url="${this.video}" 
                 data-width="${this.video_width}" data-height="${this.video_height}">
-                <img class="thumbnail" src="${this.video_thumbnail}">
+                <img class="thumbnail" 
+                src="${this.video_thumbnail ? this.video_thumbnail : constants.BLANK_THUMBNAIL}">
                 <div class="far fa-play-circle"></div>
                 </div>`;
     }

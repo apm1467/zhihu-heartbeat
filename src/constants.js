@@ -101,3 +101,6 @@ exports.GITHUB_ISSUES_URL = GITHUB_REPO_URL + '/issues';
 exports.GITHUB_DOWNLOAD_URL = GITHUB_REPO_URL +  '/releases/latest';
 
 exports.GITHUB_CHECK_UPDATE_URL = 'https://raw.githubusercontent.com/apm1467/zhihu-heartbeat/master/version';
+
+// 100x100 pixel black image as fallback video thumbnail
+exports.BLANK_THUMBNAIL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaUlEQVR42u3PQREAAAgDoK1/aI3g34MGNJMXKiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiJyWXmfZAEMq/KNAAAAAElFTkSuQmCC';
