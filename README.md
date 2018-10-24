@@ -11,13 +11,13 @@
 - 发布或删除新想法
 - 打开高清图片和视频
 - 查看评论
-- 表达我对桌面操作系统的[喜爱](https://overcast.fm/+CdRRhGxw/1:30:56)
+- 表达软件作者对桌面操作系统的[喜爱](https://overcast.fm/+CdRRhGxw/1:30:56)
 
 ## macOS
 
 第一次运行可能需要在「系统偏好设置」→「安全性与隐私」中点击允许。
 
-<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/43783097-2bc4b7c2-9a61-11e8-93fa-f41b1f0d1486.png">
+<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/47407376-1f2f7600-d75b-11e8-9082-0af4953c3ab3.png">
 
 <img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/43783098-2be3a6b4-9a61-11e8-999b-c72543723996.png">
 
