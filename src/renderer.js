@@ -52,7 +52,7 @@ const current_window = remote.getCurrentWindow();
     request(constants.GITHUB_CHECK_UPDATE_URL, function(error, response, body) {
         let latest_version = body;
         let current_version = app.getVersion();
-        if (current_version != latest_version) {
+        if (current_version !== latest_version) {
             let options = {
                 title: '检查更新',
                 buttons: ['去下载', '取消'],
@@ -60,7 +60,7 @@ const current_window = remote.getCurrentWindow();
                 cancelId: 1,
                 message: '当前版本 ' + current_version + '，' + 
                          '最新版本 ' + latest_version + '，要去下载吗？'
-            }
+            };
             dialog.showMessageBox(current_window, options, function(response) {
                 if (response === 0)
                     shell.openExternal(constants.GITHUB_DOWNLOAD_URL);

@@ -19,7 +19,7 @@ class PinAuthor {
         return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
     }
     is_self() {
-        return (this.id == localStorage.getItem('self_user_id'));
+        return (this.id === localStorage.getItem('self_user_id'));
     }
 }
 
@@ -32,7 +32,7 @@ class Pin {
         this.author = new PinAuthor(target['author']);
         this.time = target['updated']; // int
         this.num_likes = target['reaction_count'];
-        this.is_liked = target['virtuals']['reaction_type'] == 'like';
+        this.is_liked = target['virtuals']['reaction_type'] === 'like';
         this.num_repins = target['repin_count'];
         this.num_comments = target['comment_count'];
         this.text = '';
@@ -43,9 +43,9 @@ class Pin {
 
         // handle text & text repin
         if (
-            content_array[0]['type'] == 'text' ||
-            feed_item['feed_type'] == 'repin' || 
-            feed_item['feed_type'] == 'repin_with_comment'
+            content_array[0]['type'] === 'text' ||
+            feed_item['feed_type'] === 'repin' ||
+            feed_item['feed_type'] === 'repin_with_comment'
         ) {
             this.text = content_array[0]['content']
                 .replace(/<script/ig, '')
@@ -80,19 +80,19 @@ class Pin {
 
         // handle media
         for (const item of content_array) {
-            if (item['type'] == 'link') {
+            if (item['type'] === 'link') {
                 let url = item['url'];
                 url = '<a class="link" href="' + url + '">' + url + '</a>';
                 let title = item['title'];
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
-            if (item['type'] == 'image') {
+            if (item['type'] === 'image') {
                 this.images.push(item['url']);
             }
-            if (item['type'] == 'video') {
+            if (item['type'] === 'video') {
                 this.video_thumbnail = item['thumbnail'];
                 let playlist = item['playlist'];
-                let video = playlist.find((el) => el['quality'] == 'hd');
+                let video = playlist.find((el) => el['quality'] === 'hd');
                 this.video = video['url'];
                 this.video_height = video['height'];
                 this.video_width = video['width'];
@@ -122,14 +122,14 @@ class Pin {
     }
     _get_image_html() {
         let num_images = this.images.length;
-        if (num_images == 0)
+        if (num_images === 0)
             return '';
 
         let output = '<div class="images">';
 
-        if (num_images == 1)
+        if (num_images === 1)
             output += '<img class="img single-img" src="' + this.images[0] + '">';
-        else if (num_images == 2)
+        else if (num_images === 2)
             for (const url of this.images)
                 output += `<div class="img double-img" 
                             style="background-image: url('${url}');"></div>`;
@@ -139,7 +139,7 @@ class Pin {
                 output += `<div class="img" 
                             style="background-image: url('${url}');"></div>`;
                 // change to new row after every 3 images
-                if (index > 1 && (index + 1) % 3 == 0)
+                if (index > 1 && (index + 1) % 3 === 0)
                     output += '</div><div class="row">';
             }
             // remove the last <div class="row"> opening tag
@@ -154,7 +154,7 @@ class Pin {
         return output;
     }
     _get_video_html() {
-        if (this.video == '')
+        if (this.video === '')
             return '';
         return `<div class="video" data-url="${this.video}" 
                 data-width="${this.video_width}" data-height="${this.video_height}">

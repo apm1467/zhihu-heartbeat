@@ -38,7 +38,7 @@ module.exports = class Feed {
             return;
         }
         let feed_array = res['data']
-            .filter((el) => el['type'] == 'moment');
+            .filter((el) => el['type'] === 'moment');
 
         // get latest pin id & time
         let pin = new Pin(feed_array[0]);
@@ -82,7 +82,7 @@ module.exports = class Feed {
         });
         if (res['data']) {
             let feed_items = res['data']
-                .filter((el) => el['type'] == 'moment');
+                .filter((el) => el['type'] === 'moment');
             console.log(feed_items);
             this._append_to_feed(feed_items);
         }
@@ -104,12 +104,12 @@ module.exports = class Feed {
             return;
         }
         let feed_item = res['data']
-            .find((el) => el['type'] == 'moment');
+            .find((el) => el['type'] === 'moment');
 
         let pin = new Pin(feed_item);
         console.log(pin.id);
         if (
-            pin.id != this.local_latest_pin_id &&
+            pin.id !== this.local_latest_pin_id &&
             pin.time + 10 > this.local_latest_pin_time // 10 sec tolerance
         ) {
             this.server_latest_pin_id = pin.id;
@@ -133,12 +133,12 @@ module.exports = class Feed {
             json: true
         });
         let feed_array = res['data']
-            .filter(el => el['type'] == 'moment');
+            .filter(el => el['type'] === 'moment');
 
         for (const feed_item of feed_array) {
             let pin = new Pin(feed_item);
             if (
-                pin.id == this.local_latest_pin_id ||
+                pin.id === this.local_latest_pin_id ||
                 pin.time + 10 <= this.local_latest_pin_time
             ) {
                 stop_fetching = true;
