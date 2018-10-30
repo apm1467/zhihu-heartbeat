@@ -19,7 +19,7 @@ module.exports = class Comments {
     }
 
     async _fetch_initial_comments() {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: this.url,
             headers: auth.get_authorized_request_header(),
@@ -30,11 +30,11 @@ module.exports = class Comments {
     }
 
     _enable_scroll_event() {
-        var self = this;
-        var container = $('.comments-container');
+        let self = this;
+        let container = $('.comments-container');
         container.scroll(async function() {
-            var page_length = container[0].scrollHeight;
-            var scroll_position = container.scrollTop();
+            let page_length = container[0].scrollHeight;
+            let scroll_position = container.scrollTop();
 
             // scroll down to fetch older comments
             if (page_length - scroll_position < 2000) {
@@ -47,7 +47,7 @@ module.exports = class Comments {
     }
 
     async _fetch_older_comments() {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: this.url + '&offset=' + this.offset,
             headers: auth.get_authorized_request_header(),
@@ -56,7 +56,7 @@ module.exports = class Comments {
             json: true
         });
         try {
-            var data = res['data'];
+            let data = res['data'];
             self._append_to_list(data);   
         }
         catch (err) {
@@ -65,16 +65,16 @@ module.exports = class Comments {
     }
 
     _append_to_list(data) {
-        var output = '';
+        let output = '';
         for (const item of data) {
-            var comment = new Comment(item);
+            let comment = new Comment(item);
             output += comment.get_html();
 
-            var child_items = item['child_comments'];
+            let child_items = item['child_comments'];
             if (child_items) {
                 output += '<div class="child-comments">';
                 for (const child_item of child_items) {
-                    var comment = new Comment(child_item);
+                    let comment = new Comment(child_item);
                     output += comment.get_html();
                 }
                 output += '</div>'; // child-comments

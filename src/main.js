@@ -5,12 +5,12 @@ const shell = require('electron').shell;
 try {
     require('electron-reloader')(module);
 } catch (err) {}
-const constants = require('./constants')
+const constants = require('./constants');
 
 const window_bounds_path = path.join(app.getPath('userData'), 'window_bounds.json');
 
 
-var main_window = null;
+let main_window = null;
 
 // create main window
 app.on('ready', function() {
@@ -27,8 +27,9 @@ app.on('ready', function() {
     });
 
     // restore window bounds
+    let bounds;
     try {
-        var bounds = JSON.parse(fs.readFileSync(window_bounds_path, 'utf8'));
+        bounds = JSON.parse(fs.readFileSync(window_bounds_path, 'utf8'));
     }
     catch (err) {}
     if (bounds)
@@ -39,7 +40,7 @@ app.on('ready', function() {
     // hide the main window instead of closing in on macOS
     if (process.platform === 'darwin') {
         // user can still quit the app normally
-        var user_quit = false;
+        let user_quit = false;
         app.on('before-quit', function() {
             user_quit = true;
         });
@@ -59,7 +60,7 @@ app.on('ready', function() {
 
     // save window bounds
     main_window.on('close', function(event) {
-        var bounds = main_window.getBounds();
+        let bounds = main_window.getBounds();
         fs.writeFileSync(window_bounds_path, JSON.stringify(bounds));
     });
 });
@@ -107,7 +108,7 @@ app.once('ready', function() {
                 }
             ]
         }
-    ]
+    ];
 
     if (process.platform === 'darwin') {
         template.unshift({

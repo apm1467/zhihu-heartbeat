@@ -5,7 +5,7 @@ const auth = require('./auth');
 
 
 exports.open_editor = function() {
-    var win = new BrowserWindow({
+    let win = new BrowserWindow({
         show: false,
         resizable: false,
         height: 550,
@@ -22,24 +22,24 @@ exports.open_editor = function() {
 }
 
 exports.publish = async function(text, editor_window) {
-    var token_res = await request({
+    let token_res = await request({
         method: 'GET',
         url: constants.PIN_TOKEN_URL,
         headers: auth.get_authorized_request_header(),
         jar: true,
         json: true
     });
-    var token = token_res['token'];
+    let token = token_res['token'];
 
-    var content_form = constants.PIN_PUBLISH_CONTENT_FORM;
+    let content_form = constants.PIN_PUBLISH_CONTENT_FORM;
     content_form[0]['randomTag'] = generate_random_tag();
     content_form[0]['content'] = escape_html(text);
 
-    var publish_form = constants.PIN_PUBLISH_FORM;
+    let publish_form = constants.PIN_PUBLISH_FORM;
     publish_form['token'] = token;
     publish_form['content'] = JSON.stringify(content_form);
 
-    var publish_res = await request({
+    let publish_res = await request({
         method: 'POST',
             url: constants.PIN_URL,
             headers: auth.get_authorized_request_header(),
@@ -49,7 +49,7 @@ exports.publish = async function(text, editor_window) {
             json: true
     });
     if ('error' in publish_res) {
-        console.log(response);
+        console.log(publish_res);
         dialog.showMessageBox(editor_window, {
             type: 'error',
             message: publish_res['error']
@@ -71,8 +71,8 @@ function escape_html(text) {
 
 function generate_random_tag() {
     // random int between 100 and 9999
-    var min = 100;
-    var max = 9999;
+    let min = 100;
+    let max = 9999;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

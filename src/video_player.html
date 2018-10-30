@@ -46,7 +46,7 @@
                 console.log('refreshing video url');
                 video.pause();
 
-                var res = await request({
+                let res = await request({
                     method: 'GET',
                     url: constants.PIN_URL + '/' + pin_id,
                     headers: auth.get_authorized_request_header(),
@@ -54,7 +54,7 @@
                     simple: false,
                     json: true
                 });
-                var video_url = (new Pin(res)).video;
+                let video_url = (new Pin(res)).video;
                 current_window.webContents.send('video', video_url, pin_id);
             }
         });

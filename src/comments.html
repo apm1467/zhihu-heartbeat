@@ -24,26 +24,26 @@
 
         // display pin
         ipc.on('pin', function(event, pin_id, pin_html) {
-            var comments = new Comments(pin_id, pin_html);
+            let comments = new Comments(pin_id, pin_html);
             comments.start();
 
             // display pin post date
-            var time_field = $('.pin .time');
-            var post_time = parseInt(time_field.attr('data-time'));
-            var date = new Date(post_time * 1000);
-            var minutes = date.getMinutes();
+            let time_field = $('.pin .time');
+            let post_time = parseInt(time_field.attr('data-time'));
+            let date = new Date(post_time * 1000);
+            let minutes = date.getMinutes();
             if (minutes < 10)
                 minutes = "0" + minutes;
             time_field.text(`${date.getMonth()} 月 ${date.getDate()} 日 
                              ${date.getHours()}:${minutes}`);
 
             // collapse pin content
-            var pin_content = $('.pin .content');
-            var has_img = pin_content.find('.img, .thumbnail').length !== 0;
+            let pin_content = $('.pin .content');
+            let has_img = pin_content.find('.img, .thumbnail').length !== 0;
 
             // imgs haven't been loaded yet; the height must be added manually
             // all imgs have max-height 250; add 100px tolerance to handle window resize
-            var height = pin_content.outerHeight() + (has_img ? 350 : 100);
+            let height = pin_content.outerHeight() + (has_img ? 350 : 100);
             if (height > 210) {
                 pin_content.css('max-height', height);
                 pin_content.addClass('collapse');
@@ -67,9 +67,9 @@
         // click heart button to like comment
         const {Comment} = require('./models');
         $(document).on('click', '.comment-item .num-likes', async function(event) {
-            var clicked_btn = $(this);
-            var comment_id = clicked_btn.parent().parent().attr('data-id');
-            var is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+            let clicked_btn = $(this);
+            let comment_id = clicked_btn.parent().parent().attr('data-id');
+            let is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
             clicked_btn.fadeTo(200, 0);
             if (is_liked)
                 await Comment.unlike(comment_id);

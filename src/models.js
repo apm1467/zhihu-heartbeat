@@ -25,7 +25,7 @@ class PinAuthor {
 
 class Pin {
     constructor(feed_item) {
-        var target = feed_item['target'] ? feed_item['target'] : feed_item;
+        let target = feed_item['target'] ? feed_item['target'] : feed_item;
         this.source_dict = target;
 
         this.id = target['id'];
@@ -39,7 +39,7 @@ class Pin {
         this.images = [];
         this.video = ''; // video url
 
-        var content_array = target['content'];
+        let content_array = target['content'];
 
         // handle text & text repin
         if (
@@ -69,10 +69,10 @@ class Pin {
             this.text = this.text.replace(/<a\s+class="repin_account"/g, repin_sign + '<a');
 
             // case 2: href first
-            var tags = this.text.match(/<a\s+href=["'][^"']*["']\s+class="repin_account"/g);
+            let tags = this.text.match(/<a\s+href=["'][^"']*["']\s+class="repin_account"/g);
             if (tags) {
                 for (const tag of tags) {
-                    var url = tag.replace('class="repin_account"', '');
+                    let url = tag.replace('class="repin_account"', '');
                     this.text = this.text.replace(tag, repin_sign + url);
                 }
             }
@@ -81,9 +81,9 @@ class Pin {
         // handle media
         for (const item of content_array) {
             if (item['type'] == 'link') {
-                var url = item['url'];
+                let url = item['url'];
                 url = '<a class="link" href="' + url + '">' + url + '</a>';
-                var title = item['title'];
+                let title = item['title'];
                 this.text += '<div class="link-title">' + title + '</div>' + url;
             }
             if (item['type'] == 'image') {
@@ -91,8 +91,8 @@ class Pin {
             }
             if (item['type'] == 'video') {
                 this.video_thumbnail = item['thumbnail'];
-                var playlist = item['playlist'];
-                var video = playlist.find((el) => el['quality'] == 'hd');
+                let playlist = item['playlist'];
+                let video = playlist.find((el) => el['quality'] == 'hd');
                 this.video = video['url'];
                 this.video_height = video['height'];
                 this.video_width = video['width'];
@@ -101,7 +101,7 @@ class Pin {
     }
 
     get_statistics_html() {
-        var output = '<div class="statistics">';
+        let output = '<div class="statistics">';
         if (this.author.is_self()) {
             // include delete button
             output += '<span class="delete-btn"><i class="fas fa-trash-alt"></i></span>';
@@ -121,11 +121,11 @@ class Pin {
         return this.text ? `<div class="text">${this.text}</div>` : '';
     }
     _get_image_html() {
-        var num_images = this.images.length;
+        let num_images = this.images.length;
         if (num_images == 0)
             return '';
 
-        var output = '<div class="images">';
+        let output = '<div class="images">';
 
         if (num_images == 1)
             output += '<img class="img single-img" src="' + this.images[0] + '">';
@@ -164,14 +164,14 @@ class Pin {
                 </div>`;
     }
     get_content_html() {
-        var output = '';
+        let output = '';
         output += this._get_text_html();
         output += this._get_image_html();
         output += this._get_video_html();
         return output;
     }
     get_html() {
-        var output = '<div class="author">' + this.author.get_avatar_html() + 
+        let output = '<div class="author">' + this.author.get_avatar_html() + 
                   this.author.get_name_html() + '</div>';
         output += '<div class="time" data-time="' + this.time + '"></div>';
         output += this.get_statistics_html();
@@ -185,7 +185,7 @@ class Pin {
                 output += this.source_dict['origin_pin']['deleted_reason'];
             }
             else {
-                var origin_pin = new Pin(this.source_dict['origin_pin']);
+                let origin_pin = new Pin(this.source_dict['origin_pin']);
                 output += '<div class="origin-pin" data-id="' + origin_pin.id + '">';
                 output += '<div class="author">' + origin_pin.author.get_name_html() + '</div>';
                 output += '<div class="origin-pin-content">' + 
@@ -199,7 +199,7 @@ class Pin {
     }
 
     static async delete(pin_id) {
-        var res = await request({
+        let res = await request({
             method: 'DELETE',
             url: constants.PIN_URL + '/' + pin_id,
             headers: auth.get_authorized_request_header(),
@@ -208,13 +208,13 @@ class Pin {
             json: true
         });
         if (res['success']) {
-            var selector = '[data-id="' + pin_id + '"]';
+            let selector = '[data-id="' + pin_id + '"]';
             $(selector).remove();
         }
     }
 
     static async like(pin_id) {
-        var res = await request({
+        let res = await request({
             method: 'POST',
             url: `${constants.PIN_URL}/${pin_id}/reactions?type=like`,
             headers: auth.get_authorized_request_header(),
@@ -227,7 +227,7 @@ class Pin {
     }
 
     static async unlike(pin_id) {
-        var res = await request({
+        let res = await request({
             method: 'DELETE',
             url: `${constants.PIN_URL}/${pin_id}/reactions`,
             headers: auth.get_authorized_request_header(),
@@ -240,7 +240,7 @@ class Pin {
     }
 
     static async update_statistics(pin_id) {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: constants.PIN_URL + '/' + pin_id,
             headers: auth.get_authorized_request_header(),
@@ -248,14 +248,15 @@ class Pin {
             simple: false,
             json: true
         });
+        let pin;
         try {
-            var pin = new Pin(res);
+            pin = new Pin(res);
         }
         catch (err) {
             console.warn(res);
             return;
         }
-        var selector = '.feed-item[data-id="' + pin_id + '"] > .statistics';
+        let selector = '.feed-item[data-id="' + pin_id + '"] > .statistics';
         $(selector).replaceWith(pin.get_statistics_html());
     }
 }
@@ -289,7 +290,7 @@ class Comment {
     }
 
     get_html() {
-        var output = '';
+        let output = '';
         output += `<div class="comment-item" data-id="${this.id}">
                    <div class="author">
                    <span class="comment-author">${this.author.get_html()}</span>`;
@@ -308,7 +309,7 @@ class Comment {
     }
 
     static async like(comment_id) {
-        var res = await request({
+        let res = await request({
             method: 'POST',
             url: `${constants.COMMENT_URL}/${comment_id}/voters`,
             headers: auth.get_authorized_request_header(),
@@ -318,14 +319,14 @@ class Comment {
         });
         if (res['voting']) {
             // show solid heart
-            var selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
+            let selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
             $(selector).html(`<i class="fas fa-heart"></i>${res['vote_count']}`);
         }
     }
 
     static async unlike(comment_id) {
-        var self_id = localStorage.getItem('self_user_id')
-        var res = await request({
+        let self_id = localStorage.getItem('self_user_id');
+        let res = await request({
             method: 'DELETE',
             url: `${constants.COMMENT_URL}/${comment_id}/voters/${self_id}`,
             headers: auth.get_authorized_request_header(),
@@ -335,11 +336,11 @@ class Comment {
         });
         if (!res['voting']) {
             // show regular heart
-            var selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
+            let selector = `.comment-item[data-id="${comment_id}"] > .statistics > .num-likes`;
             $(selector).html(`<i class="far fa-heart"></i>${res['vote_count']}`);
         }
     }
 }
 
 
-module.exports = {Pin, Comment}
+module.exports = {Pin, Comment};

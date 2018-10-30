@@ -20,7 +20,7 @@
         const publish = require('./publish');
 
         $('.submit').click(function() {
-            var text = $('textarea').val().trim();
+            let text = $('textarea').val().trim();
             if (text) {
                 // remove submit button, display sending text
                 $('.submit').fadeOut(200, function() {

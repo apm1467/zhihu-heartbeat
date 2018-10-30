@@ -25,7 +25,7 @@ module.exports = class Feed {
     }
 
     async _fetch_initial_feed() {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
@@ -37,11 +37,11 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        var feed_array = res['data']
+        let feed_array = res['data']
             .filter((el) => el['type'] == 'moment');
 
         // get latest pin id & time
-        var pin = new Pin(feed_array[0]);
+        let pin = new Pin(feed_array[0]);
         this.local_latest_pin_id = pin.id;
         this.local_latest_pin_time = pin.time;
 
@@ -50,11 +50,11 @@ module.exports = class Feed {
     }
 
     _enable_scroll_event() {
-        var container = $('.feed-container');
-        var self = this;
+        let container = $('.feed-container');
+        let self = this;
         container.scroll(async function() {
-            var page_length = container[0].scrollHeight;
-            var scroll_position = container.scrollTop();
+            let page_length = container[0].scrollHeight;
+            let scroll_position = container.scrollTop();
 
             // scroll down to fetch older feed
             if (page_length - scroll_position < 3000) {
@@ -71,7 +71,7 @@ module.exports = class Feed {
     }
 
     async _fetch_older_feed() {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: `${constants.PIN_FETCH_URL}?after_id=${this.local_oldest_pin_id}&
                   offset=${this.feed_offset}`,
@@ -81,8 +81,8 @@ module.exports = class Feed {
             json: true
         });
         if (res['data']) {
-            var feed_items = res['data']
-                .filter((el) => el['type'] == 'moment')
+            let feed_items = res['data']
+                .filter((el) => el['type'] == 'moment');
             console.log(feed_items);
             this._append_to_feed(feed_items);
         }
@@ -91,7 +91,7 @@ module.exports = class Feed {
     }
 
     async _check_update() {
-        var res = await request({
+        let res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
@@ -103,10 +103,10 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        var feed_item = res['data']
+        let feed_item = res['data']
             .find((el) => el['type'] == 'moment');
 
-        var pin = new Pin(feed_item);
+        let pin = new Pin(feed_item);
         console.log(pin.id);
         if (
             pin.id != this.local_latest_pin_id &&
@@ -116,15 +116,15 @@ module.exports = class Feed {
             this.server_latest_pin_time = pin.time;
 
             // get the first pin, and fetch the rest in _fetch_update()
-            var output = generate_feed_item_html(feed_item);
+            let output = generate_feed_item_html(feed_item);
             this._fetch_update(pin.id, 0, output);
         }
     }
 
     async _fetch_update(fetch_after_id, fetch_offset, output) {
         console.log(fetch_offset);
-        var stop_fetching = false;
-        var res = await request({
+        let stop_fetching = false;
+        let res = await request({
             method: 'GET',
             url: constants.PIN_FETCH_URL + 
                  '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
@@ -132,11 +132,11 @@ module.exports = class Feed {
             jar: true,
             json: true
         });
-        var feed_array = res['data']
+        let feed_array = res['data']
             .filter(el => el['type'] == 'moment');
 
         for (const feed_item of feed_array) {
-            var pin = new Pin(feed_item);
+            let pin = new Pin(feed_item);
             if (
                 pin.id == this.local_latest_pin_id ||
                 pin.time + 10 <= this.local_latest_pin_time
@@ -160,9 +160,9 @@ module.exports = class Feed {
             // give update 2 seconds to load
             setTimeout( 
                 () => {
-                    var update = $('#update');
-                    var container = $('.feed-container');
-                    var scroll_top = container.scrollTop();
+                    let update = $('#update');
+                    let container = $('.feed-container');
+                    let scroll_top = container.scrollTop();
     
                     update.removeClass('hidden');
                     // maintain scroll bar position
@@ -193,7 +193,7 @@ module.exports = class Feed {
     }
 
     _append_to_feed(items) {
-        var output = '';
+        let output = '';
         for (const item of items)
             output += generate_feed_item_html(item);
         $('.feed').append(output);
@@ -205,7 +205,7 @@ module.exports = class Feed {
 
 
 async function display_self_avatar() {
-    var res = await request({
+    let res = await request({
         method: 'GET',
         url: constants.SELF_URL,
         headers: auth.get_authorized_request_header(),
@@ -217,13 +217,13 @@ async function display_self_avatar() {
         display_self_avatar();
         return;
     }
-    var avatar = res['avatar_url'].replace('_s', ''); // get large image
+    let avatar = res['avatar_url'].replace('_s', ''); // get large image
     $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
 }
 
 function generate_feed_item_html(feed_item) {
-    var output = '';
-    var pin = new Pin(feed_item);
+    let output = '';
+    let pin = new Pin(feed_item);
     output += '<div class="feed-item" data-id="' + pin.id + '">';
     output += pin.get_html();
     output += '</div>'; // feed-item
