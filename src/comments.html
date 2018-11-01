@@ -44,7 +44,7 @@
             // imgs haven't been loaded yet; the height must be added manually
             // all imgs have max-height 250; add 100px tolerance to handle window resize
             let height = pin_content.outerHeight() + (has_img ? 350 : 100);
-            if (height > 210) {
+            if (height > 310) {
                 pin_content.css('max-height', height);
                 pin_content.addClass('collapse');
 
@@ -70,6 +70,7 @@
             let clicked_btn = $(this);
             let comment_id = clicked_btn.parent().parent().attr('data-id');
             let is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+
             clicked_btn.fadeTo(200, 0);
             if (is_liked)
                 await Comment.unlike(comment_id);
