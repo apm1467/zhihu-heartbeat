@@ -22,7 +22,7 @@ a {
     word-break: break-all;
     cursor: default;
 }
-a:active {
+a.active {
     color: rgb(36, 105, 183);
 }
 

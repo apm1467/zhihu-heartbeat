@@ -269,6 +269,8 @@ const current_window = remote.getCurrentWindow();
 {
     $(document).on('click', 'a[href^="http"]', function(event) {
         event.preventDefault();
+        let a = $(this);
+        a.addClass('active').delay(500).queue(() => a.removeClass('active').dequeue());
         shell.openExternal(this.href, {activate: false});
     });
 }

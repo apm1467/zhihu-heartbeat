@@ -46,8 +46,7 @@
             let height = pin_content.outerHeight() + (has_img ? 350 : 100);
             if (height > 310) {
                 pin_content.css('max-height', height);
-                pin_content.addClass('collapsible');
-                pin_content.addClass('collapse');
+                pin_content.addClass('collapsible collapse');
 
                 // click pin to toggle collapse
                 $(document).on('click', '.pin', function(event) {
@@ -62,6 +61,8 @@
         const shell = require('electron').shell;
         $(document).on('click', 'a[href^="http"]', function(event) {
             event.preventDefault();
+            let a = $(this);
+            a.addClass('active').delay(500).queue(() => a.removeClass('active').dequeue());
             shell.openExternal(this.href, {activate: false});
         });
 

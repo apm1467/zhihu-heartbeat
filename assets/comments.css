@@ -13,6 +13,9 @@ a {
     word-break: break-all;
     cursor: default;
 }
+a.active {
+    color: rgb(36, 105, 183);
+}
 p {
     margin: 0;
 }
@@ -61,6 +64,7 @@ p + p {
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: -1;
     margin-left: 51px;
 }
 .pin .content.collapse {
