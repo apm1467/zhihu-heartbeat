@@ -46,6 +46,7 @@
             let height = pin_content.outerHeight() + (has_img ? 350 : 100);
             if (height > 310) {
                 pin_content.css('max-height', height);
+                pin_content.addClass('collapsible');
                 pin_content.addClass('collapse');
 
                 // click pin to toggle collapse
