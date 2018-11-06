@@ -41,9 +41,7 @@ app.on('ready', function() {
     if (process.platform === 'darwin') {
         // user can still quit the app normally
         let user_quit = false;
-        app.on('before-quit', function() {
-            user_quit = true;
-        });
+        app.on('before-quit', () => user_quit = true);
 
         main_window.on('close', function(event) {
             if (!user_quit) {
@@ -53,9 +51,7 @@ app.on('ready', function() {
             }
         });
 
-        app.on('activate', function() {
-            main_window.show();
-        });
+        app.on('activate', () =>  main_window.show());
     }
 
     // save window bounds
@@ -67,7 +63,7 @@ app.on('ready', function() {
 
 // create app menu
 app.once('ready', function() {
-    const template = [
+    let template = [
         {
             label: 'Edit',
             submenu: [
@@ -102,9 +98,7 @@ app.once('ready', function() {
             submenu: [
                 {
                     label: 'Github Repository',
-                    click: function () {
-                        shell.openExternal(constants.GITHUB_REPO_URL);
-                    }
+                    click: () => shell.openExternal(constants.GITHUB_REPO_URL)
                 }
             ]
         }
@@ -126,9 +120,7 @@ app.once('ready', function() {
             ]
         });
         template[1].submenu.push(
-            {
-                type: 'separator'
-            }, 
+            { type: 'separator' },
             {
                 label: 'Speech',
                 submenu: [
@@ -147,19 +139,15 @@ app.once('ready', function() {
     } else {
         template.unshift({
             label: 'File',
-            submenu: [{
-                role: 'quit'
-            }]
+            submenu: [{ role: 'quit' }]
         });
     }
 
-    const menu = Menu.buildFromTemplate(template);
+    let menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 });
 
-app.on('window-all-closed', function() {
-    app.quit();
-});
+app.on('window-all-closed', () => app.quit());
 
 // allow video auto play
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');

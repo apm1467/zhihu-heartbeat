@@ -31,8 +31,8 @@ const current_window = remote.getCurrentWindow();
 
     function log_in() {
         $('.logo').addClass('hidden');
-        auth.check_captcha();
         $('.login-form').removeClass('hidden');
+        auth.check_captcha();
 
         $('.login-btn').click(async function() {
             $(this).fadeTo(200, 0);
@@ -74,7 +74,7 @@ const current_window = remote.getCurrentWindow();
 // update post time of each pin every second
 {
     setInterval(function() {
-        const now = Math.round(Date.now() / 1000);
+        let now = Math.round(Date.now() / 1000);
         $('.time').each(function() {
             let time_field = $(this);
             let post_time = parseInt(time_field.attr('data-time'));
@@ -137,7 +137,7 @@ const current_window = remote.getCurrentWindow();
                 }
             }
         ]);
-        delete_menu.popup(current_window);
+        delete_menu.popup({});
     });
 }
 
@@ -211,7 +211,7 @@ const current_window = remote.getCurrentWindow();
         }
 
         let menu = Menu.buildFromTemplate(template);
-        menu.popup({window: current_window});
+        menu.popup({});
     });
 
     function open_comments_window(pin) { // jQuery object
@@ -220,7 +220,6 @@ const current_window = remote.getCurrentWindow();
 
         let pin_id = pin.attr('data-id');
         let pin_html = pin.html();
-
         let win = new BrowserWindow({
             width: 450,
             minWidth: 400,
@@ -266,9 +265,7 @@ const current_window = remote.getCurrentWindow();
             }
         }
     ]);
-    $(document).on('click', '.self-avatar', function(event) {
-        logout_menu.popup(current_window);
-    });
+    $(document).on('click', '.self-avatar', () => logout_menu.popup({}));
 }
 
 // ------------------------------------------------------------
@@ -333,7 +330,7 @@ const current_window = remote.getCurrentWindow();
                 }
             }
         ]);
-        img_menu.popup(current_window);
+        img_menu.popup({});
     });
 
     function get_img_url(img_jquery) {
@@ -438,11 +435,11 @@ const current_window = remote.getCurrentWindow();
         player_win.loadFile('src/video_player.html');
 
         // pass video url to player window
-        player_win.webContents.on('did-finish-load', function() {
-            player_win.webContents.send('video', video_url, pin_id);
-        });
+        player_win.webContents.on('did-finish-load', () =>
+            player_win.webContents.send('video', video_url, pin_id)
+        );
 
-        player_win.once('ready-to-show', function() {
+        player_win.once('ready-to-show', () => {
             player_win.show();
             $('.video').removeClass('darkened'); // remove darkening
         });
