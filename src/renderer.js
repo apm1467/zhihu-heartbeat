@@ -160,58 +160,66 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// open pin details window
+// pin focus & context menu
 {
-    // click feed item to add focus
-    $(document).on('click contextmenu', '.feed-item', function(event) {
-        let feed_item = $(this);
-
-        // not trigger this event when clicking links or images
+    // click pin to add focus & remove collapse
+    $(document).on('click contextmenu', '.pin', function(event) {
+        // not add focus when clicking links or images
         if ($(event.target).is('a, a span, .img, .thumbnail'))
             return;
 
-        if (!feed_item.hasClass('focus')) {
-            $('.feed-item').removeClass('focus');
-            feed_item.addClass('focus');
+        let pin = $(this);
+        pin.children('.content').removeClass('collapse');
+
+        if (!pin.hasClass('focus')) {
+            $('.pin').removeClass('focus');
+            pin.addClass('focus');
         }
     });
 
     // click title bar to remove focus
     $(document).on('click contextmenu', '.title-bar', function(event) {
-        $('.feed-item').removeClass('focus');
+        $('.pin').removeClass('focus');
     });
 
-    // double click feed item to open comments window
-    $(document).on('dblclick', '.feed-item', function(event) {
+    // double click pin to open comments window
+    $(document).on('dblclick', '.pin', function(event) {
         // not trigger this event when clicking links or images
-        if ($(event.target).is('a, a span, .img, .thumbnail'))
-            return;
-
-        let feed_item = $(this);
-        open_comments_window(feed_item);
+        if (!$(event.target).is('a, a span, .img, .thumbnail'))
+            open_comments_window($(this));
     });
 
-    // right click on feed item to open comments window
-    $(document).on('contextmenu', '.feed-item', function(event) {
+    // context menu
+    $(document).on('contextmenu', '.pin', function(event) {
         if ($(event.target).is('.img'))
             return;
 
-        let feed_item = $(this);
-        const feed_item_menu = Menu.buildFromTemplate([
-            {
-                label: '详情',
-                click: () => open_comments_window(feed_item)
-            }
-        ]);
-        feed_item_menu.popup(current_window);
+        let pin = $(this);
+        let template = [{
+            label: '详情',
+            click: () => open_comments_window(pin)
+        }];
+
+        // make long pins collapsible
+        let pin_content = pin.children('.content');
+        if (pin_content.outerHeight() > 400) {
+            pin_content.css('max-height', pin_content.outerHeight() + 100);
+            template.unshift({
+                label: '折叠',
+                click: () => pin_content.addClass('collapse')
+            });
+        }
+
+        let menu = Menu.buildFromTemplate(template);
+        menu.popup({window: current_window});
     });
 
-    function open_comments_window(feed_item) { // accept jQuery object
+    function open_comments_window(pin) { // jQuery object
         window.getSelection().empty();
-        feed_item.addClass('loading');
+        pin.addClass('loading');
 
-        let pin_id = feed_item.attr('data-id');
-        let pin_html = feed_item.html();
+        let pin_id = pin.attr('data-id');
+        let pin_html = pin.html();
 
         let win = new BrowserWindow({
             width: 450,
@@ -230,7 +238,7 @@ const current_window = remote.getCurrentWindow();
             // pass pin_id to comments window
             win.webContents.send('pin', pin_id, pin_html);
 
-            feed_item.removeClass('loading');
+            pin.removeClass('loading');
             win.show();
         });
     }

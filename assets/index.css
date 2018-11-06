@@ -272,6 +272,28 @@ a.active {
     margin-left: 50px;
     padding-bottom: 11px;
     border-bottom: 1px solid rgb(72, 72, 72);
+    transition: max-height 0.3s ease-in;
+    overflow: hidden;
+}
+.content.collapse {
+    transition: max-height 0.3s ease-out;
+    max-height: 110px !important;
+}
+.content.collapse:after {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgb(106, 175, 253)' width='24' height='40'%3E%3Cpath transform='translate(0,20)' d='M12 13L8.285 9.218a.758.758 0 0 0-1.064 0 .738.738 0 0 0 0 1.052l4.249 4.512a.758.758 0 0 0 1.064 0l4.246-4.512a.738.738 0 0 0 0-1.052.757.757 0 0 0-1.063 0L12 13z'%3E%3C/path%3E%3C/svg%3E");
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-left: 70px;
+    margin-right: 20px;
+    height: 45px;
+    border-bottom: 1px solid rgb(72, 72, 72);
+    background: linear-gradient(transparent, rgb(51, 51, 51) 50%);
+}
+.pin.focus .content.collapse:after{
+    background: linear-gradient(transparent, rgb(64, 64, 64) 50%);
 }
 .content .fa-retweet {
     margin-right: 3px;
