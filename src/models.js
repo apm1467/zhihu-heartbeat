@@ -24,8 +24,8 @@ class PinAuthor {
 }
 
 class Pin {
-    constructor(feed_item) {
-        let target = feed_item['target'] ? feed_item['target'] : feed_item;
+    constructor(pin_data) {
+        let target = pin_data['target'] ? pin_data['target'] : pin_data;
         this.source_dict = target;
 
         this.id = target['id'];
@@ -44,8 +44,8 @@ class Pin {
         // handle text & text repin
         if (
             content_array[0]['type'] === 'text' ||
-            feed_item['feed_type'] === 'repin' ||
-            feed_item['feed_type'] === 'repin_with_comment'
+            pin_data['feed_type'] === 'repin' ||
+            pin_data['feed_type'] === 'repin_with_comment'
         ) {
             this.text = content_array[0]['content']
                 .replace(/<script/ig, '')
@@ -207,10 +207,8 @@ class Pin {
             simple: false,
             json: true
         });
-        if (res['success']) {
-            let selector = '[data-id="' + pin_id + '"]';
-            $(selector).remove();
-        }
+        if (res['success'])
+            $(`[data-id="${pin_id}"]`).remove();
     }
 
     static async like(pin_id) {
@@ -256,7 +254,7 @@ class Pin {
             console.warn(res);
             return;
         }
-        let selector = '.feed-item[data-id="' + pin_id + '"] > .statistics';
+        let selector = `.pin[data-id="${pin_id}"] > .statistics`;
         $(selector).replaceWith(pin.get_statistics_html());
     }
 }

@@ -37,16 +37,16 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        let feed_array = res['data']
+        let pins_data = res['data']
             .filter((el) => el['type'] === 'moment');
 
         // get latest pin id & time
-        let pin = new Pin(feed_array[0]);
+        let pin = new Pin(pins_data[0]);
         this.local_latest_pin_id = pin.id;
         this.local_latest_pin_time = pin.time;
 
         this._report_latest_viewed_pin_id();
-        this._append_to_feed(feed_array);
+        this._append_to_feed(pins_data);
     }
 
     _enable_scroll_event() {
@@ -81,10 +81,10 @@ module.exports = class Feed {
             json: true
         });
         if (res['data']) {
-            let feed_items = res['data']
+            let pins_data = res['data']
                 .filter((el) => el['type'] === 'moment');
-            console.log(feed_items);
-            this._append_to_feed(feed_items);
+            console.log(pins_data);
+            this._append_to_feed(pins_data);
         }
         else
             console.warn(res);
@@ -103,10 +103,10 @@ module.exports = class Feed {
             console.warn(res);
             return;
         }
-        let feed_item = res['data']
+        let pin_data = res['data']
             .find((el) => el['type'] === 'moment');
 
-        let pin = new Pin(feed_item);
+        let pin = new Pin(pin_data);
         console.log(pin.id);
         if (
             pin.id !== this.local_latest_pin_id &&
@@ -116,7 +116,7 @@ module.exports = class Feed {
             this.server_latest_pin_time = pin.time;
 
             // get the first pin, and fetch the rest in _fetch_update()
-            let output = generate_feed_item_html(feed_item);
+            let output = generate_pin_html(pin_data);
             this._fetch_update(pin.id, 0, output);
         }
     }
@@ -132,11 +132,11 @@ module.exports = class Feed {
             jar: true,
             json: true
         });
-        let feed_array = res['data']
+        let pins_data = res['data']
             .filter(el => el['type'] === 'moment');
 
-        for (const feed_item of feed_array) {
-            let pin = new Pin(feed_item);
+        for (const pin_data of pins_data) {
+            let pin = new Pin(pin_data);
             if (
                 pin.id === this.local_latest_pin_id ||
                 pin.time + 10 <= this.local_latest_pin_time
@@ -146,7 +146,7 @@ module.exports = class Feed {
             }
             else {
                 fetch_after_id = pin.id;
-                output += generate_feed_item_html(feed_item);
+                output += generate_pin_html(pin_data);
             }
         }
         if (stop_fetching) {
@@ -192,13 +192,13 @@ module.exports = class Feed {
         });
     }
 
-    _append_to_feed(items) {
+    _append_to_feed(pins_data) {
         let output = '';
-        for (const item of items)
-            output += generate_feed_item_html(item);
+        for (const pin_data of pins_data)
+            output += generate_pin_html(pin_data);
         $('.feed').append(output);
 
-        this.local_oldest_pin_id = items[items.length - 1]['target']['id'];
+        this.local_oldest_pin_id = pins_data[pins_data.length - 1]['target']['id'];
         this.feed_offset += 10;
     }
 }
@@ -221,11 +221,11 @@ async function display_self_avatar() {
     $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
 }
 
-function generate_feed_item_html(feed_item) {
+function generate_pin_html(pin_data) {
     let output = '';
-    let pin = new Pin(feed_item);
-    output += '<div class="feed-item" data-id="' + pin.id + '">';
+    let pin = new Pin(pin_data);
+    output += '<div class="pin" data-id="' + pin.id + '">';
     output += pin.get_html();
-    output += '</div>'; // feed-item
+    output += '</div>'; // pin
     return output;
 }

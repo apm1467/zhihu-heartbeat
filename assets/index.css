@@ -20,6 +20,7 @@ a {
     color: rgb(106, 175, 253);
     text-decoration: none;
     word-break: break-all;
+    cursor: default;
 }
 a:active {
     color: rgb(36, 105, 183);
@@ -162,34 +163,31 @@ a:active {
 .feed {
     width: 100%;
 }
-.feed-item {
+.pin {
     position: relative;
     padding-top: 13px;
     padding-left: 20px;
     padding-right: 20px;
     transition: background-color 0.06s;
 }
-.feed-item a {
-    cursor: default;
-}
-.feed-item.focus {
+.pin.focus {
     background-color: rgb(64, 64, 64);
     color: rgb(220, 220, 220);
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
     cursor: auto;
 }
-.feed-item.focus .content {
+.pin.focus .content {
     user-select: text;
 }
-.feed-item.focus .name {
+.pin.focus .name {
     color: rgb(220, 220, 220);
 }
-.feed-item.focus + .feed-item {
+.pin.focus + .pin {
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
 }
-.feed-item.loading {
+.pin.loading {
     background-color: rgb(30, 30, 30);
     color: rgb(200, 200, 200);
 }
@@ -261,10 +259,10 @@ a:active {
     color: rgb(220, 80, 60);
     font-size: 13px;
 }
-.feed-item:hover > .time {
+.pin:hover > .time {
     display: none;
 }
-.feed-item:hover > .statistics {
+.pin:hover > .statistics {
     display: inline-block;
 }
 .content {

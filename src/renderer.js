@@ -71,7 +71,7 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// update post time of each feed-item every second
+// update post time of each pin every second
 {
     setInterval(function() {
         const now = Math.round(Date.now() / 1000);
@@ -105,10 +105,10 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// update statistics of each feed-item every 10 min
+// update statistics of each pin every 10 min
 {
     setInterval(function() {
-        $('.feed-item').each(function() {
+        $('.pin').each(function() {
             Pin.update_statistics($(this).attr('data-id'));
         });
     }, constants.PIN_STATISTICS_UPDATE_INTERVAL);
