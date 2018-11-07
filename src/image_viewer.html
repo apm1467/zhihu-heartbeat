@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="../assets/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../assets/fontawesome-5.1.0/css/all.css">
+    <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/image_viewer.css">
+</head>
+
+<body>
+
+<div id="carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#carousel" data-slide="prev">
+        <span class="fas fa-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel" data-slide="next">
+        <span class="fas fa-chevron-right"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<script>
+    // close window when user types esc
+    window.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape')
+            require('electron').remote.getCurrentWindow().close()
+    });
+
+
+    // display images
+    const ipc = require('electron').ipcRenderer;
+    ipc.on('urls', async function(event, urls, index_clicked) {
+        if (urls.length === 1)
+            $('.carousel-control, .carousel-indicators').addClass('hidden');
+
+        let carousel = $('.carousel-inner');
+        let indicators = $('.carousel-indicators');
+        for (const [index, url] of urls.entries()) {
+            let active = index === parseInt(index_clicked);
+            carousel.append(
+                `<div class="item ${active ? 'active' : ''}"><img src="${url}"></div>`
+            );
+            indicators.append(
+                `<li data-target="#carousel" data-slide-to="${index}" ${active ? 'class="active"' : ''}></li>`
+            );
+        }
+    });
+</script>
+</body>
+</html>

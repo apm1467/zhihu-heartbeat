@@ -128,15 +128,15 @@ class Pin {
         let output = '<div class="images">';
 
         if (num_images === 1)
-            output += '<img class="img single-img" src="' + this.images[0] + '">';
+            output += `<img class="img single-img" src="${this.images[0]}" data-index="0">`;
         else if (num_images === 2)
-            for (const url of this.images)
-                output += `<div class="img double-img" 
+            for (const [index, url] of this.images.entries())
+                output += `<div class="img double-img" data-url="${url}" data-index="${index}"
                             style="background-image: url('${url}');"></div>`;
         else {
             output += '<div class="img-grid"><div class="row">';
             for (const [index, url] of this.images.entries()) {
-                output += `<div class="img" 
+                output += `<div class="img" data-url="${url}" data-index="${index}"
                             style="background-image: url('${url}');"></div>`;
                 // change to new row after every 3 images
                 if (index > 1 && (index + 1) % 3 === 0)
