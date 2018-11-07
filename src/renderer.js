@@ -294,12 +294,17 @@ const current_window = remote.getCurrentWindow();
 
         // darken the image thumbnail while opening image window
         img.addClass('darkened');
-        open_img_window(get_img_url(img).replace(/_[a-z]+/, '_qhd')); 
+
+        let urls = get_img_urls(img);
+        let index_clicked = img.attr('data-index');
+        open_img_window(urls, index_clicked);
     });
 
     // right click context menu
     $(document).on('contextmenu', '.img', function(event) {
-        let img_url = get_img_url($(this)).replace(/_[a-z]+/, '');
+        let img = $(this);
+        let urls = get_img_urls(img).map((url) => url.replace('_qhd', ''));
+        let index_clicked = img.attr('data-index');
         let desktop_path = app.getPath('desktop') + '/';
         let file_name = Date.now() + '.jpg';
         const img_menu = Menu.buildFromTemplate([
@@ -307,14 +312,14 @@ const current_window = remote.getCurrentWindow();
                 label: '打开原图',
                 click: () => {
                     $(this).addClass('darkened');
-                    open_img_window(img_url);
+                    open_img_window(urls, index_clicked);
                 }
             },
             { type: 'separator' },
             {
                 label: '保存原图到桌面',
                 click: () =>
-                    request(img_url).pipe(fs.createWriteStream(desktop_path + file_name))
+                    request(urls[index_clicked]).pipe(fs.createWriteStream(desktop_path + file_name))
             },
             {
                 label: '保存原图到…',
@@ -326,23 +331,36 @@ const current_window = remote.getCurrentWindow();
                         filters: [{ extensions: ['jpg'] }]
                     });
                     if (path)
-                        request(img_url).pipe(fs.createWriteStream(path));
+                        request(urls[index_clicked]).pipe(fs.createWriteStream(path));
                 }
             }
         ]);
         img_menu.popup({});
     });
 
-    function get_img_url(img_jquery) {
-        if (img_jquery.hasClass('single-img'))
-            return img_jquery.attr('src');
-        else
-            return img_jquery.css('background-image').slice(4, -1).replace(/"/g, "");
+    function get_img_urls(img) {
+        let urls;
+
+        if (img.hasClass('single-img'))
+            urls = [img.attr('src')];
+        else {
+            let imgs;
+            if (img.hasClass('double-img'))
+                imgs = img.parent().children('.img');
+            else
+                imgs = img.parent().parent().find('.img');
+
+            urls = imgs.map(function () {
+                return $(this).attr('data-url');
+            }).get();
+        }
+
+        return urls.map((url) => url.replace(/_[a-z]+/, '_qhd'));
     }
 
-    function open_img_window(img_url) {
+    function open_img_window(urls, index_clicked) {
         let img = new Image();
-        img.src = img_url;
+        img.src = urls[index_clicked];
         img.onload = function() {
             let {win_w, win_h} = calculate_img_window_size(this.width, this.height);
             let win = new BrowserWindow({
@@ -355,11 +373,10 @@ const current_window = remote.getCurrentWindow();
                 fullscreenable: false,
                 useContentSize: true
             });
-            win.loadURL('data:text/html,' +
-                        '<body style="-webkit-app-region: drag; margin: 0;">' +
-                        '<img draggable="false" ' +
-                        'width="' + win_w + '" height="auto" src="' + this.src + '">' +
-                        '</body>');
+            win.loadFile('src/image_viewer.html');
+            win.webContents.on('did-finish-load', () =>
+                win.webContents.send('urls', urls, index_clicked)
+            );
             win.once('ready-to-show', () => {
                 win.show();
                 $('.img').removeClass('darkened');
