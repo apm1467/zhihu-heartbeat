@@ -38,10 +38,24 @@
     const ipc = electron.ipcRenderer;
     const image = require('./image');
 
-    // close window when user types esc
-    window.addEventListener('keyup', (event) => {
-        if (event.key === 'Escape')
-            electron.remote.getCurrentWindow().close()
+    // accept keyboard shortcuts
+    window.addEventListener('keydown', (event) => {
+        let carousel = $('#carousel');
+        switch (event.key) {
+            case 'Escape':
+                electron.remote.getCurrentWindow().close();
+                break;
+            case 'h':
+            case 'k':
+            case 'ArrowLeft':
+                carousel.carousel("prev");
+                break;
+            case 'l':
+            case 'j':
+            case 'ArrowRight':
+                carousel.carousel("next");
+                break;
+        }
     });
 
     // display images
