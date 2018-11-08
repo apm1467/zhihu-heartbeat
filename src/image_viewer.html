@@ -34,15 +34,17 @@
 </div>
 
 <script>
+    const electron = require('electron');
+    const ipc = electron.ipcRenderer;
+    const image = require('./image');
+
     // close window when user types esc
     window.addEventListener('keyup', (event) => {
         if (event.key === 'Escape')
-            require('electron').remote.getCurrentWindow().close()
+            electron.remote.getCurrentWindow().close()
     });
 
-
     // display images
-    const ipc = require('electron').ipcRenderer;
     ipc.on('urls', async function(event, urls, index_clicked) {
         if (urls.length === 1)
             $('.carousel-control, .carousel-indicators').addClass('hidden');
@@ -58,6 +60,12 @@
                 `<li data-target="#carousel" data-slide-to="${index}" ${active ? 'class="active"' : ''}></li>`
             );
         }
+
+        // context menu
+        $(document).on('contextmenu', '.carousel', function(event) {
+            let current_index = $('div.active').index();
+            image.open_img_context_menu(urls, current_index);
+        });
     });
 </script>
 </body>
