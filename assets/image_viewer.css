@@ -55,10 +55,10 @@ body {
 .carousel-indicators li {
     cursor: default;
     border: 0.5px solid rgba(0, 0, 0, 0.5);
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 10px;
-    width: 10px;
-    margin: 1px;
+    background-color: rgba(200, 200, 200, 0.4);
+    height: 8px;
+    width: 8px;
+    margin: 2px;
 }
 .carousel-indicators li + li {
     margin-left: 5px;
@@ -69,5 +69,5 @@ body {
     margin: 0;
 }
 .carousel-indicators li + li.active {
-    margin-left: 4px;
+    margin-left: 3px;
 }
