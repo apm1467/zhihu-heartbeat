@@ -203,10 +203,19 @@ const current_window = remote.getCurrentWindow();
         // make long pins collapsible
         let pin_content = pin.children('.content');
         if (pin_content.outerHeight() > 400) {
-            pin_content.css('max-height', pin_content.outerHeight() + 100);
+            pin_content.css('max-height', pin_content.height());
             template.unshift({
                 label: '折叠',
-                click: () => pin_content.addClass('collapse')
+                click: () => {
+                    // maintain scroll bar position if pin is partially out of screen
+                    let container = $('.feed-container');
+                    let scroll_top = container.scrollTop();
+                    let pin_h = pin.outerHeight(true);
+                    if (pin.offset().top < 0)
+                        container.animate({scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
+
+                    pin_content.addClass('collapse');
+                }
             });
         }
 
