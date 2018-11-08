@@ -259,10 +259,12 @@ a.active {
     color: rgb(220, 80, 60);
     font-size: 13px;
 }
-.pin:hover > .time {
+.pin:hover > .time,
+.pin.focus > .time {
     display: none;
 }
-.pin:hover > .statistics {
+.pin:hover > .statistics,
+.pin.focus > .statistics {
     display: inline-block;
 }
 .content {
