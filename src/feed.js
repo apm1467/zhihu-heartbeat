@@ -83,7 +83,6 @@ module.exports = class Feed {
         if (res['data']) {
             let pins_data = res['data']
                 .filter((el) => el['type'] === 'moment');
-            console.log(pins_data);
             this._append_to_feed(pins_data);
         }
         else
@@ -130,6 +129,7 @@ module.exports = class Feed {
                  '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
         let pins_data = res['data']
@@ -188,6 +188,7 @@ module.exports = class Feed {
             url: constants.PIN_VIEWS_REPORT_URL,
             headers: auth.get_authorized_request_header(),
             form: { 'pin_ids': this.local_latest_pin_id },
+            simple: false,
             jar: true
         });
     }
