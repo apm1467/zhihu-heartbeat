@@ -279,6 +279,12 @@ const current_window = remote.getCurrentWindow();
             case 'm':
                 toggle_collapse(pin_focused);
                 break;
+            case 'i':
+                if (has_focus) {
+                    let media = pin_focused.find('.img, .video .thumbnail');
+                    media.first().click();
+                }
+                break;
             case 'k':
             case 'ArrowUp':
                 if (has_focus && in_viewport(pin_focused)) {
