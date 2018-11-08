@@ -169,7 +169,9 @@ const current_window = remote.getCurrentWindow();
             return;
 
         let pin = $(this);
-        pin.children('.content').removeClass('collapse');
+        let pin_content = pin.children('.content');
+        pin_content.removeClass('collapse');
+        setTimeout(() => pin_content.css('max-height', 'none'), 300);
 
         if (!pin.hasClass('focus')) {
             $('.pin').removeClass('focus');
@@ -201,23 +203,11 @@ const current_window = remote.getCurrentWindow();
         }];
 
         // make long pins collapsible
-        let pin_content = pin.children('.content');
-        if (pin_content.outerHeight() > 400) {
-            pin_content.css('max-height', pin_content.height());
+        if (pin.outerHeight() > 400)
             template.unshift({
                 label: '折叠',
-                click: () => {
-                    // maintain scroll bar position if pin is partially out of screen
-                    let container = $('.feed-container');
-                    let scroll_top = container.scrollTop();
-                    let pin_h = pin.outerHeight(true);
-                    if (pin.offset().top < 0)
-                        container.animate({scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
-
-                    pin_content.addClass('collapse');
-                }
+                click: () => toggle_collapse(pin)
             });
-        }
 
         let menu = Menu.buildFromTemplate(template);
         menu.popup({});
@@ -249,6 +239,98 @@ const current_window = remote.getCurrentWindow();
             pin.removeClass('loading');
             win.show();
         });
+    }
+
+    function toggle_collapse(pin) {
+        let pin_content = pin.children('.content');
+        if (pin.outerHeight() < 400) {
+            pin_content.removeClass('collapse');
+            setTimeout(() => pin_content.css('max-height', 'none'), 300);
+            return;
+        }
+
+        pin_content.css('max-height', pin_content.height());
+
+        // maintain scroll bar position if pin is partially out of screen
+        let container = $('.feed-container');
+        let scroll_top = container.scrollTop();
+        let pin_h = pin.outerHeight(true);
+        if (pin.offset().top < 0)
+            container.animate({scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
+
+        pin_content.addClass('collapse');
+    }
+}
+
+// ------------------------------------------------------------
+
+// accept keyboard shortcuts
+{
+    window.addEventListener('keydown', (event) => {
+        let pin_focused = $('.focus');
+        let has_focus = pin_focused.length === 1;
+        switch (event.key) {
+            case ' ': // space bar
+            case 'Enter':
+                event.preventDefault();
+                if (has_focus)
+                    open_comments_window(pin_focused);
+                break;
+            case 'm':
+                toggle_collapse(pin_focused);
+                break;
+            case 'k':
+            case 'ArrowUp':
+                if (has_focus && in_viewport(pin_focused)) {
+                    pin_focused.removeClass('focus');
+                    move_focus(pin_focused.prev());
+                }
+                else {
+                    $($('.pin').get().reverse()).each(function() {
+                        let pin = $(this);
+                        if (in_viewport(pin)) {
+                            $('.pin').removeClass('focus');
+                            pin.addClass('focus');
+                            return false;
+                        }
+                    });
+                }
+                break;
+            case 'j':
+            case 'ArrowDown':
+                if (has_focus && in_viewport(pin_focused)) {
+                    pin_focused.removeClass('focus');
+                    move_focus(pin_focused.next());
+                }
+                else {
+                    $('.pin').each(function() {
+                        let pin = $(this);
+                        if (in_viewport(pin)) {
+                            $('.pin').removeClass('focus');
+                            pin.addClass('focus');
+                            return false;
+                        }
+                    });
+                }
+                break;
+        }
+    });
+
+    function in_viewport(pin) {
+        let top = pin.offset().top - 55;
+        let bottom = top + pin.outerHeight(true);
+        let container_h = $('.feed-container').height();
+        return !(bottom < 0 || top > container_h);
+    }
+
+    function move_focus(pin) {
+        pin.addClass('focus');
+        let top = pin.offset().top - 50;
+        let bottom = top + pin.outerHeight(true);
+        let container = $('.feed-container');
+        let scroll_top = container.scrollTop();
+        if (top < 0 || bottom > container.height())
+            container.animate({scrollTop: scroll_top + top}, 300, 'easieEaseInOut');
     }
 }
 
