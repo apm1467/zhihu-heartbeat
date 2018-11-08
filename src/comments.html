@@ -22,6 +22,28 @@
         const ipc = require('electron').ipcRenderer;
         const Comments = require('./comments.js');
 
+        // accept keyboard shortcuts
+        window.addEventListener('keydown', (event) => {
+            let container = $('.comments-container');
+            let scroll_top = container.scrollTop();
+            switch (event.key) {
+                case 'Escape':
+                    require('electron').remote.getCurrentWindow().close();
+                    break;
+                case 'm':
+                    $('.pin').click(); // toggle collapse
+                    break;
+                case 'k':
+                case 'ArrowUp':
+                    container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
+                    break;
+                case 'j':
+                case 'ArrowDown':
+                    container.animate({scrollTop: scroll_top + 500}, 250, 'linear');
+                    break;
+            }
+        });
+
         // display pin
         ipc.on('pin', function(event, pin_id, pin_html) {
             let comments = new Comments(pin_id, pin_html);
