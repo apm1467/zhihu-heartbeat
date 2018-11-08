@@ -1,4 +1,3 @@
-const fs = require('fs');
 const request = require('request');
 const electron = require('electron');
 const remote = electron.remote;
@@ -9,6 +8,7 @@ const {Pin} = require('./models');
 const publish = require('./publish');
 const constants = require('./constants');
 const auth = require('./auth');
+const image = require('./image');
 
 const current_window = remote.getCurrentWindow();
 
@@ -288,59 +288,27 @@ const current_window = remote.getCurrentWindow();
     $(document).on('click', '.img', function(event) {
         let img = $(this);
 
-        // prevent opening window multiple times on double click
+        // img is already loading
         if (img.hasClass('darkened'))
             return;
 
-        // darken the image thumbnail while opening image window
+        // mark img as loading
         img.addClass('darkened');
 
         let urls = get_img_urls(img);
         let index_clicked = img.attr('data-index');
-        open_img_window(urls, index_clicked);
+        image.open_img_viewer(urls, index_clicked);
     });
 
-    // right click context menu
     $(document).on('contextmenu', '.img', function(event) {
         let img = $(this);
-        let urls = get_img_urls(img).map((url) => url.replace('_qhd', ''));
+        let urls = get_img_urls(img);
         let index_clicked = img.attr('data-index');
-        let desktop_path = app.getPath('desktop') + '/';
-        let file_name = Date.now() + '.jpg';
-        const img_menu = Menu.buildFromTemplate([
-            {
-                label: '打开原图',
-                click: () => {
-                    $(this).addClass('darkened');
-                    open_img_window(urls, index_clicked);
-                }
-            },
-            { type: 'separator' },
-            {
-                label: '保存原图到桌面',
-                click: () =>
-                    request(urls[index_clicked]).pipe(fs.createWriteStream(desktop_path + file_name))
-            },
-            {
-                label: '保存原图到…',
-                click: () => {
-                    current_window.focus();
-                    let path = dialog.showSaveDialog({
-                        title: '保存原图',
-                        defaultPath: file_name,
-                        filters: [{ extensions: ['jpg'] }]
-                    });
-                    if (path)
-                        request(urls[index_clicked]).pipe(fs.createWriteStream(path));
-                }
-            }
-        ]);
-        img_menu.popup({});
+        image.open_img_context_menu(urls, index_clicked, img);
     });
 
     function get_img_urls(img) {
         let urls;
-
         if (img.hasClass('single-img'))
             urls = [img.attr('src')];
         else {
@@ -354,70 +322,7 @@ const current_window = remote.getCurrentWindow();
                 return $(this).attr('data-url');
             }).get();
         }
-
         return urls.map((url) => url.replace(/_[a-z]+/, '_qhd'));
-    }
-
-    function open_img_window(urls, index_clicked) {
-        let img = new Image();
-        img.src = urls[index_clicked];
-        img.onload = function() {
-            let {win_w, win_h} = calculate_img_window_size(this.width, this.height);
-            let win = new BrowserWindow({
-                titleBarStyle: 'hidden',
-                show: false,
-                height: win_h,
-                width: win_w,
-                backgroundColor: "#000",
-                autoHideMenuBar: true,
-                fullscreenable: false,
-                useContentSize: true
-            });
-            win.loadFile('src/image_viewer.html');
-            win.webContents.on('did-finish-load', () =>
-                win.webContents.send('urls', urls, index_clicked)
-            );
-            win.once('ready-to-show', () => {
-                win.show();
-                $('.img').removeClass('darkened');
-            });
-            win.on('closed', () => win = null);
-        }
-    }
-
-    function calculate_img_window_size(img_w, img_h) {
-        let current_screen = electron.screen.getDisplayMatching(current_window.getBounds());
-        let screen_w = current_screen.workAreaSize.width;
-        let screen_h = current_screen.workAreaSize.height;
-        let max_w = Math.ceil(screen_w * 0.95);
-        let max_h = Math.ceil(screen_h * 0.9);
-        let output_w;
-        let output_h;
-
-        if (max_w < img_w || max_h < img_h) {
-            let aspect_ratio = img_w / img_h;
-            if (aspect_ratio <= 0.45) {
-                // image is very tall; allow scroll in vertical direction
-                output_w = Math.min(max_w, img_w);
-                output_h = Math.ceil(output_w / aspect_ratio);
-            }
-            else {
-                // normal aspect ratio; display entire image on screen
-                output_h = Math.min(max_h, img_h);
-                output_w = Math.ceil(output_h * aspect_ratio);
-
-                if (output_w > screen_w) {
-                    // image is very wide; adjust window size according to screen width
-                    output_w = max_w;
-                    output_h = Math.ceil(output_w / aspect_ratio);
-                }
-            }
-        }
-        else {
-            output_w = img_w;
-            output_h = img_h;
-        }
-        return {win_w: output_w, win_h: output_h};
     }
 }
 
