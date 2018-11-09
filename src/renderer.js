@@ -285,6 +285,10 @@ const current_window = remote.getCurrentWindow();
                     media.first().click();
                 }
                 break;
+            case 's':
+                if (has_focus)
+                    pin_focused.find('.num-likes').click(); // click heart button
+                break;
             case 'k':
             case 'ArrowUp':
                 if (has_focus && in_viewport(pin_focused)) {
