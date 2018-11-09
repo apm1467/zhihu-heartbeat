@@ -17,15 +17,27 @@
 
 第一次运行可能需要在「系统偏好设置」→「安全性与隐私」中点击允许。
 
-<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/47407376-1f2f7600-d75b-11e8-9082-0af4953c3ab3.png">
+<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/48238118-10d39200-e3ca-11e8-952f-5343979a7dde.png">
 
-<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/43783098-2be3a6b4-9a61-11e8-999b-c72543723996.png">
+<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/48238119-10d39200-e3ca-11e8-9c52-a8b0cef974c7.png">
 
 <img width="450" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/43783099-2c053a86-9a61-11e8-89fb-c6c1ac16d24e.png">
 
 ## Windows
 
 <img width="450" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/44744790-390b5e80-ab06-11e8-88ac-7be70d3ac4a3.png">
+
+## 键盘快捷键
+
+- `j`/`↓` 去下一条想法
+- `k`/`↑` 去上一条想法
+- `m` 折叠想法
+- `s` 给想法点赞
+- `i` 查看想法内的图片或视频
+- `space`/`enter` 查看想法评论
+- `esc` 退出图片、视频或评论窗口
+- `h`/`←` 前一张图片
+- `l`/`→` 后一张图片
 
 ## 构建方法
 
