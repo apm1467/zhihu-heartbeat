@@ -56,7 +56,7 @@
             let minutes = date.getMinutes();
             if (minutes < 10)
                 minutes = "0" + minutes;
-            time_field.text(`${date.getMonth()} 月 ${date.getDate()} 日 
+            time_field.text(`${date.getMonth() + 1} 月 ${date.getDate()} 日
                              ${date.getHours()}:${minutes}`);
 
             // collapse pin content

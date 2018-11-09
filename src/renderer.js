@@ -99,7 +99,7 @@ const current_window = remote.getCurrentWindow();
             return Math.round(diff / sec_per_day) + ' 日前';
         // fall back to display full date
         let date = new Date(post_time * 1000);
-        return date.getMonth() + ' 月 ' + date.getDate() + ' 日';
+        return `${date.getMonth() + 1} 月 ${date.getDate()} 日`;
     }
 }
 
