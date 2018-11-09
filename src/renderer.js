@@ -274,6 +274,7 @@ const current_window = remote.getCurrentWindow();
             case 'Enter':
                 event.preventDefault();
                 if (has_focus)
+                    pin_focused.click(); // unfold & add focus
                     open_comments_window(pin_focused);
                 break;
             case 'm':
