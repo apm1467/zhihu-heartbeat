@@ -277,6 +277,9 @@ const current_window = remote.getCurrentWindow();
                     pin_focused.click(); // unfold & add focus
                     open_comments_window(pin_focused);
                 break;
+            case 'Escape':
+                $('.pin').removeClass('focus');
+                break;
             case 'm':
                 toggle_collapse(pin_focused);
                 break;
