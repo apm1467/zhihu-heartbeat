@@ -100,7 +100,7 @@ function calculate_img_window_size(img_w, img_h) {
         else {
             // normal aspect ratio; display entire image on screen
             output_h = Math.min(max_h, img_h);
-            output_w = Math.ceil(output_h * aspect_ratio);
+            output_w = Math.floor(output_h * aspect_ratio);
 
             if (output_w > screen_w) {
                 // image is very wide; adjust window size according to screen width

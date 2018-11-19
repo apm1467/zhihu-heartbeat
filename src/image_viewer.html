@@ -68,7 +68,9 @@
         for (const [index, url] of urls.entries()) {
             let active = index === parseInt(index_clicked);
             carousel.append(
-                `<div class="item ${active ? 'active' : ''}"><img src="${url}"></div>`
+                `<div class="item ${active ? 'active' : ''}">
+                   <img src="${url}" class="${active ? 'init-img' : 'rest-img'}">
+                 </div>`
             );
             indicators.append(
                 `<li data-target="#carousel" data-slide-to="${index}" ${active ? 'class="active"' : ''}></li>`
