@@ -3,6 +3,8 @@ const constants = require('./constants');
 const auth = require('./auth');
 const {Pin} = require('./models');
 
+const current_window = require('electron').remote.getCurrentWindow();
+
 
 module.exports = class Feed {
     constructor() {
@@ -33,12 +35,9 @@ module.exports = class Feed {
             simple: false,
             json: true
         });
-        if (res['data'] === undefined) {
-            console.warn(res);
+        if (handle_err(res))
             return;
-        }
-        let pins_data = res['data']
-            .filter((el) => el['type'] === 'moment');
+        let pins_data = res['data'].filter((el) => el['type'] === 'moment');
 
         // get latest pin id & time
         let pin = new Pin(pins_data[0]);
@@ -80,13 +79,10 @@ module.exports = class Feed {
             simple: false,
             json: true
         });
-        if (res['data']) {
-            let pins_data = res['data']
-                .filter((el) => el['type'] === 'moment');
-            this._append_to_feed(pins_data);
-        }
-        else
-            console.warn(res);
+        if (handle_err(res))
+            return;
+        let pins_data = res['data'].filter((el) => el['type'] === 'moment');
+        this._append_to_feed(pins_data);
     }
 
     async _check_update() {
@@ -98,12 +94,9 @@ module.exports = class Feed {
             simple: false,
             json: true
         });
-        if (res['data'] === undefined) {
-            console.warn(res);
+        if (handle_err(res))
             return;
-        }
-        let pin_data = res['data']
-            .find((el) => el['type'] === 'moment');
+        let pin_data = res['data'].find((el) => el['type'] === 'moment');
 
         let pin = new Pin(pin_data);
         console.log(pin.id);
@@ -132,8 +125,9 @@ module.exports = class Feed {
             simple: false,
             json: true
         });
-        let pins_data = res['data']
-            .filter(el => el['type'] === 'moment');
+        if (handle_err(res))
+            return;
+        let pins_data = res['data'].filter(el => el['type'] === 'moment');
 
         for (const pin_data of pins_data) {
             let pin = new Pin(pin_data);
@@ -229,4 +223,18 @@ function generate_pin_html(pin_data) {
     output += pin.get_html();
     output += '</div>'; // pin
     return output;
+}
+
+// return true if there is error in res
+function handle_err(res) {
+    if ('error' in res) {
+        console.warn(res);
+        if (res['error']['message'] === 'ERR_LOGIN_TICKET_EXPIRED') {
+            // log out
+            localStorage.clear();
+            current_window.reload();
+        }
+        return true;
+    }
+    return false;
 }
