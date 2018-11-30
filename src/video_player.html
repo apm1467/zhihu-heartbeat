@@ -49,6 +49,7 @@
             // play mp4
             if (video_url.includes('.mp4')) {
                 video.src = video_url;
+                video.load();
                 try {
                     await video.play();
                 }
@@ -85,7 +86,8 @@
                     simple: false,
                     json: true
                 });
-                let video_url = (new Pin(res)).video;
+                let pin = new Pin(res);
+                let video_url = pin.video || pin.origin_pin.video;
                 current_window.webContents.send('video', video_url, pin_id);
             }
         });
