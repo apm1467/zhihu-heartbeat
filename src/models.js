@@ -26,7 +26,6 @@ class PinAuthor {
 class Pin {
     constructor(pin_data) {
         let target = pin_data['target'] ? pin_data['target'] : pin_data;
-        this.source_dict = target;
 
         this.id = target['id'];
         this.author = new PinAuthor(target['author']);
@@ -37,17 +36,25 @@ class Pin {
         this.num_comments = target['comment_count'];
         this.text = '';
         this.images = [];
-        this.video = ''; // video url
+        this.video = '';
 
-        let content_array = target['content'];
+        this.is_repin = 'origin_pin' in target;
+        if (this.is_repin) {
+            if (target['origin_pin']['is_deleted'])
+                this.origin_pin_deleted_reason = target['origin_pin']['deleted_reason'];
+            else
+                this.origin_pin = new Pin(target['origin_pin']);
+        }
+
+        let contents = target['content'];
 
         // handle text & text repin
         if (
-            content_array[0]['type'] === 'text' ||
+            contents[0]['type'] === 'text' ||
             pin_data['feed_type'] === 'repin' ||
             pin_data['feed_type'] === 'repin_with_comment'
         ) {
-            this.text = content_array[0]['content']
+            this.text = contents[0]['content']
                 .replace(/<script/ig, '')
                 .replace(/data-repin=["'][^"']*["']/g, 'class="repin_account"') // mark repin
                 .replace(/\sdata-\w+=["'][^"']*["']/g, '') // remove data-* attributes
@@ -70,29 +77,26 @@ class Pin {
 
             // case 2: href first
             let tags = this.text.match(/<a\s+href=["'][^"']*["']\s+class="repin_account"/g);
-            if (tags) {
+            if (tags)
                 for (const tag of tags) {
                     let url = tag.replace('class="repin_account"', '');
                     this.text = this.text.replace(tag, repin_sign + url);
                 }
-            }
         }
 
         // handle media
-        for (const item of content_array) {
-            if (item['type'] === 'link') {
-                let url = item['url'];
-                url = '<a class="link" href="' + url + '">' + url + '</a>';
-                let title = item['title'];
-                this.text += '<div class="link-title">' + title + '</div>' + url;
-            }
-            if (item['type'] === 'image') {
-                this.images.push(item['url']);
-            }
-            if (item['type'] === 'video') {
-                this.video_thumbnail = item['thumbnail'];
-                let playlist = item['playlist'];
-                let video = playlist.find((el) => el['quality'] === 'hd');
+        for (const content of contents) {
+            if (content['type'] === 'link')
+                this.text +=
+                    `<div class="link-title">${content['title']}</div>
+                     <a class="link" href="${content['url']}">${content['url']}</a>`;
+
+            if (content['type'] === 'image')
+                this.images.push(content['url']);
+
+            if (content['type'] === 'video') {
+                this.video_thumbnail = content['thumbnail'];
+                let video = content['playlist'].find(el => el['quality'] === 'hd');
                 this.video = video['url'];
                 this.video_height = video['height'];
                 this.video_width = video['width'];
@@ -171,27 +175,30 @@ class Pin {
         return output;
     }
     get_html() {
-        let output = '<div class="author">' + this.author.get_avatar_html() + 
-                  this.author.get_name_html() + '</div>';
-        output += '<div class="time" data-time="' + this.time + '"></div>';
-        output += this.get_statistics_html();
-
-        output += '<div class="content">' + this.get_content_html();
+        let output = `
+            <div class="author">
+                ${this.author.get_avatar_html()}
+                ${this.author.get_name_html()}
+            </div>
+            <div class="time" data-time="${this.time}"></div>
+            ${this.get_statistics_html()}
+        
+            <div class="content">${this.get_content_html()}
+        `;
 
         // if this pin is a repin
-        if (this.source_dict['origin_pin']) {
-            if (this.source_dict['origin_pin']['is_deleted']) {
-                output += '<div class="origin-pin">';
-                output += this.source_dict['origin_pin']['deleted_reason'];
-            }
+        if (this.is_repin) {
+            if (this.origin_pin_deleted_reason)
+                output += `<div class="origin-pin">${this.origin_pin_deleted_reason}</div>`;
+
             else {
-                let origin_pin = new Pin(this.source_dict['origin_pin']);
-                output += '<div class="origin-pin" data-id="' + origin_pin.id + '">';
-                output += '<div class="author">' + origin_pin.author.get_name_html() + '</div>';
-                output += '<div class="origin-pin-content">' + 
-                          origin_pin.get_content_html() + '</div>';
+                output += `
+                    <div class="origin-pin" data-id="${this.origin_pin.id}">
+                        <div class="author">${this.origin_pin.author.get_name_html()}</div>
+                        <div class="origin-pin-content">${this.origin_pin.get_content_html()}</div>
+                    </div>
+                `;
             }
-            output += '</div>'; // origin-pin
         }
 
         output += '</div>'; // content
