@@ -129,6 +129,12 @@ const current_window = remote.getCurrentWindow();
         if ($(event.target).is('.logo, i'))
             return;
 
+        scroll_to_top();
+    });
+
+    // scroll to top if currently not at top;
+    // scroll back to the last scroll position if currently at top
+    function scroll_to_top() {
         let container = $('.feed-container');
         let scroll_position = container.scrollTop();
         if (scroll_position !== 0) {
@@ -140,7 +146,7 @@ const current_window = remote.getCurrentWindow();
             if (last_scroll_position)
                 container.animate({scrollTop: last_scroll_position}, 300, 'easieEaseInOut');
         }
-    });
+    }
 }
 
 // ------------------------------------------------------------
@@ -317,14 +323,14 @@ const current_window = remote.getCurrentWindow();
                 break;
             case 'k':
             case 'ArrowUp':
-                if (has_focus && in_viewport(pin_focused)) {
+                if (has_focus && is_in_viewport(pin_focused)) {
                     pin_focused.removeClass('focus');
                     move_focus(pin_focused.prev());
                 }
                 else {
                     $($('.pin').get().reverse()).each(function() {
                         let pin = $(this);
-                        if (in_viewport(pin)) {
+                        if (is_in_viewport(pin)) {
                             $('.pin').removeClass('focus');
                             pin.addClass('focus');
                             return false;
@@ -334,14 +340,14 @@ const current_window = remote.getCurrentWindow();
                 break;
             case 'j':
             case 'ArrowDown':
-                if (has_focus && in_viewport(pin_focused)) {
+                if (has_focus && is_in_viewport(pin_focused)) {
                     pin_focused.removeClass('focus');
                     move_focus(pin_focused.next());
                 }
                 else {
                     $('.pin').each(function() {
                         let pin = $(this);
-                        if (in_viewport(pin)) {
+                        if (is_in_viewport(pin)) {
                             $('.pin').removeClass('focus');
                             pin.addClass('focus');
                             return false;
@@ -349,10 +355,13 @@ const current_window = remote.getCurrentWindow();
                     });
                 }
                 break;
+            case 'g':
+                scroll_to_top();
+                break;
         }
     });
 
-    function in_viewport(pin) {
+    function is_in_viewport(pin) {
         let top = pin.offset().top - 55;
         let bottom = top + pin.outerHeight(true);
         let container_h = $('.feed-container').height();
