@@ -123,6 +123,28 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
+// double click title bar to scroll top
+{
+    $(document).on('dblclick', '.title-bar', function(event) {
+        if ($(event.target).is('.logo, i'))
+            return;
+
+        let container = $('.feed-container');
+        let scroll_position = container.scrollTop();
+        if (scroll_position !== 0) {
+            localStorage.setItem('last_scroll_position', scroll_position);
+            container.animate({scrollTop: 0}, 300, 'easieEaseInOut');
+        }
+        else {
+            let last_scroll_position = parseInt(localStorage.getItem('last_scroll_position'));
+            if (last_scroll_position)
+                container.animate({scrollTop: last_scroll_position}, 300, 'easieEaseInOut');
+        }
+    });
+}
+
+// ------------------------------------------------------------
+
 // click delete button to delete pin
 {
     $(document).on('click', '.delete-btn', function(event) {
