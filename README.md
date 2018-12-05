@@ -11,7 +11,7 @@
 - 发布或删除新想法
 - 打开高清图片和视频
 - 查看评论
-- 表达软件作者对桌面操作系统的[喜爱](https://overcast.fm/+CdRRhGxw/1:30:56)
+- 表达作者对桌面操作系统的[喜爱](https://overcast.fm/+CdRRhGxw/1:30:56)
 
 ## macOS
 
@@ -21,7 +21,6 @@
 
 <img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/48238119-10d39200-e3ca-11e8-9c52-a8b0cef974c7.png">
 
-<img width="450" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/43783099-2c053a86-9a61-11e8-89fb-c6c1ac16d24e.png">
 
 ## Windows
 
@@ -31,6 +30,7 @@
 
 - `j`/`↓` 去下一条想法
 - `k`/`↑` 去上一条想法
+- `g` 去时间线顶部（再按一次返回原位置）
 - `m` 折叠想法
 - `s` 给想法点赞
 - `i` 查看想法内的图片或视频
@@ -46,7 +46,7 @@
 1. 安装 [`yarn`](https://yarnpkg.com/lang/en/docs/install/) 
 2. `$ cd zhihu-heartbeat/`
 3. `$ yarn install`
-4. 使用 `$ yarn start` 直接启动程序，或 `$ yarn dist --mac --win` 输出对应两个系统的可执行程序
+4. 使用 `$ yarn start` 直接启动程序，或 `$ yarn dist --mac --win` 生成对应两个系统的可执行程序
 
 ## 致谢
 
