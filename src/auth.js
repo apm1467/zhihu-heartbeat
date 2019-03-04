@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const request = require('request-promise');
+const request = require('request-promise-native');
 const constants = require('./constants');
 
 const current_window = require('electron').remote.getCurrentWindow();

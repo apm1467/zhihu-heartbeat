@@ -1,5 +1,5 @@
 const {dialog, BrowserWindow} = require('electron').remote;
-const request = require('request-promise');
+const request = require('request-promise-native');
 const constants = require('./constants');
 const auth = require('./auth');
 

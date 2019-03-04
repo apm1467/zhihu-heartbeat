@@ -5,7 +5,7 @@
     <script>
         const ipc = require('electron').ipcRenderer;
         const Hls = require('hls.js');
-        const request = require('request-promise');
+        const request = require('request-promise-native');
         const {Pin} = require('./models');
         const auth = require('./auth');
         const constants = require('./constants');

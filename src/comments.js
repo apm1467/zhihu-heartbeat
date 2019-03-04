@@ -1,4 +1,4 @@
-const request = require('request-promise');
+const request = require('request-promise-native');
 const constants = require('./constants');
 const auth = require('./auth');
 const {Comment} = require('./models');
