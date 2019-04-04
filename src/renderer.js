@@ -219,6 +219,12 @@ const current_window = remote.getCurrentWindow();
             open_comments_window($(this));
     });
 
+    // prevent text selection after double click
+    $(document).on('mousedown', '.pin', function(event) {
+        if (event.detail > 1)
+            event.preventDefault();
+    });
+
     // context menu
     $(document).on('contextmenu', '.pin', function(event) {
         if ($(event.target).is('.img'))
@@ -242,7 +248,6 @@ const current_window = remote.getCurrentWindow();
     });
 
     function open_comments_window(pin) { // jQuery object
-        window.getSelection().empty();
         pin.addClass('loading');
 
         let pin_id = pin.attr('data-id');
