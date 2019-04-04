@@ -1,6 +1,6 @@
 body {
-    color: rgb(204, 204, 204);
-    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
+    color: #E0E0DF;
+    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
     margin: 0;
     user-select: none;
 }
@@ -26,7 +26,7 @@ p + p {
     -webkit-app-region: drag;
     height: 40px;
     width: 100%;
-    background-color: rgb(77, 77, 77);
+    background-image: linear-gradient(#44413D, #373431);
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
 .title {
@@ -35,6 +35,8 @@ p + p {
     transform: translate(-50%, 0);
     margin-top: 10px;
     color: rgb(160, 160, 160);
+    font-weight: 600;
+    font-size: 16px;
 }
 .comments-container {
     position: absolute;
@@ -80,11 +82,11 @@ p + p {
     right: 0;
     margin-left: 51px;
     height: 45px;
-    background: linear-gradient(transparent, rgb(51, 51, 51) 50%);
+    background: linear-gradient(transparent, #2C2924 50%);
 }
 .comments {
     padding-top: 5px;
-    border-top: 1px solid rgb(72, 72, 72);
+    border-top: 1px solid #413E39;
 }
 .child-comments {
     padding-left: 50px;
@@ -98,7 +100,6 @@ p + p {
 }
 .avatar {
     border-radius: 50%;
-    border: 1px solid rgb(102, 102, 102);
     height: 42px;
     width: 42px;
     position: absolute;
@@ -120,7 +121,7 @@ p + p {
     margin-left: 0;
 }
 .author .arraw {
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -129,15 +130,14 @@ p + p {
     position: absolute;
     right: 25px;
     font-size: 14px;
+    font-weight: 600;
+    color: rgb(122, 122, 122);
 }
 .time {
-    color: rgb(160, 160, 160);
     top: 15px;
 }
 .statistics {
     top: 16px;
-    color: rgb(122, 122, 122);
-    font-weight: 600;
     font-size: 14px;
 }
 .pin .statistics {
@@ -148,14 +148,11 @@ p + p {
 }
 .statistics i {
     margin-right: 3px;
-}
-.statistics .fas.fa-heart {
-    color: rgb(220, 80, 60);
-    font-size: 13px;
+    color: #595959;
 }
 .comment-item .statistics .num-likes:hover {
     color: rgb(160, 160, 160);
-    background-color: rgb(80, 80, 80);
+    background-color: #3F3F3F;
     border-radius: 4px;
     padding-top: 2px;
     padding-bottom: 2px;
@@ -168,7 +165,7 @@ p + p {
 }
 .content .fa-retweet {
     margin-right: 3px;
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
 }
 .content {
     font-size: 17px;
@@ -178,7 +175,7 @@ p + p {
 }
 .comment-item .content {
     padding-bottom: 11px;
-    border-bottom: 1px solid rgb(72, 72, 72);
+    border-bottom: 1px solid #413E39;
     user-select: text;
 }
 
@@ -193,7 +190,7 @@ p + p {
     margin-bottom: 5px;
     padding-left: 10px;
     padding-top: 2px;
-    border-left: 2px solid rgb(102, 102, 102);
+    border-left: 1px solid rgb(102, 102, 102);
 }
 .origin-pin .name {
     display: inline-block;
@@ -204,7 +201,9 @@ p + p {
 .link-title {
     margin-top: 15px;
     line-height: 1.4em;
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
+    font-weight: 500;
+    font-size: 16px;
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -212,6 +211,7 @@ p + p {
     cursor: default;
 }
 .link {
+    font-size: 16px;
     display: block;
     white-space: nowrap; 
     overflow: hidden;
