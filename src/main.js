@@ -20,7 +20,7 @@ app.on('ready', function() {
         maxWidth: 600,
         height: 800,
         titleBarStyle: 'hiddenInset',
-        backgroundColor: "#333333",
+        backgroundColor: "#2C2924",
         autoHideMenuBar: true,
         fullscreenable: false,
         useContentSize: true

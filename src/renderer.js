@@ -406,7 +406,8 @@ const current_window = remote.getCurrentWindow();
             }
         }
     ]);
-    $(document).on('click', '.self-avatar', () => logout_menu.popup({}));
+    $(document).on('click contextmenu', '.self-avatar', 
+                   () => logout_menu.popup({}));
 }
 
 // ------------------------------------------------------------

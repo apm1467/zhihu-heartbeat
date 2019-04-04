@@ -1,6 +1,6 @@
 body {
-    color: rgb(204, 204, 204);
-    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
+    color: #E0E0DF;
+    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
     margin: 0;
     cursor: default;
     user-select: none;
@@ -36,7 +36,7 @@ a.active {
     position: sticky;
     z-index: 99;
     top: 0;
-    background-color: rgb(77, 77, 77);
+    background-image: linear-gradient(#44413D, #373431);
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
 .logo {
@@ -65,7 +65,6 @@ a.active {
 }
 .self-avatar {
     border-radius: 50%;
-    border: 1px solid rgb(102, 102, 102);
     height: 36px;
     width: 36px;
     float: right;
@@ -172,7 +171,7 @@ a.active {
     transition: filter 0.06s;
 }
 .pin.focus {
-    background-color: rgb(64, 64, 64);
+    background-color: #37332F;
     color: rgb(220, 220, 220);
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
@@ -197,7 +196,6 @@ a.active {
 }
 .avatar {
     border-radius: 50%;
-    border: 1px solid rgb(102, 102, 102);
     height: 42px;
     width: 42px;
     position: absolute;
@@ -221,14 +219,13 @@ a.active {
     position: absolute;
     right: 25px;
     font-size: 14px;
+    font-weight: 600;
+    color: rgb(122, 122, 122);
 }
 .time {
-    color: rgb(160, 160, 160);
     top: 15px;
 }
 .statistics {
-    color: rgb(122, 122, 122);
-    font-weight: 600;
     top: 16px;
     display: none;
 }
@@ -237,6 +234,7 @@ a.active {
 }
 .statistics i {
     margin-right: 3px;
+    color: #595959;
 }
 .statistics .delete-btn {
     margin-right: 3px;
@@ -244,7 +242,7 @@ a.active {
 }
 .statistics .num-likes:hover {
     color: rgb(160, 160, 160);
-    background-color: rgb(80, 80, 80);
+    background-color: #3F3F3F;
     border-radius: 4px;
     padding-top: 2px;
     padding-bottom: 2px;
@@ -255,10 +253,6 @@ a.active {
 }
 .statistics .num-likes:hover .far.fa-heart {
     color: rgb(220, 80, 60);
-}
-.statistics .fas.fa-heart {
-    color: rgb(220, 80, 60);
-    font-size: 13px;
 }
 .pin:hover > .time,
 .pin.focus > .time {
@@ -274,7 +268,7 @@ a.active {
     margin-top: 5px;
     margin-left: 50px;
     padding-bottom: 11px;
-    border-bottom: 1px solid rgb(72, 72, 72);
+    border-bottom: 1px solid #413E39;
     transition: max-height 0.3s ease-in;
     overflow: hidden;
 }
@@ -293,19 +287,21 @@ a.active {
     margin-right: 20px;
     height: 45px;
     border-bottom: 1px solid rgb(72, 72, 72);
-    background: linear-gradient(transparent, rgb(51, 51, 51) 50%);
+    background: linear-gradient(transparent, #2C2924 50%);
 }
 .pin.focus .content.collapse:after{
-    background: linear-gradient(transparent, rgb(64, 64, 64) 50%);
+    background: linear-gradient(transparent, #37332F 50%);
 }
 .content .fa-retweet {
     margin-right: 3px;
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
 }
 .link-title {
     margin-top: 15px;
     line-height: 1.4em;
-    color: rgb(160, 160, 160);
+    color: rgb(122, 122, 122);
+    font-weight: 500;
+    font-size: 16px;
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -313,6 +309,7 @@ a.active {
     cursor: default;
 }
 .link {
+    font-size: 16px;
     display: block;
     white-space: nowrap; 
     overflow: hidden;
@@ -387,7 +384,7 @@ a.active {
     margin-bottom: 5px;
     padding-left: 10px;
     padding-top: 2px;
-    border-left: 2px solid rgb(102, 102, 102);
+    border-left: 1px solid #514F4B;
 }
 .origin-pin .name {
     display: inline-block;
