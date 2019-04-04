@@ -105,8 +105,12 @@ p + p {
     position: absolute;
     transform: translate(0, 2px);
 }
-.pin .author:hover .avatar, .comment-author:hover .avatar {
+.author:hover .avatar, .comment-author:hover .avatar {
     box-shadow: 0px 0 7px rgb(180, 180, 180);
+    transition: box-shadow 0.2s;
+}
+.author.active .avatar, .comment-author.active .avatar {
+    box-shadow: 0 0 12px white;
 }
 .name {
     font-weight: 600;
@@ -116,6 +120,10 @@ p + p {
 }
 .pin .author:hover .name, .comment-author:hover .name {
     color: white;
+    transition: text-shadow 0.2s;
+}
+.pin .author.active .name, .comment-author.active .name {
+    text-shadow: 0 0 5px white;
 }
 .arraw + .comment-author .name {
     margin-left: 0;

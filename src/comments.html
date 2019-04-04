@@ -88,6 +88,13 @@
             shell.openExternal(this.href, {activate: false});
         });
 
+        // add shadow when pin author is clicked
+        $(document).on('click', '.author a', function(event) {
+            let author = $(this).closest('.comment-author, .author');
+            author.addClass('active')
+                  .delay(500).queue(() => author.removeClass('active').dequeue());
+        });
+
         // click heart button to like comment
         const {Comment} = require('./models');
         $(document).on('click', '.comment-item .num-likes', async function(event) {

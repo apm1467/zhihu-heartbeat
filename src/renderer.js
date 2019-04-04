@@ -429,6 +429,17 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
+// add shadow when pin author is clicked
+{
+    $(document).on('click', '.author a', function(event) {
+        let author = $(this).closest('.author');
+        author.addClass('active')
+              .delay(500).queue(() => author.removeClass('active').dequeue());
+    });
+}
+
+// ------------------------------------------------------------
+
 // open timeline images
 {
     // click to open images in new window
