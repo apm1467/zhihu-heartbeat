@@ -411,8 +411,12 @@ const current_window = remote.getCurrentWindow();
             }
         }
     ]);
-    $(document).on('click contextmenu', '.self-avatar', 
-                   () => logout_menu.popup({}));
+    $(document).on('click contextmenu', '.self-avatar', function(event) {
+        event.preventDefault();
+        let avatar = $(this);
+        avatar.addClass('darkened');
+        logout_menu.popup({callback: () => avatar.removeClass('darkened')});
+    });
 }
 
 // ------------------------------------------------------------
