@@ -3,7 +3,7 @@ html, body {
     box-sizing: border-box;
 }
 body {
-    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
+    font-family: BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
     margin: 0;
 }
 .hidden {
@@ -47,7 +47,7 @@ body {
 textarea {
     height: 500px;
     color: #E0E0DF;
-    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
+    font-family: BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
     font-size: 17px;
     line-height: 1.6em;
     background-color: transparent;
