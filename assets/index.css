@@ -168,7 +168,8 @@ a.active {
     padding-top: 13px;
     padding-left: 20px;
     padding-right: 20px;
-    transition: background-color 0.06s;
+    filter: brightness(100%);
+    transition: filter 0.06s;
 }
 .pin.focus {
     background-color: rgb(64, 64, 64);
@@ -188,8 +189,8 @@ a.active {
     margin-top: -1px;
 }
 .pin.loading {
-    background-color: rgb(30, 30, 30);
-    color: rgb(200, 200, 200);
+    filter: brightness(70%) !important;
+    color: white;
 }
 .author {
     display: inline-block;
@@ -325,6 +326,10 @@ a.active {
     text-align: center;
     border-radius: 6px;
     overflow: hidden;
+}
+.img, .video {
+    filter: brightness(100%);
+    transition: filter 0.1s;
 }
 .img + .img {
     margin-left: 3px;
