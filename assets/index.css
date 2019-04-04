@@ -57,6 +57,10 @@ a.active {
     color: rgb(220, 80, 60);
     box-shadow: inset 0 0 7px rgba(220, 80, 60, 0.4);
 }
+.logo.active {
+    color: rgb(255, 90, 70);
+    box-shadow: inset 0 0 18px rgba(220, 80, 60, 0.8);
+}
 .logo i {
     position: absolute;
     top: 50%;

@@ -118,7 +118,12 @@ const current_window = remote.getCurrentWindow();
 
 // click logo to publish new pin
 {
-    $('.logo').click(() => publish.open_editor());
+    $(document).on('click', '.logo', function(event) {
+        let logo = $(this);
+        logo.addClass('active')
+            .delay(400).queue(() => logo.removeClass('active').dequeue());
+        publish.open_editor()
+    });
 }
 
 // ------------------------------------------------------------
