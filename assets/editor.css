@@ -3,8 +3,7 @@ html, body {
     box-sizing: border-box;
 }
 body {
-    color: rgb(204, 204, 204);
-    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
+    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
     margin: 0;
 }
 .hidden {
@@ -24,6 +23,8 @@ body {
 .title, .sending {
     margin-top: 10px;
     color: rgb(160, 160, 160);
+    font-weight: 600;
+    font-size: 16px;
 }
 .submit, .sending {
     float: right;
@@ -32,20 +33,23 @@ body {
 .submit {
     -webkit-app-region: no-drag;
     color: rgb(106, 175, 253);
+    font-size: 15px;
+    font-weight: 600;
     user-select: none;
     margin-top: 8px;
     border-radius: 7px;
     padding: 1px 5px;
-    border: 1px solid rgb(102, 102, 102);
+    border: 1px solid #514F4B;
 }
 .submit:hover {
-    background-color: rgb(66, 66, 66);
+    background-color: #3F3F3F;
 }
 textarea {
     height: 500px;
-    color: rgb(204, 204, 204);
-    font-family: BlinkMacSystemFont, HiraginoSansGB-W3, Verdana, "Microsoft YaHei", sans-serif;
+    color: #E0E0DF;
+    font-family: BlinkMacSystemFont, PingFang SC, Verdana, "Microsoft YaHei", sans-serif;
     font-size: 17px;
+    line-height: 1.6em;
     background-color: transparent;
     outline: none;
     border: none;

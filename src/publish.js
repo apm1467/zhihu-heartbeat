@@ -13,7 +13,7 @@ exports.open_editor = function() {
         titleBarStyle: 'hiddenInset',
         maximizable: false,
         autoHideMenuBar: true,
-        backgroundColor: "#333333",
+        backgroundColor: "#2C2924",
         useContentSize: true
     });
     win.loadFile('src/pin_editor.html');
