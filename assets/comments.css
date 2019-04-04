@@ -160,8 +160,24 @@ p + p {
     padding-right: 4px;
     margin-right: -4px;
 }
+/* hollow heart */
+.comment-item .statistics .num-likes .far.fa-heart {
+    transition: color 0.2s, text-shadow 0.2s;
+}
 .comment-item .statistics .num-likes:hover .far.fa-heart {
     color: rgb(220, 80, 60);
+    text-shadow: 0 0 8px rgba(220, 80, 60);
+}
+/* solid heart */
+.comment-item .statistics .num-likes .fas.fa-heart {
+    font-size: 13px;
+    color: rgb(220, 80, 60);
+    text-shadow: 0 0 8px rgba(220, 80, 60);
+    transition: text-shadow 0.2s;
+}
+.comment-item .statistics .num-likes:hover .fas.fa-heart {
+    color: rgb(220, 80, 60);
+    text-shadow: none;
 }
 .content .fa-retweet {
     margin-right: 3px;
