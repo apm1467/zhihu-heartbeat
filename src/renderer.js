@@ -3,6 +3,7 @@ const electron = require('electron');
 const {clipboard} = electron;
 const remote = electron.remote;
 const shell = electron.shell;
+const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu} = remote;
 const Feed = require('./feed');
 const {Pin} = require('./models');
@@ -106,13 +107,19 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// update statistics of each pin every 10 min
+// update pin statistics
 {
+    // update all pin statistics every 10 min
     setInterval(function() {
         $('.pin').each(function() {
             Pin.update_statistics($(this).attr('data-id'));
         });
     }, constants.PIN_STATISTICS_UPDATE_INTERVAL);
+
+    // update on demand
+    ipc.on('update-pin-statistics', function(event, pin_id) {
+        Pin.update_statistics(pin_id);
+    });
 }
 
 // ------------------------------------------------------------
@@ -306,8 +313,8 @@ const current_window = remote.getCurrentWindow();
         });
         win.loadFile('src/comments_page.html');
         win.webContents.on('did-finish-load', function() {
-            // pass pin_id to comments window
             win.webContents.send('pin', pin_id, pin_html);
+            win.webContents.send('parent-id', current_window.webContents.id);
 
             pin.removeClass('loading');
             win.show();

@@ -151,6 +151,12 @@ p + p {
 .pin .statistics {
     display: none;
 }
+.pin:hover > .time {
+    display: none;
+}
+.pin:hover > .statistics{
+    display: inline-block;
+}
 .statistics span {
     margin-left: 7px;
 }
@@ -158,7 +164,7 @@ p + p {
     margin-right: 3px;
     color: #595959;
 }
-.comment-item .statistics .num-likes:hover {
+.statistics .num-likes:hover {
     color: rgb(160, 160, 160);
     background-color: #3F3F3F;
     border-radius: 4px;
@@ -168,22 +174,26 @@ p + p {
     padding-right: 4px;
     margin-right: -4px;
 }
+.pin .statistics .num-likes:hover {
+    padding-left: 1px;
+    margin-left: 6px;
+}
 /* hollow heart */
-.comment-item .statistics .num-likes .far.fa-heart {
+.statistics .num-likes .far.fa-heart {
     transition: color 0.2s, text-shadow 0.2s;
 }
-.comment-item .statistics .num-likes:hover .far.fa-heart {
+.statistics .num-likes:hover .far.fa-heart {
     color: rgb(220, 80, 60);
     text-shadow: 0 0 8px rgba(220, 80, 60);
 }
 /* solid heart */
-.comment-item .statistics .num-likes .fas.fa-heart {
+.statistics .num-likes .fas.fa-heart {
     font-size: 13px;
     color: rgb(220, 80, 60);
     text-shadow: 0 0 8px rgba(220, 80, 60);
     transition: text-shadow 0.2s;
 }
-.comment-item .statistics .num-likes:hover .fas.fa-heart {
+.statistics .num-likes:hover .fas.fa-heart {
     color: rgb(220, 80, 60);
     text-shadow: none;
 }

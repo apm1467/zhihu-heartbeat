@@ -20,7 +20,9 @@
 
     <script>
         const ipc = require('electron').ipcRenderer;
+        const shell = require('electron').shell;
         const CommentsPage = require('./comments_page.js');
+        const {Pin, Comment} = require('./models');
 
         // accept keyboard shortcuts
         window.addEventListener('keydown', (event) => {
@@ -59,6 +61,11 @@
             time_field.text(`${date.getMonth() + 1} 月 ${date.getDate()} 日
                              ${date.getHours()}:${minutes}`);
 
+            $('.pin').attr('data-id', pin_id);
+
+            // update statistics
+            Pin.update_statistics(pin_id);
+
             // collapse pin content
             let pin_content = $('.pin .content');
             let has_img = pin_content.find('.img, .thumbnail').length !== 0;
@@ -72,15 +79,19 @@
 
                 // click pin to toggle collapse
                 $(document).on('click', '.pin', function(event) {
-                    if ($(event.target).is('a, a span, .avatar'))
+                    if ($(event.target).is('a, a span, .avatar, .num-likes, i'))
                         return;
                     $('.pin .content').toggleClass('collapse');
                 });
             }
         });
 
+        // update pin statistics on demand
+        ipc.on('update-pin-statistics', function(pin_id) {
+            Pin.update_statistics(pin_id);
+        });
+
         // open links in external browser
-        const shell = require('electron').shell;
         $(document).on('click', 'a[href^="http"]', function(event) {
             event.preventDefault();
             let a = $(this);
@@ -95,8 +106,27 @@
                   .delay(500).queue(() => author.removeClass('active').dequeue());
         });
 
+        // click heart button to like pin
+        ipc.on('parent-id', function(event, parent_id) {
+            console.log(parent_id);
+            $(document).on('click', '.pin .num-likes', async function(event) {
+                let clicked_btn = $(this);
+                let pin_id = clicked_btn.parent().parent().attr('data-id');
+                let is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+
+                clicked_btn.fadeTo(200, 0);
+                if (is_liked)
+                    await Pin.unlike(pin_id);
+                else
+                    await Pin.like(pin_id);
+                clicked_btn.fadeTo(200, 1);
+
+                // notify parent window to update pin statistics
+                ipc.sendTo(parent_id, 'update-pin-statistics', pin_id);
+            });
+        });
+
         // click heart button to like comment
-        const {Comment} = require('./models');
         $(document).on('click', '.comment-item .num-likes', async function(event) {
             let clicked_btn = $(this);
             let comment_id = clicked_btn.parent().parent().attr('data-id');
