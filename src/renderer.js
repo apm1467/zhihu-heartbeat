@@ -269,7 +269,7 @@ const current_window = remote.getCurrentWindow();
             show: false,
             useContentSize: true
         });
-        win.loadFile('src/comments.html');
+        win.loadFile('src/comments_page.html');
         win.webContents.on('did-finish-load', function() {
             // pass pin_id to comments window
             win.webContents.send('pin', pin_id, pin_html);

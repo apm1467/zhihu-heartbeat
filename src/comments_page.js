@@ -4,7 +4,7 @@ const auth = require('./auth');
 const {Comment} = require('./models');
 
 
-module.exports = class Comments {
+module.exports = class CommentsPage {
     constructor(pin_id, pin_html) {
         this.pin_id = pin_id;
         this.pin_html = pin_html;
