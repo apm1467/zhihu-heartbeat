@@ -15,7 +15,10 @@ exports.PIN_TOKEN_URL = BASE_URL + '/pins/token';
 
 exports.COMMENT_URL = BASE_URL + '/comments';
 
-exports.BASE_WEB_URL = 'https://www.zhihu.com';
+const BASE_WEB_URL = 'https://www.zhihu.com';
+exports.BASE_WEB_URL = BASE_WEB_URL;
+
+exports.PIN_WEB_URL = BASE_WEB_URL + '/pin';
 
 exports.SELF_URL = BASE_URL + '/people/self';
 

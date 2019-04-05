@@ -1,5 +1,6 @@
 const request = require('request');
 const electron = require('electron');
+const {clipboard} = electron;
 const remote = electron.remote;
 const shell = electron.shell;
 const {app, dialog, BrowserWindow, Menu} = remote;
@@ -253,10 +254,19 @@ const current_window = remote.getCurrentWindow();
             return;
 
         let pin = $(this);
-        let template = [{
-            label: '详情',
-            click: () => open_comments_window(pin)
-        }];
+        let template = [
+            {
+                label: '详情',
+                click: () => open_comments_page(
+                    $(this).closest('.origin-pin, .pin'))
+            },
+            { type: 'separator' },
+            {
+                label: '复制链接',
+                click: () => clipboard.writeText(
+                    constants.PIN_WEB_URL + '/' + pin.attr('data-id'))
+            }
+        ];
 
         // make long pins collapsible
         if (pin.outerHeight() > 400 && !pin.hasClass('origin-pin'))
