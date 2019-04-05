@@ -264,6 +264,26 @@ class Pin {
         let selector = `.pin[data-id="${pin_id}"] > .statistics`;
         $(selector).replaceWith(pin.get_statistics_html());
     }
+
+    static async get_html(pin_id) {
+        let res = await request({
+            method: 'GET',
+            url: constants.PIN_URL + '/' + pin_id,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            simple: false,
+            json: true
+        });
+        let pin;
+        try {
+            pin = new Pin(res);
+        }
+        catch (err) {
+            console.warn(res);
+            return;
+        }
+        return pin.get_html();
+    }
 }
 
 class CommentAuthor {

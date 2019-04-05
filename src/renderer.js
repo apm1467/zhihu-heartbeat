@@ -217,11 +217,23 @@ const current_window = remote.getCurrentWindow();
         $('.pin').removeClass('focus');
     });
 
-    // double click pin to open comments window
+    // double click pin to open comments page
     $(document).on('dblclick', '.pin', function(event) {
-        // not trigger this event when clicking links or images
         if (!$(event.target).is('a, a span, .img, .thumbnail'))
-            open_comments_window($(this));
+            open_comments_page($(this));
+    });
+
+    // single click origin-pin to open comments page
+    $(document).on('click', '.origin-pin', function(event) {
+        event.stopPropagation();
+
+        let pin = $(this);
+        if (
+            !$(event.target).is('a, a span, .img, .thumbnail') &&
+            !pin.hasClass('loading')
+        ) {
+            open_comments_page(pin);
+        }
     });
 
     // prevent text selection after double click
@@ -230,8 +242,13 @@ const current_window = remote.getCurrentWindow();
             event.preventDefault();
     });
 
+    // prevent double click on origin-pin from opening comments page for repin
+    $(document).on('dblclick', '.origin-pin', function(event) {
+        event.stopPropagation();
+    });
+
     // context menu
-    $(document).on('contextmenu', '.pin', function(event) {
+    $(document).on('contextmenu', '.pin, .origin-pin', function(event) {
         if ($(event.target).is('.img'))
             return;
 
@@ -242,7 +259,7 @@ const current_window = remote.getCurrentWindow();
         }];
 
         // make long pins collapsible
-        if (pin.outerHeight() > 400)
+        if (pin.outerHeight() > 400 && !pin.hasClass('origin-pin'))
             template.unshift({
                 label: '折叠',
                 click: () => toggle_collapse(pin)
@@ -252,11 +269,19 @@ const current_window = remote.getCurrentWindow();
         menu.popup({});
     });
 
-    function open_comments_window(pin) { // jQuery object
+    async function open_comments_page(pin) {
         pin.addClass('loading');
 
         let pin_id = pin.attr('data-id');
-        let pin_html = pin.html();
+
+        // refetch pin html for origin-pin 
+        // because author avatar is not included in html on index page
+        let pin_html;
+        if (pin.hasClass('origin-pin'))
+            pin_html = await Pin.get_html(pin_id);
+        else
+            pin_html = pin.html();
+
         let win = new BrowserWindow({
             width: 450,
             minWidth: 400,

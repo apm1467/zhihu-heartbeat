@@ -191,7 +191,7 @@ a.active {
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
 }
-.pin.loading {
+.pin.loading, .origin-pin.loading {
     filter: brightness(70%) !important;
     color: white;
 }
@@ -413,6 +413,17 @@ a.active {
     padding-left: 10px;
     padding-top: 2px;
     border-left: 1px solid #514F4B;
+    filter: brightness(100%);
+    transition: background-color 0.1s, border-left 0.1s, filter 0.06s;
+}
+.origin-pin:hover {
+    border-left: 1px solid transparent;
+    border-radius: 6px;
+    background-color: #3F3F3F;
+}
+.origin-pin.loading {
+    border-left: 1px solid transparent;
+    background-color: #37332F;
 }
 .origin-pin .name {
     display: inline-block;
