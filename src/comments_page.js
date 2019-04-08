@@ -59,8 +59,7 @@ module.exports = class CommentsPage {
             json: true
         });
         try {
-            let data = res['data'];
-            self._append_to_list(data);   
+            this._append_to_list(res['data']);   
         }
         catch (err) {
             console.warn(res);
