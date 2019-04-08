@@ -217,7 +217,7 @@ a.active {
 }
 .author:hover .avatar {
     box-shadow: 0 0 7px rgb(180, 180, 180);
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.1s;
 }
 .author.active .avatar {
     box-shadow: 0 0 12px white;
@@ -231,7 +231,7 @@ a.active {
 }
 .author:hover .name {
     color: white;
-    transition: text-shadow 0.2s;
+    transition: color 0.1s;
 }
 .author.active .name {
     text-shadow: 0 0 5px white;
