@@ -7,7 +7,7 @@ const current_window = require('electron').remote.getCurrentWindow();
 
 exports.check_captcha = check_captcha;
 async function check_captcha() {
-    var res = await request({
+    let res = await request({
         method: 'GET',
         url: constants.CAPTCHA_URL,
         headers: constants.CAPTCHA_REQUEST_HEADER,
@@ -20,7 +20,7 @@ async function check_captcha() {
 }
 
 async function get_captcha() {
-    var res = await request({
+    let res = await request({
         method: 'PUT',
         url: constants.CAPTCHA_URL,
         headers: constants.LOGIN_REQUEST_HEADER,
@@ -33,7 +33,7 @@ async function get_captcha() {
         return;
     }
 
-    var image = new Image();
+    let image = new Image();
     image.src = 'data:image/gif;base64,' + res['img_base64'];
     $('.captcha').prepend(image);
     $('.captcha').removeClass('hidden');
@@ -43,7 +43,7 @@ async function get_captcha() {
 exports.get_access_token = async function(email, password, captcha_text) {
     if (captcha_text) {
         // submit captcha text before authentication
-        var options = {
+        let options = {
             method: 'POST',
             url: constants.CAPTCHA_URL,
             headers: constants.LOGIN_REQUEST_HEADER,
@@ -52,7 +52,7 @@ exports.get_access_token = async function(email, password, captcha_text) {
             simple: false,
             json: true
         };
-        var res = await request(options);
+        let res = await request(options);
         if (res['error']) {
             reload_login_page(res['error']['message']);
             return;
@@ -62,8 +62,8 @@ exports.get_access_token = async function(email, password, captcha_text) {
 }
 
 async function authenticate(email, password) {
-    var time = Date.now();
-    var auth_data = {
+    let time = Date.now();
+    let auth_data = {
         ...constants.AUTH_DATA,
         signature: calculate_signature(time),
         timestamp: time,
@@ -71,7 +71,7 @@ async function authenticate(email, password) {
         password: password
     }
 
-    var res = await request({
+    let res = await request({
         method: 'POST',
         url: constants.SIGN_IN_URL,
         form: auth_data,
@@ -86,7 +86,7 @@ async function authenticate(email, password) {
 
     localStorage.setItem('access_token', res['access_token']);
     localStorage.setItem('self_user_id', res['uid']);
-    var access_expire = time + res['expires_in'] * 1000;
+    let access_expire = time + res['expires_in'] * 1000;
     localStorage.setItem('access_expire_time', access_expire.toString());
 
     $('.login-form').addClass('hidden');
@@ -94,9 +94,9 @@ async function authenticate(email, password) {
 }
 
 function calculate_signature(time) {
-    var {grant_type, client_id, source} = constants.AUTH_DATA;
-    var hmac = crypto.createHmac('sha1', constants.APP_SECRET);
-    var msg = grant_type + client_id + source + time;
+    let {grant_type, client_id, source} = constants.AUTH_DATA;
+    let hmac = crypto.createHmac('sha1', constants.APP_SECRET);
+    let msg = grant_type + client_id + source + time;
     hmac.update(msg);
     return hmac.digest('hex');
 }
@@ -108,6 +108,6 @@ function reload_login_page(err_message) {
 
 
 exports.get_authorized_request_header = function() {
-    var access_token = 'Bearer ' + localStorage.getItem('access_token');
+    let access_token = 'Bearer ' + localStorage.getItem('access_token');
     return {...constants.BASE_HEADER, Authorization: access_token};
 }
