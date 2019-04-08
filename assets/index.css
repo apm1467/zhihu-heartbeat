@@ -38,6 +38,10 @@ a.active {
     background-image: linear-gradient(#44413D, #373431);
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
+.title-bar.inactive {
+    background-image: none;
+    background-color: #373430;
+}
 .logo {
     -webkit-app-region: no-drag;
     font-size: 27px;
@@ -51,6 +55,9 @@ a.active {
     border-radius: 50%;
     box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
     transition: color 0.2s, box-shadow 0.2s;
+}
+.title-bar.inactive .logo {
+    color: #7A7772;
 }
 .logo:hover {
     color: rgb(220, 80, 60);
@@ -73,6 +80,9 @@ a.active {
     float: right;
     margin-right: 10px;
     margin-top: 6px;
+}
+.title-bar.inactive .self-avatar {
+    filter: opacity(70%);
 }
 #update-notification {
     color: rgb(220, 220, 220);

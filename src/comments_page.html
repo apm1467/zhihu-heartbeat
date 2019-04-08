@@ -20,35 +20,14 @@
     </div>
 
     <script>
-        const ipc = require('electron').ipcRenderer;
-        const shell = require('electron').shell;
+        const electron = require('electron');
+        const ipc = electron.ipcRenderer;
+        const shell = electron.shell;
+        const current_window = electron.remote.getCurrentWindow();
         const CommentsPage = require('./comments_page.js');
         const {Pin, Comment} = require('./models');
 
-        // accept keyboard shortcuts
-        window.addEventListener('keydown', (event) => {
-            let container = $('.comments-container');
-            let scroll_top = container.scrollTop();
-            switch (event.key) {
-                case 'Escape':
-                    require('electron').remote.getCurrentWindow().close();
-                    break;
-                case 'm':
-                    $('.pin').click(); // toggle collapse
-                    break;
-                case 's':
-                    $('.pin').find('.num-likes').click(); // click heart button
-                break;
-                case 'k':
-                case 'ArrowUp':
-                    container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
-                    break;
-                case 'j':
-                case 'ArrowDown':
-                    container.animate({scrollTop: scroll_top + 500}, 250, 'linear');
-                    break;
-            }
-        });
+        // ------------------------------------------------------------
 
         // display pin
         ipc.on('pin', function(event, pin_id, pin_html) {
@@ -94,6 +73,45 @@
         ipc.on('update-pin-statistics', function(pin_id) {
             Pin.update_statistics(pin_id);
         });
+
+        // ------------------------------------------------------------
+
+        // deactivate title bar when window loses focus
+        current_window.on('blur', function(event) {
+            $('.title-bar').addClass('inactive');
+        });
+        current_window.on('focus', function(event) {
+            $('.title-bar').removeClass('inactive');
+        });
+
+        // ------------------------------------------------------------
+
+        // accept keyboard shortcuts
+        window.addEventListener('keydown', (event) => {
+            let container = $('.comments-container');
+            let scroll_top = container.scrollTop();
+            switch (event.key) {
+                case 'Escape':
+                    require('electron').remote.getCurrentWindow().close();
+                    break;
+                case 'm':
+                    $('.pin').click(); // toggle collapse
+                    break;
+                case 's':
+                    $('.pin').find('.num-likes').click(); // click heart button
+                break;
+                case 'k':
+                case 'ArrowUp':
+                    container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
+                    break;
+                case 'j':
+                case 'ArrowDown':
+                    container.animate({scrollTop: scroll_top + 500}, 250, 'linear');
+                    break;
+            }
+        });
+
+        // ------------------------------------------------------------
 
         // open links in external browser
         $(document).on('click', 'a[href^="http"]', function(event) {

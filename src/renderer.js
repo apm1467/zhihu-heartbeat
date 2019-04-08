@@ -164,6 +164,18 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
+// deactivate title bar when window loses focus
+{
+    current_window.on('blur', function(event) {
+        $('.title-bar').addClass('inactive');
+    });
+    current_window.on('focus', function(event) {
+        $('.title-bar').removeClass('inactive');
+    });
+}
+
+// ------------------------------------------------------------
+
 // click delete button to delete pin
 {
     $(document).on('click', '.delete-btn', function(event) {

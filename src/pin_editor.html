@@ -17,7 +17,17 @@
 
     <script>
         const remote = require('electron').remote;
+        const current_window = remote.getCurrentWindow();
         const publish = require('./publish');
+
+
+        current_window.on('blur', function(event) {
+            $('.title-bar').addClass('inactive');
+        });
+        current_window.on('focus', function(event) {
+            $('.title-bar').removeClass('inactive');
+        });
+
 
         $('.submit').click(function() {
             let text = $('textarea').val().trim();

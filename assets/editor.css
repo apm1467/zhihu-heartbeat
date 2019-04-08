@@ -26,6 +26,9 @@ body {
     font-weight: 600;
     font-size: 16px;
 }
+.title-bar.inactive .title {
+    color: #7A7772;
+}
 .submit, .sending {
     float: right;
     margin-right: 10px;
@@ -40,6 +43,9 @@ body {
     border-radius: 7px;
     padding: 1px 5px;
     border: 1px solid #514F4B;
+}
+.title-bar.inactive .submit {
+    filter: opacity(65%);
 }
 .submit:hover {
     background-color: #3F3F3F;
