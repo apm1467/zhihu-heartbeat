@@ -159,6 +159,10 @@ module.exports = class Feed {
                     let scroll_top = container.scrollTop();
     
                     update.removeClass('hidden');
+
+                    // add spaces between CJK and half-width characters
+                    pangu.spacingElementByClassName('text');
+
                     // maintain scroll bar position
                     container.scrollTop(scroll_top + update.outerHeight(true));
 
@@ -192,6 +196,9 @@ module.exports = class Feed {
         for (const pin_data of pins_data)
             output += generate_pin_html(pin_data);
         $('.feed').append(output);
+
+        // add spaces between CJK and half-width characters
+        pangu.spacingElementByClassName('text');
 
         this.local_oldest_pin_id = pins_data[pins_data.length - 1]['target']['id'];
         this.feed_offset += 10;

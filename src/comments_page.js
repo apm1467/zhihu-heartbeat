@@ -14,6 +14,9 @@ module.exports = class CommentsPage {
 
     async start() {
         $('.pin').append(this.pin_html);
+        // add spaces between CJK and half-width characters
+        pangu.spacingElementByClassName('text');
+
         await this._fetch_initial_comments();
         this._enable_scroll_event();
     }
@@ -81,6 +84,9 @@ module.exports = class CommentsPage {
             }
         }
         $('.comments').append(output);
+        // add spaces between CJK and half-width characters
+        pangu.spacingElementByClassName('content');
+
         this.offset += 20;
     }
 }
