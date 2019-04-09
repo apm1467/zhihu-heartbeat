@@ -22,7 +22,7 @@
 
 ## Windows
 
-<img width="450" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/55666972-72ebd280-5856-11e9-8927-1e63c224d377.png">
+<img width="450" alt="screenshot" src="https://user-images.githubusercontent.com/10210967/55829427-eae42200-5b0e-11e9-8030-0a4fd85c9d99.png">
 
 ## 键盘快捷键
 
@@ -49,7 +49,8 @@
 ## 致谢
 
 - OAuth 登录部分参照了开源项目 [Zhihu-OAuth](https://github.com/7sDream/zhihu-oauth) 的[方法](http://zhihu-oauth.readthedocs.io/zh_CN/latest/for-dev/oauth/game.html)
-- 本软件图标和界面均使用了 [Font Awesome](https://fontawesome.com) 的免费图标字体
+- 软件图标和界面均使用了 [Font Awesome](https://fontawesome.com) 的免费图标字体
 - 视频播放部分使用了 [hls.js](https://github.com/video-dev/hls.js/) 开源库
+- 使用了 [pangu.js](https://github.com/vinta/pangu.js) 在中西文字符之间自动插入空格
 - 界面灵感来自 [Tweetbot](https://tapbots.com/tweetbot/mac/) 和 [Reeder 4](https://beta.reeder.ch)
 - 感谢知乎
