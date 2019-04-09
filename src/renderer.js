@@ -176,6 +176,14 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
+// include extra CSS to adjust app scrollbar on Windows
+{    
+    if (process.platform === 'win32')
+        current_window.webContents.insertCSS(constants.WINDOWS_EXTRA_CSS);
+}
+
+// ------------------------------------------------------------
+
 // click delete button to delete pin
 {
     $(document).on('click', '.delete-btn', function(event) {

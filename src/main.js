@@ -37,7 +37,7 @@ app.on('ready', function() {
 
     main_window.loadFile('src/index.html');
 
-    // hide the main window instead of closing in on macOS
+    // hide the main window instead of closing it on macOS
     if (process.platform === 'darwin') {
         // user can still quit the app normally
         let user_quit = false;

@@ -19,6 +19,7 @@
         const remote = require('electron').remote;
         const current_window = remote.getCurrentWindow();
         const publish = require('./publish');
+        const constants = require('./constants');
 
 
         current_window.on('blur', function(event) {
@@ -27,6 +28,9 @@
         current_window.on('focus', function(event) {
             $('.title-bar').removeClass('inactive');
         });
+
+        if (process.platform === 'win32')
+            current_window.webContents.insertCSS(constants.WINDOWS_EXTRA_CSS);
 
 
         $('.submit').click(function() {

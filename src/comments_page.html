@@ -24,6 +24,7 @@
         const ipc = electron.ipcRenderer;
         const shell = electron.shell;
         const current_window = electron.remote.getCurrentWindow();
+        const constants = require('./constants');
         const CommentsPage = require('./comments_page.js');
         const {Pin, Comment} = require('./models');
 
@@ -83,6 +84,12 @@
         current_window.on('focus', function(event) {
             $('.title-bar').removeClass('inactive');
         });
+
+        // ------------------------------------------------------------
+
+        // include extra CSS to adjust app scrollbar on Windows
+        if (process.platform === 'win32')
+            current_window.webContents.insertCSS(constants.WINDOWS_EXTRA_CSS);
 
         // ------------------------------------------------------------
 
