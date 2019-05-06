@@ -488,8 +488,15 @@ const current_window = remote.getCurrentWindow();
     $(document).on('click', 'a[href^="http"]', function(event) {
         event.preventDefault();
         let a = $(this);
-        a.addClass('active').delay(500).queue(() => a.removeClass('active').dequeue());
-        shell.openExternal(this.href, {activate: false});
+        let url = this.href;
+        a.addClass('active').delay(500)
+                            .queue(() => a.removeClass('active').dequeue());
+
+        // check if the link is an image
+        if (['.gif', '.jpg', '.webp'].some((el) => url.includes(el)))
+            image.open_img_viewer([url], 0);
+        else
+            shell.openExternal(url, {activate: false});
     });
 }
 
