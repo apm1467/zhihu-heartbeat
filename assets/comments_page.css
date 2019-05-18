@@ -1,39 +1,17 @@
-body {
-    color: #E0E0DF;
-    font-family: BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
-    margin: 0;
-    user-select: none;
-}
-img {
-    user-select: none;
-}
-a {
-    color: rgb(106, 175, 253);
-    text-decoration: none;
-    word-break: break-all;
-    cursor: default;
-}
-a.active {
-    color: rgb(36, 105, 183);
-}
 p {
     margin: 0;
 }
 p + p {
     margin-top: 0.8em;
 }
+
+/* ------------------------------------------------------------ */
+/* title bar */
+
 .title-bar {
-    -webkit-app-region: drag;
     height: 40px;
-    width: 100%;
-    background-image: linear-gradient(#44413D, #373431);
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 }
-.title-bar.inactive {
-    background-image: none;
-    background-color: #373430;
-}
-.title {
+.title-bar .title {
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
@@ -45,27 +23,45 @@ p + p {
 .title-bar.inactive .title {
     color: #7A7772;
 }
+
+/* ------------------------------------------------------------ */
+/* pin & comments */
+
 .comments-container {
-    position: absolute;
     top: 40px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-.pin, .comment-item {
-    position: relative;
-    padding-top: 13px;
-    padding-left: 20px;
-    padding-right: 20px;
 }
 .pin .content {
     padding-bottom: 15px;
-    transition: max-height 0.3s ease-in;
-    overflow: hidden;
 }
+.comments {
+    padding-top: 5px;
+    border-top: 1px solid #413E39;
+}
+.comment-item .content {
+    padding-bottom: 11px;
+    border-bottom: 1px solid #413E39;
+    user-select: text;
+}
+.child-comments {
+    padding-left: 50px;
+}
+.author .arraw {
+    color: rgb(122, 122, 122);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.author .arraw + .comment-author .name {
+    margin-left: 0;
+}
+.statistics .num-likes:hover {
+    padding-left: 4px;
+}
+
+/* ------------------------------------------------------------ */
+/* collapse */
+
 .pin .content.collapsible:not(.collapse):after {
+    /* upwards arrow */
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgb(106, 175, 253)' width='24' height='40'%3E%3Cpath d='M12 13L8.285 9.218a.758.758 0 0 0-1.064 0 .738.738 0 0 0 0 1.052l4.249 4.512a.758.758 0 0 0 1.064 0l4.246-4.512a.738.738 0 0 0 0-1.052.757.757 0 0 0-1.063 0L12 13z'%3E%3C/path%3E%3C/svg%3E");
     transform: rotate(180deg);
     text-align: center;
@@ -76,242 +72,6 @@ p + p {
     z-index: -1;
     margin-left: 51px;
 }
-.pin .content.collapse {
-    transition: max-height 0.3s ease-out;
-    max-height: 110px !important;
-}
 .pin .content.collapse:after {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgb(106, 175, 253)' width='24' height='40'%3E%3Cpath transform='translate(0,20)' d='M12 13L8.285 9.218a.758.758 0 0 0-1.064 0 .738.738 0 0 0 0 1.052l4.249 4.512a.758.758 0 0 0 1.064 0l4.246-4.512a.738.738 0 0 0 0-1.052.757.757 0 0 0-1.063 0L12 13z'%3E%3C/path%3E%3C/svg%3E");
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     margin-left: 51px;
-    height: 45px;
-    background: linear-gradient(transparent, #2C2924 50%);
-}
-.comments {
-    padding-top: 5px;
-    border-top: 1px solid #413E39;
-}
-.child-comments {
-    padding-left: 50px;
-}
-.author {
-    display: inline-block;
-    max-width: 300px;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.avatar {
-    border-radius: 50%;
-    height: 42px;
-    width: 42px;
-    position: absolute;
-    transform: translate(0, 2px);
-}
-.pin .author:hover .avatar, .comment-author:hover .avatar {
-    box-shadow: 0px 0 7px rgb(180, 180, 180);
-    transition: box-shadow 0.1s;
-}
-.pin .author.active .avatar, .comment-author.active .avatar {
-    box-shadow: 0 0 12px white;
-}
-.name {
-    font-weight: 600;
-    font-size: 18px;
-    color: rgb(204, 204, 204);
-    margin-left: 50px;
-}
-.pin .author:hover .name, .comment-author:hover .name {
-    color: white;
-    transition: color 0.1s;
-}
-.pin .author.active .name, .comment-author.active .name {
-    text-shadow: 0 0 5px white;
-}
-.arraw + .comment-author .name {
-    margin-left: 0;
-}
-.author .arraw {
-    color: rgb(122, 122, 122);
-    margin-left: 10px;
-    margin-right: 10px;
-}
-.time, .statistics {
-    cursor: default;
-    position: absolute;
-    right: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    color: rgb(122, 122, 122);
-}
-.time {
-    top: 15px;
-}
-.statistics {
-    top: 16px;
-    font-size: 14px;
-}
-.pin .statistics {
-    display: none;
-}
-.pin:hover > .time {
-    display: none;
-}
-.pin:hover > .statistics{
-    display: inline-block;
-}
-.statistics span {
-    margin-left: 7px;
-}
-.statistics i {
-    margin-right: 3px;
-    color: #595959;
-}
-.statistics .num-likes:hover {
-    color: rgb(160, 160, 160);
-    background-color: #3F3F3F;
-    border-radius: 4px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-    margin-right: -4px;
-}
-.pin .statistics .num-likes:hover {
-    padding-left: 1px;
-    margin-left: 6px;
-}
-/* hollow heart */
-.statistics .num-likes .far.fa-heart {
-    transition: color 0.2s, text-shadow 0.2s;
-}
-.statistics .num-likes:hover .far.fa-heart {
-    color: rgb(220, 80, 60);
-    text-shadow: 0 0 8px rgba(220, 80, 60);
-}
-/* solid heart */
-.statistics .num-likes .fas.fa-heart {
-    font-size: 13px;
-    color: rgb(220, 80, 60);
-    text-shadow: 0 0 8px rgba(220, 80, 60);
-    transition: text-shadow 0.2s;
-}
-.statistics .num-likes:hover .fas.fa-heart {
-    color: rgb(220, 80, 60);
-    text-shadow: none;
-}
-.content .fa-retweet {
-    margin-right: 3px;
-    color: rgb(122, 122, 122);
-}
-.content {
-    font-size: 17px;
-    line-height: 1.6em;
-    margin-top: 5px;
-    margin-left: 50px;
-}
-.comment-item .content {
-    padding-bottom: 11px;
-    border-bottom: 1px solid #413E39;
-    user-select: text;
-}
-
-/* ------------------------------------------------------------ */
-/* render pin */
-
-.origin-pin {
-    font-size: 16px;
-    line-height: 1.55em;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    padding-left: 10px;
-    padding-top: 2px;
-    border-left: 1px solid rgb(102, 102, 102);
-}
-.origin-pin .name {
-    display: inline-block;
-    margin-left: 0;
-    margin-bottom: 6px;
-    font-size: 17px;
-}
-.link-title {
-    margin-top: 15px;
-    line-height: 1.4em;
-    color: rgb(122, 122, 122);
-    font-weight: 500;
-    font-size: 16px;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    user-select: none;
-    cursor: default;
-}
-.link {
-    font-size: 16px;
-    display: block;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.images, .video {
-    line-height: 0;
-    margin-top: 10px;
-    margin-bottom: 9px;
-    width: 100%;
-    text-align: center;
-    border-radius: 6px;
-    overflow: hidden;
-}
-.img + .img {
-    margin-left: 3px;
-}
-.single-img, .video .thumbnail {
-    max-width: 100%;
-    max-height: 250px;
-    border-radius: 8px;
-}
-.double-img, .img-grid .img {
-    display: inline-block;
-    background-position: center center;
-    background-size: cover;
-}
-.double-img {
-    width: calc(50% - 1.5px);;
-    height: 250px;
-}
-.img-grid .img {
-    position: relative;
-    width: calc(33.33% - 2px);
-    height: auto;
-}
-.img-grid .img:before{
-    content: "";
-    display: inline-block;
-    padding-top: 100%;
-}
-.img-grid .row {
-    line-height: 0;
-    text-align: left;
-    margin: 0 auto;
-    width: 100%;
-}
-.img-grid .row + .row {
-    margin-top: 3px;
-}
-.video {
-    position: relative;
-}
-.video div {
-    font-size: 23px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.6);; 
 }
