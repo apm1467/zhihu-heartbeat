@@ -56,31 +56,26 @@ class Pin {
         ) {
             this.text = contents[0]['content']
                 .replace(/<script/ig, '')
-                .replace(/data-repin=["'][^"']*["']/g, 'class="repin_account"') // mark repin
-                .replace(/\sdata-\w+=["'][^"']*["']/g, '') // remove data-* attributes
+                .replace(/data-repin=["'][^"']*["']/g, 'class="repin_user"') // mark repin
+                .replace(/\sdata-[^=]+=["'][^"']*["']/g, '')
                 .replace(/<\/a>:\s?/g, '</a>：') // use full-width colon
                 .replace(/\s+class=["']member_mention["']/g, '')
                 .replace('<br><a href="zhihu://pin/feedaction/fold/">收起</a>', '');
 
-            // add repin sign before account names
             const repin_sign = '<i class="fas fa-retweet"></i>';
+            const img_sign = '<i class="fas fa-image"></i>';
 
-            /*
-                an account name without data-* attributes looks like this:
-                <a href="..." class="repin_account">name</a>
+            let links = this.text.match(
+                /<a\s+(class=["'][^"']*["']\s+)?href=["'][^"']*["'](\s+class=["'][^"']*["'])?>/g);
+            if (links)
+                for (const l of links) {
+                    // add repin sign before account names
+                    if (l.includes('repin_user'))
+                        this.text = this.text.replace(l, repin_sign + l);
 
-                2 possibilities: class comes first or href comes first 
-            */
-
-            // case 1: class first
-            this.text = this.text.replace(/<a\s+class="repin_account"/g, repin_sign + '<a');
-
-            // case 2: href first
-            let tags = this.text.match(/<a\s+href=["'][^"']*["']\s+class="repin_account"/g);
-            if (tags)
-                for (const tag of tags) {
-                    let url = tag.replace('class="repin_account"', '');
-                    this.text = this.text.replace(tag, repin_sign + url);
+                    // add image sign before image links
+                    if (l.includes('comment_img') || l.includes('comment_sticker'))
+                        this.text = this.text.replace(l, img_sign + l);
                 }
         }
 
@@ -306,12 +301,23 @@ class Comment {
     constructor(comment_item) {
         this.id = comment_item['id'];
         this.time = comment_item['created_time'];
-        this.content = comment_item['content'];
+        this.content = comment_item['content']
+            .replace(/\sdata-[^=]+=["'][^"']*["']/g, '');
         this.num_likes = comment_item['vote_count'];
         this.is_liked = comment_item['voting'];
         this.author = new CommentAuthor(comment_item['author']);
         if (comment_item['reply_to_author'])
             this.reply_to_author = new CommentAuthor(comment_item['reply_to_author']);
+
+        // add image sign before image links
+        const img_sign = ' <i class="fas fa-image"></i>';
+        let links = this.content.match(
+            /<a\s+(class=["'][^"']*["']\s+)?href=["'][^"']*["'](\s+class=["'][^"']*["'])?>/g);
+        if (links)
+            for (const l of links) {
+                if (l.includes('comment_img') || l.includes('comment_sticker'))
+                    this.content = this.content.replace(l, img_sign + l);
+            }
     }
 
     get_html() {

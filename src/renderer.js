@@ -492,8 +492,7 @@ const current_window = remote.getCurrentWindow();
         a.addClass('active').delay(500)
                             .queue(() => a.removeClass('active').dequeue());
 
-        // check if the link is an image
-        if (['.gif', '.jpg', '.webp'].some((el) => url.includes(el)))
+        if (a.hasClass('comment_img') || a.hasClass('comment_sticker'))
             image.open_img_viewer([url], 0);
         else
             shell.openExternal(url, {activate: false});
