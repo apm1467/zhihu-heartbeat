@@ -7,7 +7,7 @@ const ipc = electron.ipcRenderer;
 const {app, dialog, BrowserWindow, Menu} = remote;
 const Feed = require('./feed');
 const {Pin} = require('./models');
-const publish = require('./publish');
+const pin_publish = require('./pin_publish');
 const constants = require('./constants');
 const auth = require('./auth');
 const image = require('./image');
@@ -130,7 +130,7 @@ const current_window = remote.getCurrentWindow();
         let logo = $(this);
         logo.addClass('active')
             .delay(400).queue(() => logo.removeClass('active').dequeue());
-        publish.open_editor()
+        pin_publish.open_editor();
     });
 }
 

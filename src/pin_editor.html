@@ -18,7 +18,7 @@
     <script>
         const remote = require('electron').remote;
         const current_window = remote.getCurrentWindow();
-        const publish = require('./publish');
+        const pin_publish = require('./pin_publish');
         const constants = require('./constants');
 
 
@@ -41,7 +41,7 @@
                     $('.sending').fadeIn(200);
                 });
 
-                publish.publish(text, remote.getCurrentWindow());
+                pin_publish.publish(text, remote.getCurrentWindow());
             }
         });
     </script>
