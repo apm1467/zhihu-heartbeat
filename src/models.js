@@ -14,7 +14,7 @@ class User {
         this.followed_by_me = user_data['is_following'];
         this.num_pins = user_data['pins_count'];
         this.avatar = user_data['avatar_url'].replace('_s', '_l');
-        this.url = constants.BASE_WEB_URL + user_data['url'];
+        this.url = `${constants.PROFILE_WEB_URL}/${this.id}`;
     }
 
     get_avatar_html() {
