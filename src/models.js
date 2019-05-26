@@ -35,18 +35,37 @@ class User {
         return (this.id === localStorage.getItem('self_user_id'));
     }
 
-    static async update_profile(uid) {
+    static async follow(uid) {
         let res = await request({
-            method: 'GET',
-            url: `${constants.PROFILE_URL}/${uid}`,
+            method: 'POST',
+            url: `${constants.PROFILE_URL}/${uid}/followers`,
             headers: auth.get_authorized_request_header(),
             jar: true,
+            simple: false,
             json: true
         });
+        if (res['is_following'])
+            await User.update_profile(uid);
+    }
 
+    static async unfollow(uid) {
+        let self_id = localStorage.getItem('self_user_id');
+        let res = await request({
+            method: 'DELETE',
+            url: `${constants.PROFILE_URL}/${uid}/followers/${self_id}`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            simple: false,
+            json: true
+        });
+        if (!res['is_following'])
+            await User.update_profile(uid);
+    }
+
+    static async update_profile(uid) {
         let user;
         try {
-            user = new User(res);
+            user = await User.get_user(uid);
         }
         catch (err) {
             console.warn(res);
@@ -54,24 +73,51 @@ class User {
         }
 
         $('.title').text(user.name);
-        $('.author').html(user.get_html());
-        $('.content').text(user.bio);
+        $('.profile > .author').html(user.get_html());
+        $('.profile > .content').text(user.bio);
         $('.followers .num').text(user.followers);
         $('.following .num').text(user.following);
         $('.num-pins .num').text(user.num_pins);
 
         if (user.follows_me) {
             $('.follows-me').removeClass('hidden');
-            $('.profile .content').css({'margin-right': '135px'});
-        }
-
-        if (user.followed_by_me) {
-            $('.follow-btn').text('已关注');
-            $('.follow-btn').addClass('followed-by-me');
+            $('.profile > .content').css({'margin-right': '135px'});
         }
         else {
-            $('.follow-btn').text('关注');
+            $('.follows-me').addClass('hidden');
+            $('.profile > .content').css({'margin-right': '60px'});
         }
+
+        let btn = $('.follow-btn');
+        if (user.followed_by_me) {
+            btn.text('已关注');
+            btn.addClass('followed-by-me');
+        }
+        else {
+            btn.text('关注');
+            btn.removeClass('followed-by-me');
+        }
+
+        btn.unbind('click');
+        btn.click(async function(event) {
+            btn.fadeTo(200, 0);
+            if (user.followed_by_me)
+                await User.unfollow(uid);
+            else
+                await User.follow(uid);
+            btn.fadeTo(200, 1);
+        });
+    }
+
+    static async get_user(uid) {
+        let res = await request({
+            method: 'GET',
+            url: `${constants.PROFILE_URL}/${uid}`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+        return new User(res);
     }
 }
 
