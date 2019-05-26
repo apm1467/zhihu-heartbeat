@@ -7,7 +7,17 @@ const current_window = require('electron').remote.getCurrentWindow();
 
 
 module.exports = class Feed {
-    constructor() {
+    constructor(uid='') {
+        if (uid) {
+            // this is feed on a user's profile page
+            this.fetch_url = `${constants.PIN_URL}/${uid}/moments`;
+            this.profile_url = `${constants.PROFILE_URL}/${uid}`;
+        }
+        else {
+            // this is main timeline on index page
+            this.fetch_url = constants.PIN_FETCH_URL;
+            this.profile_url = constants.SELF_PROFILE_URL;
+        }
         this.feed_offset = 0; // needed when fetching older feed
         this.local_latest_pin_id = '';
         this.server_latest_pin_id = '';
@@ -17,7 +27,7 @@ module.exports = class Feed {
     }
 
     async start() {
-        display_self_avatar();
+        this._display_avatar();
         await this._fetch_initial_feed();
         this._enable_scroll_event();
         setInterval(
@@ -26,10 +36,27 @@ module.exports = class Feed {
         );
     }
 
+    async _display_avatar() {
+        let res = await request({
+            method: 'GET',
+            url: this.profile_url,
+            headers: auth.get_authorized_request_header(),
+            json: true,
+            simple: false,
+            jar: true
+        });
+        if ("error" in res) {
+            this._display_avatar();
+            return;
+        }
+        let avatar = res['avatar_url'].replace('_s', ''); // get large image
+        $('.self-avatar').attr('src', avatar);
+    }
+
     async _fetch_initial_feed() {
         let res = await request({
             method: 'GET',
-            url: constants.PIN_FETCH_URL + '?reverse_order=0',
+            url: this.fetch_url + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
             simple: false,
@@ -72,7 +99,7 @@ module.exports = class Feed {
     async _fetch_older_feed() {
         let res = await request({
             method: 'GET',
-            url: `${constants.PIN_FETCH_URL}?after_id=${this.local_oldest_pin_id}&
+            url: `${this.fetch_url}?after_id=${this.local_oldest_pin_id}&
                   offset=${this.feed_offset}`,
             headers: auth.get_authorized_request_header(),
             jar: true,
@@ -88,7 +115,7 @@ module.exports = class Feed {
     async _check_update() {
         let res = await request({
             method: 'GET',
-            url: constants.PIN_FETCH_URL + '?reverse_order=0',
+            url: this.fetch_url + '?reverse_order=0',
             headers: auth.get_authorized_request_header(),
             jar: true,
             simple: false,
@@ -118,7 +145,7 @@ module.exports = class Feed {
         let stop_fetching = false;
         let res = await request({
             method: 'GET',
-            url: constants.PIN_FETCH_URL + 
+            url: this.fetch_url + 
                  '?after_id=' + fetch_after_id + '&offset=' + fetch_offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
@@ -205,23 +232,6 @@ module.exports = class Feed {
     }
 }
 
-
-async function display_self_avatar() {
-    let res = await request({
-        method: 'GET',
-        url: constants.SELF_URL,
-        headers: auth.get_authorized_request_header(),
-        json: true,
-        simple: false,
-        jar: true
-    });
-    if ("error" in res) {
-        display_self_avatar();
-        return;
-    }
-    let avatar = res['avatar_url'].replace('_s', ''); // get large image
-    $('.title-bar').append('<img class="self-avatar" src="' + avatar + '">');
-}
 
 function generate_pin_html(pin_data) {
     let output = '';

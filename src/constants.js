@@ -20,7 +20,12 @@ exports.BASE_WEB_URL = BASE_WEB_URL;
 
 exports.PIN_WEB_URL = BASE_WEB_URL + '/pin';
 
-exports.SELF_URL = BASE_URL + '/people/self';
+const PROFILE_URL = BASE_URL + '/people';
+exports.PROFILE_URL = PROFILE_URL;
+
+exports.SELF_PROFILE_URL = PROFILE_URL + '/self';
+
+exports.PROFILE_WEB_URL = BASE_WEB_URL + '/people'
 
 exports.APP_SECRET = 'ecbefbf6b17e47ecb9035107866380';
 
