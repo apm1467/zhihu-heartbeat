@@ -11,6 +11,7 @@ const pin_publish = require('./pin_publish');
 const constants = require('./constants');
 const auth = require('./auth');
 const image = require('./image');
+const profile = require('./profile');
 
 const current_window = remote.getCurrentWindow();
 
@@ -494,6 +495,10 @@ const current_window = remote.getCurrentWindow();
 
         if (a.hasClass('comment_img') || a.hasClass('comment_sticker'))
             image.open_img_viewer([url], 0);
+        else if (url.startsWith(constants.PROFILE_WEB_URL)) {
+            uid = url.slice(constants.PROFILE_WEB_URL.length + 1);
+            profile.open_profile(uid);
+        }
         else
             shell.openExternal(url, {activate: false});
     });

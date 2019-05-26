@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="../assets/pangu.min.js"></script>
+    <link rel="stylesheet" href="../assets/fontawesome-5.1.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="../assets/pin.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/profile.css" />
+</head>
+
+<body>
+
+    <div class="title-bar">
+        <div class="title"></div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile">
+            <div class="author"></div>
+            <div class="content"></div>
+            <div class="profile-statistics">
+                <span class="followers"><div>关注者</div></span>
+                <span class="following"><div>关注了</div></span>
+                <span class="num-pins"><div>想法</div></span>
+            </div>
+        </div>
+        <div class="feed"></div>
+    </div>
+
+    <script>
+        const electron = require('electron');
+        const ipc = electron.ipcRenderer;
+        const current_window = electron.remote.getCurrentWindow();
+        const constants = require('./constants');
+        const {ProfilePage} = require('./profile')
+
+        // ------------------------------------------------------------
+
+        // display pin
+        ipc.on('uid', function(event, uid) {
+            let page = new ProfilePage(uid);
+            page.start();
+        });
+
+        // ------------------------------------------------------------
+
+        // deactivate title bar when window loses focus
+        current_window.on('blur', function(event) {
+            $('.title-bar').addClass('inactive');
+        });
+        current_window.on('focus', function(event) {
+            $('.title-bar').removeClass('inactive');
+        });
+
+        // ------------------------------------------------------------
+
+        // include extra CSS to adjust app scrollbar on Windows
+        if (process.platform === 'win32')
+            current_window.webContents.insertCSS(constants.WINDOWS_EXTRA_CSS);
+
+        // ------------------------------------------------------------
+
+        // accept keyboard shortcuts
+        window.addEventListener('keydown', (event) => {
+            let container = $('.comments-container');
+            let scroll_top = container.scrollTop();
+            switch (event.key) {
+                case 'Escape':
+                    require('electron').remote.getCurrentWindow().close();
+                    break;
+                case 'm':
+                    $('.pin').click(); // toggle collapse
+                    break;
+                case 's':
+                    $('.pin').find('.num-likes').click(); // click heart button
+                break;
+                case 'k':
+                case 'ArrowUp':
+                    container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
+                    break;
+                case 'j':
+                case 'ArrowDown':
+                    container.animate({scrollTop: scroll_top + 500}, 250, 'linear');
+                    break;
+            }
+        });
+
+        // ------------------------------------------------------------
+
+        // open links in external browser
+        $(document).on('click', 'a[href^="http"]', function(event) {
+            event.preventDefault();
+            let a = $(this);
+            let url = this.href;
+            a.addClass('active').delay(500)
+                                .queue(() => a.removeClass('active').dequeue());
+
+            if (a.hasClass('comment_img') || a.hasClass('comment_sticker'))
+                image.open_img_viewer([url], 0);
+            else
+                shell.openExternal(url, {activate: false});
+        });
+
+        // add shadow when pin author is clicked
+        $(document).on('click', '.author a', function(event) {
+            let author = $(this).closest('.comment-author, .author');
+            author.addClass('active')
+                  .delay(500).queue(() => author.removeClass('active').dequeue());
+        });
+
+        // click heart button to like pin
+        ipc.on('parent-id', function(event, parent_id) {
+            console.log(parent_id);
+            $(document).on('click', '.pin .num-likes', async function(event) {
+                let clicked_btn = $(this);
+                let pin_id = clicked_btn.parent().parent().attr('data-id');
+                let is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+
+                clicked_btn.fadeTo(200, 0);
+                if (is_liked)
+                    await Pin.unlike(pin_id);
+                else
+                    await Pin.like(pin_id);
+                clicked_btn.fadeTo(200, 1);
+
+                // notify parent window to update pin statistics
+                ipc.sendTo(parent_id, 'update-pin-statistics', pin_id);
+            });
+        });
+
+        // click heart button to like comment
+        $(document).on('click', '.comment-item .num-likes', async function(event) {
+            let clicked_btn = $(this);
+            let comment_id = clicked_btn.parent().parent().attr('data-id');
+            let is_liked = clicked_btn.find('i.fas.fa-heart').length !== 0;
+
+            clicked_btn.fadeTo(200, 0);
+            if (is_liked)
+                await Comment.unlike(comment_id);
+            else
+                await Comment.like(comment_id);
+            clicked_btn.fadeTo(200, 1);
+        });
+    </script>
+</body>
+</html>

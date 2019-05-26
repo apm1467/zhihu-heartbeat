@@ -1,0 +1,51 @@
+/* ------------------------------------------------------------ */
+/* title bar */
+
+.title-bar {
+    height: 40px;
+}
+.title-bar .title {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    margin-top: 10px;
+    color: rgb(160, 160, 160);
+    font-weight: 600;
+    font-size: 16px;
+}
+.title-bar.inactive .title {
+    color: #7A7772;
+}
+
+/* ------------------------------------------------------------ */
+/* profile */
+
+.profile {
+    margin-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #413E39;
+}
+.profile-statistics {
+    margin-top: 15px;
+    text-align: center;
+}
+.profile-statistics span {
+    display: inline-block;
+    margin: 0 20px;
+    font-weight: bold;
+    font-size: 17px;
+}
+.profile-statistics span div {
+    font-weight: 600;
+    font-size: 14px;
+    color: rgb(122, 122, 122);
+    margin-bottom: 2px;
+}
+
+/* ------------------------------------------------------------ */
+/* feed */
+
+.pin .content {
+    padding-bottom: 11px;
+    border-bottom: 1px solid #413E39;
+}
