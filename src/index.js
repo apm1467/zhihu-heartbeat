@@ -149,7 +149,7 @@ const current_window = remote.getCurrentWindow();
     // scroll to top if currently not at top;
     // scroll back to the last scroll position if currently at top
     function scroll_to_top() {
-        let container = $('.feed-container');
+        let container = $('.container');
         let scroll_position = container.scrollTop();
         if (scroll_position !== 0) {
             localStorage.setItem('last_scroll_position', scroll_position);
@@ -353,7 +353,7 @@ const current_window = remote.getCurrentWindow();
         pin_content.css('max-height', pin_content.height());
 
         // maintain scroll bar position if pin is partially out of screen
-        let container = $('.feed-container');
+        let container = $('.container');
         let scroll_top = container.scrollTop();
         let pin_h = pin.outerHeight(true);
         if (pin.offset().top < 0)
@@ -437,7 +437,7 @@ const current_window = remote.getCurrentWindow();
     function is_in_viewport(pin) {
         let top = pin.offset().top - 55;
         let bottom = top + pin.outerHeight(true);
-        let container_h = $('.feed-container').height();
+        let container_h = $('.container').height();
         return !(bottom < 0 || top > container_h);
     }
 
@@ -445,7 +445,7 @@ const current_window = remote.getCurrentWindow();
         pin.addClass('focus');
         let top = pin.offset().top - 50;
         let bottom = top + pin.outerHeight(true);
-        let container = $('.feed-container');
+        let container = $('.container');
         let scroll_top = container.scrollTop();
         if (top < 0 || bottom > container.height())
             container.animate({scrollTop: scroll_top + top}, 300, 'easieEaseInOut');

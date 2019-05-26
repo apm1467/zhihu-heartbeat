@@ -76,7 +76,7 @@ module.exports = class Feed {
     }
 
     _enable_scroll_event() {
-        let container = $('.feed-container');
+        let container = $('.container');
         let self = this;
         container.scroll(async function() {
             let page_length = container[0].scrollHeight;
@@ -182,7 +182,7 @@ module.exports = class Feed {
             setTimeout( 
                 () => {
                     let update = $('#update');
-                    let container = $('.feed-container');
+                    let container = $('.container');
                     let scroll_top = container.scrollTop();
     
                     update.removeClass('hidden');

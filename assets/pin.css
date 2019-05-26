@@ -17,7 +17,7 @@ a {
 a.active {
     color: rgb(36, 105, 183);
 }
-.feed-container, .comments-container {
+.container {
     position: absolute;
     bottom: 0;
     left: 0;
