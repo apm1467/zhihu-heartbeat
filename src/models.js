@@ -10,6 +10,8 @@ class User {
         this.bio = user_data['headline'];
         this.followers = user_data['follower_count'];
         this.following = user_data['following_count'];
+        this.follows_me = user_data['is_followed'];
+        this.followed_by_me = user_data['is_following'];
         this.num_pins = user_data['pins_count'];
         this.avatar = user_data['avatar_url'].replace('_s', '_l');
         this.url = constants.BASE_WEB_URL + user_data['url'];

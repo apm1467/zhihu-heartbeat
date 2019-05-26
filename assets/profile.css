@@ -1,3 +1,7 @@
+.hidden {
+    display: none;
+}
+
 /* ------------------------------------------------------------ */
 /* title bar */
 
@@ -20,10 +24,15 @@
 /* ------------------------------------------------------------ */
 /* profile */
 
+.container {
+    top: 40px;
+}
 .profile {
-    margin-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px;
     border-bottom: 1px solid #413E39;
+}
+.profile .content {
+    margin-right: 60px;
 }
 .profile-statistics {
     margin-top: 15px;
@@ -40,6 +49,38 @@
     font-size: 14px;
     color: rgb(122, 122, 122);
     margin-bottom: 2px;
+}
+.follow-btn, .follows-me {
+    position: absolute;
+}
+.follows-me {
+    font-size: 12px;
+    font-weight: bold;
+    top: 31px;
+    right: 80px;
+    border-radius: 10px;
+    padding: 1px 5px;
+    background-color: rgb(122, 122, 122);
+    color: #2C2924;
+}
+.follow-btn {
+    -webkit-app-region: no-drag;
+    top: 20px;
+    right: 15px;
+    color: rgb(106, 175, 253);
+    font-size: 15px;
+    font-weight: 600;
+    user-select: none;
+    margin-top: 8px;
+    border-radius: 7px;
+    padding: 1px 5px;
+    border: 1px solid #514F4B;
+}
+.follow-btn.followed-by-me {
+    color: rgb(122, 122, 122);
+}
+.follow-btn:hover {
+    background-color: #3F3F3F;
 }
 
 /* ------------------------------------------------------------ */
