@@ -1,12 +1,6 @@
 body {
     cursor: default;
 }
-.hidden {
-    display: none;
-}
-.darkened {
-    filter: brightness(50%) !important;
-}
 
 /* ------------------------------------------------------------ */
 /* title bar */

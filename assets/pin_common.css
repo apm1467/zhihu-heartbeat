@@ -1,3 +1,9 @@
+.hidden {
+    display: none;
+}
+.darkened {
+    filter: brightness(50%) !important;
+}
 body {
     color: #E0E0DF;
     font-family: BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;

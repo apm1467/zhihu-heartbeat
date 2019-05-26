@@ -37,6 +37,7 @@ class ProfilePage {
         let feed = new Feed(this.uid);
         feed.start();
 
+        require('./pin_common');
     }
 }
 
