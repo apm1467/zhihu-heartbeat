@@ -34,6 +34,45 @@ class User {
     is_self() {
         return (this.id === localStorage.getItem('self_user_id'));
     }
+
+    static async update_profile(uid) {
+        let res = await request({
+            method: 'GET',
+            url: `${constants.PROFILE_URL}/${uid}`,
+            headers: auth.get_authorized_request_header(),
+            jar: true,
+            json: true
+        });
+
+        let user;
+        try {
+            user = new User(res);
+        }
+        catch (err) {
+            console.warn(res);
+            return;
+        }
+
+        $('.title').text(user.name);
+        $('.author').html(user.get_html());
+        $('.content').text(user.bio);
+        $('.followers .num').text(user.followers);
+        $('.following .num').text(user.following);
+        $('.num-pins .num').text(user.num_pins);
+
+        if (user.follows_me) {
+            $('.follows-me').removeClass('hidden');
+            $('.profile .content').css({'margin-right': '135px'});
+        }
+
+        if (user.followed_by_me) {
+            $('.follow-btn').text('已关注');
+            $('.follow-btn').addClass('followed-by-me');
+        }
+        else {
+            $('.follow-btn').text('关注');
+        }
+    }
 }
 
 class PinAuthor extends User {}

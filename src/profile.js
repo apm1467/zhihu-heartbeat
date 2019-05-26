@@ -32,45 +32,11 @@ class ProfilePage {
     }
 
     async start() {
-        this._display_user();
+        User.update_profile(this.uid);
 
         let feed = new Feed(this.uid);
         feed.start();
-    }
 
-    async _display_user() {
-        let res = await request({
-            method: 'GET',
-            url: `${constants.PROFILE_URL}/${this.uid}`,
-            headers: auth.get_authorized_request_header(),
-            jar: true,
-            json: true
-        });
-        if ('error' in res) {
-            this._display_user();
-            return;
-        }
-
-        let user = new User(res);
-        $('.title').append(user.name);
-        $('.author').append(user.get_html());
-        $('.content').append(user.bio);
-        $('.followers').append(user.followers);
-        $('.following').append(user.following);
-        $('.num-pins').append(user.num_pins);
-
-        if (user.follows_me) {
-            $('.follows-me').removeClass('hidden');
-            $('.profile .content').css({'margin-right': '135px'});
-        }
-
-        if (user.followed_by_me) {
-            $('.follow-btn').append('已关注');
-            $('.follow-btn').addClass('followed-by-me');
-        }
-        else {
-            $('.follow-btn').append('关注');
-        }
     }
 }
 
