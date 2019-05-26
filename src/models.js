@@ -3,25 +3,38 @@ const auth = require('./auth');
 const constants = require('./constants');
 
 
-class PinAuthor {
-    constructor(author_dict) {
-        this.id = author_dict['id'];
-        this.name = author_dict['name'];
-        this.avatar = author_dict['avatar_url'].replace('_s', '_l');
-        this.url = constants.BASE_WEB_URL + author_dict['url'];
+class User {
+    constructor(user_data) {
+        this.id = user_data['id'];
+        this.name = user_data['name'];
+        this.bio = user_data['headline'];
+        this.followers = user_data['follower_count'];
+        this.following = user_data['following_count'];
+        this.num_pins = user_data['pins_count'];
+        this.avatar = user_data['avatar_url'].replace('_s', '_l');
+        this.url = constants.BASE_WEB_URL + user_data['url'];
     }
 
     get_avatar_html() {
-        return '<a href="' + this.url +'">' + 
-               '<img class="avatar" src="' + this.avatar + '"></a>';
+        return `<a href="${this.url}">
+                    <img class="avatar" src="${this.avatar}">
+                </a>`;
     }
+
     get_name_html() {
-        return '<a class="name" href="' + this.url +'">' + this.name + '</a>';
+        return `<a class="name" href="${this.url}">${this.name}</a>`;
     }
+
+    get_html() {
+        return this.get_avatar_html() + this.get_name_html();
+    }
+
     is_self() {
         return (this.id === localStorage.getItem('self_user_id'));
     }
 }
+
+class PinAuthor extends User {}
 
 class Pin {
     constructor(pin_data) {
@@ -281,19 +294,10 @@ class Pin {
     }
 }
 
-class CommentAuthor {
-    constructor(author_dict) {
-        this.name = author_dict['member']['name'];
-        this.avatar = author_dict['member']['avatar_url'].replace('_s', '_l');
-        this.url = author_dict['member']['url'].replace('api.', '');
-    }
-
-    get_name_html() {
-        return `<a class="name" href="${this.url}">${this.name}</a>`;
-    }
-    get_html() {
-        return `<a href="${this.url}"><img class="avatar" src="${this.avatar}"></a>
-                ${this.get_name_html()}`;
+class CommentAuthor extends User {
+    constructor(data) {
+        let user_data = data['member'];
+        super(user_data);
     }
 }
 
@@ -374,4 +378,4 @@ class Comment {
 }
 
 
-module.exports = {Pin, Comment};
+module.exports = {User, Pin, Comment};
