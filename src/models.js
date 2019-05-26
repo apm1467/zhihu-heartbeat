@@ -82,16 +82,16 @@ class Pin {
 
             let links = this.text.match(
                 /<a\s+(class=["'][^"']*["']\s+)?href=["'][^"']*["'](\s+class=["'][^"']*["'])?>/g);
-            if (links)
-                for (const l of links) {
-                    // add repin sign before account names
-                    if (l.includes('repin_user'))
-                        this.text = this.text.replace(l, repin_sign + l);
+            links = new Set(links);
+            for (const l of links) {
+                // add repin sign before account names
+                if (l.includes('repin_user'))
+                    this.text = this.text.split(l).join(repin_sign + l);
 
-                    // add image sign before image links
-                    if (l.includes('comment_img') || l.includes('comment_sticker'))
-                        this.text = this.text.replace(l, img_sign + l);
-                }
+                // add image sign before image links
+                if (l.includes('comment_img') || l.includes('comment_sticker'))
+                    this.text = this.text.split(l).join(img_sign + l);
+            }
         }
 
         // handle media
