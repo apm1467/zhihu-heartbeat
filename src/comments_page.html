@@ -32,23 +32,8 @@
 
         // display pin
         ipc.on('pin', function(event, pin_id, pin_html) {
-            let comments = new CommentsPage(pin_id, pin_html);
-            comments.start();
-
-            // display pin post date
-            let time_field = $('.pin .time');
-            let post_time = parseInt(time_field.attr('data-time'));
-            let date = new Date(post_time * 1000);
-            let minutes = date.getMinutes();
-            if (minutes < 10)
-                minutes = "0" + minutes;
-            time_field.text(`${date.getMonth() + 1} 月 ${date.getDate()} 日
-                             ${date.getHours()}:${minutes}`);
-
-            $('.pin').attr('data-id', pin_id);
-
-            // update statistics
-            Pin.update_statistics(pin_id);
+            let comments_page = new CommentsPage(pin_id, pin_html);
+            comments_page.start();
 
             // collapse pin content
             let pin_content = $('.pin .content');
@@ -74,8 +59,6 @@
         ipc.on('update-pin-statistics', function(pin_id) {
             Pin.update_statistics(pin_id);
         });
-
-        require('./pin_common');
 
         // ------------------------------------------------------------
 
@@ -109,7 +92,6 @@
 
         // click heart button to like pin
         ipc.on('parent-id', function(event, parent_id) {
-            console.log(parent_id);
             $(document).on('click', '.pin .num-likes', async function(event) {
                 let clicked_btn = $(this);
                 let pin_id = clicked_btn.parent().parent().attr('data-id');

@@ -1,7 +1,7 @@
 const request = require('request-promise-native');
 const constants = require('./constants');
 const auth = require('./auth');
-const {Comment} = require('./models');
+const {Pin, Comment} = require('./models');
 
 
 module.exports = class CommentsPage {
@@ -14,11 +14,28 @@ module.exports = class CommentsPage {
 
     async start() {
         $('.pin').append(this.pin_html);
+        $('.pin').attr('data-id', this.pin_id);
+        Pin.update_statistics(this.pin_id);
+        this._display_pin_time();
+
         // add spaces between CJK and half-width characters
         pangu.spacingElementByClassName('text');
 
         await this._fetch_initial_comments();
         this._enable_scroll_event();
+
+        require('./pin_common');
+    }
+
+    _display_pin_time() {
+        let time_field = $('.pin .time');
+        let post_time = parseInt(time_field.attr('data-time'));
+        let date = new Date(post_time * 1000);
+        let minutes = date.getMinutes();
+        if (minutes < 10)
+            minutes = "0" + minutes;
+        time_field.text(`${date.getMonth() + 1} 月 ${date.getDate()} 日
+                         ${date.getHours()}:${minutes}`);
     }
 
     async _fetch_initial_comments() {

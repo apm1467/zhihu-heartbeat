@@ -68,7 +68,7 @@ class User {
             user = await User.get_user(uid);
         }
         catch (err) {
-            console.warn(res);
+            console.warn(err);
             return;
         }
 
