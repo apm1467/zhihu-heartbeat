@@ -16,7 +16,7 @@ exports.open_editor = function() {
         backgroundColor: "#2C2924",
         useContentSize: true
     });
-    win.loadFile('src/pin_editor.html');
+    win.loadFile('src/pin_publish.html');
     win.once('ready-to-show', () => win.show());
     win.on('closed', () => win = null);
 }
