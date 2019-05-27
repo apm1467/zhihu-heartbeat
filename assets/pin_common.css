@@ -37,7 +37,6 @@ a.active {
     padding-left: 20px;
     padding-right: 20px;
     filter: brightness(100%);
-    transition: filter 0.06s;
 }
 
 /* ------------------------------------------------------------ */
@@ -214,7 +213,6 @@ a.active {
 }
 .img, .video {
     filter: brightness(100%);
-    transition: filter 0.1s;
 }
 .img + .img {
     margin-left: 3px;
