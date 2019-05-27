@@ -270,34 +270,34 @@ class Pin {
         return output;
     }
     get_html() {
-        let output = `
+        let origin_pin_html = '';
+        if (this.is_repin) {
+            origin_pin_html = this.origin_pin_deleted_reason ?
+                `<div class="origin-pin">${this.origin_pin_deleted_reason}</div>`
+                :
+                `
+                    <div class="origin-pin" data-id="${this.origin_pin.id}">
+                        <div class="author">${this.origin_pin.author.get_name_html()}</div>
+                        <div class="origin-pin-content">${this.origin_pin.get_content_html()}</div>
+                    </div>
+                `;
+        }
+
+        return `
             <div class="author">
                 ${this.author.get_avatar_html()}
                 ${this.author.get_name_html()}
             </div>
             <div class="time" data-time="${this.time}"></div>
             ${this.get_statistics_html()}
-        
-            <div class="content">${this.get_content_html()}
+            <div class="content">
+                ${this.get_content_html()}
+                ${origin_pin_html}
+                <div class="collapsed-indicator hidden">
+                    <img src="${constants.COLLAPSED_INDICATOR}">
+                </div>
+            </div>
         `;
-
-        // if this pin is a repin
-        if (this.is_repin) {
-            if (this.origin_pin_deleted_reason)
-                output += `<div class="origin-pin">${this.origin_pin_deleted_reason}</div>`;
-
-            else {
-                output += `
-                    <div class="origin-pin" data-id="${this.origin_pin.id}">
-                        <div class="author">${this.origin_pin.author.get_name_html()}</div>
-                        <div class="origin-pin-content">${this.origin_pin.get_content_html()}</div>
-                    </div>
-                `;
-            }
-        }
-
-        output += '</div>'; // content
-        return output;
     }
 
     static async delete(pin_id) {

@@ -164,7 +164,6 @@ body {
     padding-bottom: 11px;
     border-bottom: 1px solid #413E39;
 }
-
 .origin-pin:hover, .origin-pin.loading {
     margin-left: 11px;
     border-left: none;
@@ -174,16 +173,4 @@ body {
 }
 .origin-pin.loading {
     background-color: #37332F;
-}
-
-/* ------------------------------------------------------------ */
-/* collapse */
-
-.content.collapse:after {
-    margin-left: 70px;
-    margin-right: 20px;
-    border-bottom: 1px solid rgb(72, 72, 72);
-}
-.pin.focus .content.collapse:after{
-    background: linear-gradient(transparent, #37332F 50%);
 }

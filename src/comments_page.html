@@ -34,25 +34,6 @@
         ipc.on('pin', function(event, pin_id, pin_html) {
             let comments_page = new CommentsPage(pin_id, pin_html);
             comments_page.start();
-
-            // collapse pin content
-            let pin_content = $('.pin .content');
-            let has_img = pin_content.find('.img, .thumbnail').length !== 0;
-
-            // imgs haven't been loaded yet; the height must be added manually
-            // all imgs have max-height 250; add 100px tolerance to handle window resize
-            let height = pin_content.outerHeight() + (has_img ? 350 : 100);
-            if (height > 310) {
-                pin_content.css('max-height', height);
-                pin_content.addClass('collapsible collapse');
-
-                // click pin to toggle collapse
-                $(document).on('click', '.pin', function(event) {
-                    if ($(event.target).is('a, a span, .avatar, .num-likes, i'))
-                        return;
-                    $('.pin .content').toggleClass('collapse');
-                });
-            }
         });
 
         // update pin statistics on demand

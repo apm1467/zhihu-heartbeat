@@ -13,18 +13,33 @@ module.exports = class CommentsPage {
     }
 
     async start() {
-        $('.pin').append(this.pin_html);
-        $('.pin').attr('data-id', this.pin_id);
-        Pin.update_statistics(this.pin_id);
-        this._display_pin_time();
-
-        // add spaces between CJK and half-width characters
-        pangu.spacingElementByClassName('text');
+        this._display_pin();
 
         await this._fetch_initial_comments();
         this._enable_scroll_event();
 
         require('./pin_common');
+    }
+
+    _display_pin() {
+        let pin = $('.pin');
+        pin.append(this.pin_html);
+        pin.attr('data-id', this.pin_id);
+        Pin.update_statistics(this.pin_id);
+        this._display_pin_time();
+
+        // collapse long pin
+        let content = $('.pin .content');
+        let img_h = content.find('.img, .thumbnail') ? 250 : 0;
+        let pin_h = content.outerHeight() + img_h + 100;
+        if (pin_h > 310) {
+            content.css('max-height', pin_h);
+            content.addClass('collapsible collapse');
+            content.children('.collapsed-indicator').removeClass('hidden');
+        }
+
+        // add spaces between CJK and half-width characters
+        pangu.spacingElementByClassName('text');
     }
 
     _display_pin_time() {

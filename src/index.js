@@ -175,17 +175,13 @@ const current_window = remote.getCurrentWindow();
 
 // pin focus & context menu
 {
-    // click pin to add focus & remove collapse
+    // click pin to add focus
     $(document).on('click contextmenu', '.pin', function(event) {
         // not add focus when clicking links or images
         if ($(event.target).is('a, a span, .img, .thumbnail'))
             return;
 
         let pin = $(this);
-        let pin_content = pin.children('.content');
-        pin_content.removeClass('collapse');
-        setTimeout(() => pin_content.css('max-height', 'none'), 300);
-
         if (!pin.hasClass('focus')) {
             $('.pin').removeClass('focus');
             pin.addClass('focus');
@@ -241,7 +237,7 @@ const current_window = remote.getCurrentWindow();
             },
             { type: 'separator' },
             {
-                label: '复制链接',
+                label: '复制想法链接',
                 click: () => clipboard.writeText(
                     constants.PIN_WEB_URL + '/' + pin.attr('data-id'))
             }
@@ -311,6 +307,7 @@ const current_window = remote.getCurrentWindow();
             container.animate({scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
 
         pin_content.addClass('collapse');
+        pin_content.children('.collapsed-indicator').removeClass('hidden');
     }
 }
 

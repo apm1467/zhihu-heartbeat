@@ -1,5 +1,6 @@
 const electron = require('electron');
 const shell = electron.shell;
+const {BrowserWindow} = electron.remote;
 const constants = require('./constants');
 const image = require('./image');
 const profile = require('./profile');
@@ -175,5 +176,24 @@ const current_window = electron.remote.getCurrentWindow();
             player_win.show();
             $('.video').removeClass('darkened'); // remove darkening
         });
+    });
+}
+
+// ------------------------------------------------------------
+
+// pin collapse
+{
+    // click pin to add focus & remove collapse
+    $(document).on('click contextmenu', '.pin', function(event) {
+        console.log($(event.target));
+        if ($(event.target).is('a, a span, .img, .thumbnail'))
+            return;
+
+        let content = $(this).children('.content');
+        content.removeClass('collapse');
+        setTimeout(() => {
+            content.css('max-height', 'none');
+            content.children('.collapsed-indicator').addClass('hidden');
+        }, 300);
     });
 }
