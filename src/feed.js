@@ -99,8 +99,8 @@ module.exports = class Feed {
     async _fetch_older_feed() {
         let res = await request({
             method: 'GET',
-            url: `${this.fetch_url}?after_id=${this.local_oldest_pin_id}&
-                  offset=${this.feed_offset}`,
+            url: this.fetch_url + '?after_id=' + this.local_oldest_pin_id +
+                 '&offset=' + this.feed_offset,
             headers: auth.get_authorized_request_header(),
             jar: true,
             simple: false,
