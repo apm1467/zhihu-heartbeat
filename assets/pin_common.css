@@ -70,11 +70,11 @@ a.active {
     position: absolute;
     transform: translate(0, 2px);
 }
-.pin .author:hover .avatar, .comment-author:hover .avatar {
+.author:hover .avatar, .comment-author:hover .avatar {
     box-shadow: 0 0 7px rgb(180, 180, 180);
     transition: box-shadow 0.1s;
 }
-.pin .author.active .avatar, .comment-author.active .avatar {
+.author.active .avatar, .comment-author.active .avatar {
     box-shadow: 0 0 12px white;
 }
 .author .name {
@@ -84,11 +84,11 @@ a.active {
     color: rgb(204, 204, 204);
     user-select: none;
 }
-.pin .author:hover .name, .comment-author:hover .name {
+.author:hover .name, .comment-author:hover .name {
     color: white;
     transition: color 0.1s;
 }
-.pin .author.active .name, .comment-author.active .name {
+.author.active .name, .comment-author.active .name {
     text-shadow: 0 0 5px white;
 }
 
@@ -305,11 +305,17 @@ a.active {
 .collapsed-indicator {
     text-align: center;
     position: absolute;
-    left: 70px;
+    left: 60px;
     right: 20px;
     bottom: 1px;
     height: 45px;
     background: linear-gradient(transparent, #2C2924 50%);
+}
+.collapsed-indicator i {
+    color: rgb(106, 175, 253);
+    font-size: 12px;
+    position: absolute;
+    bottom: 5px;
 }
 .pin.focus .collapsed-indicator {
     background: linear-gradient(transparent, #37332F 50%);

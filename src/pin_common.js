@@ -71,7 +71,8 @@ const current_window = electron.remote.getCurrentWindow();
         if (a.hasClass('comment_img') || a.hasClass('comment_sticker'))
             image.open_img_viewer([url], 0);
         else if (
-            url.startsWith(constants.PROFILE_WEB_URL) || 
+            (a.parents('.profile').length === 0 &&
+            url.startsWith(constants.PROFILE_WEB_URL)) || 
             a.hasClass('member_mention')
         ) {
             uid = url.slice(constants.PROFILE_WEB_URL.length + 1);
