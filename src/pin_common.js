@@ -2,6 +2,7 @@ const electron = require('electron');
 const shell = electron.shell;
 const {BrowserWindow} = electron.remote;
 const constants = require('./constants');
+const CommentsPage = require('./comments_page');
 const image = require('./image');
 const profile = require('./profile');
 
@@ -82,7 +83,7 @@ const current_window = electron.remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// add shadow when pin author is clicked
+// add highlight when pin author is clicked
 {
     $(document).on('click', '.author a', function(event) {
         let author = $(this).closest('.comment-author, .author');
@@ -181,9 +182,26 @@ const current_window = electron.remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
+// open comments page for origin-pin
+{
+    $(document).on('click', '.origin-pin', function(event) {
+        event.stopPropagation();
+
+        let pin = $(this);
+        if (
+            !$(event.target).is('a, a span, .img, .thumbnail') &&
+            !pin.hasClass('loading')
+        ) {
+            CommentsPage.open_comments_page(pin);
+        }
+    });
+}
+
+// ------------------------------------------------------------
+
 // pin collapse
 {
-    // click pin to add focus & remove collapse
+    // click pin to remove collapse
     $(document).on('click contextmenu', '.pin', function(event) {
         console.log($(event.target));
         if ($(event.target).is('a, a span, .img, .thumbnail'))

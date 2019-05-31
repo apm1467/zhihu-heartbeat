@@ -199,19 +199,6 @@ const current_window = remote.getCurrentWindow();
             open_comments_page($(this));
     });
 
-    // single click origin-pin to open comments page
-    $(document).on('click', '.origin-pin', function(event) {
-        event.stopPropagation();
-
-        let pin = $(this);
-        if (
-            !$(event.target).is('a, a span, .img, .thumbnail') &&
-            !pin.hasClass('loading')
-        ) {
-            open_comments_page(pin);
-        }
-    });
-
     // prevent text selection after double click
     $(document).on('mousedown', '.pin', function(event) {
         if (event.detail > 1)
@@ -253,41 +240,6 @@ const current_window = remote.getCurrentWindow();
         let menu = Menu.buildFromTemplate(template);
         menu.popup({});
     });
-
-    async function open_comments_page(pin) {
-        pin.addClass('loading');
-
-        let pin_id = pin.attr('data-id');
-
-        // refetch pin html for origin-pin 
-        // because author avatar is not included in html on index page
-        let pin_html;
-        if (pin.hasClass('origin-pin'))
-            pin_html = await Pin.get_html(pin_id);
-        else
-            pin_html = pin.html();
-
-        let win = new BrowserWindow({
-            width: 450,
-            minWidth: 400,
-            maxWidth: 600,
-            height: 800,
-            titleBarStyle: 'hiddenInset',
-            backgroundColor: "#2C2924",
-            autoHideMenuBar: true,
-            fullscreenable: false,
-            show: false,
-            useContentSize: true
-        });
-        win.loadFile('src/comments_page.html');
-        win.webContents.on('did-finish-load', function() {
-            win.webContents.send('pin', pin_id, pin_html);
-            win.webContents.send('parent-id', current_window.webContents.id);
-
-            pin.removeClass('loading');
-            win.show();
-        });
-    }
 
     function toggle_collapse(pin) {
         let pin_content = pin.children('.content');

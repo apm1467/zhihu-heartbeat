@@ -156,21 +156,7 @@ body {
     border-top: 1px solid rgb(80, 80, 80);
     margin-top: -1px;
 }
-.pin.loading, .origin-pin.loading {
-    filter: brightness(70%) !important;
-    color: white;
-}
 .pin .content {
     padding-bottom: 11px;
     border-bottom: 1px solid #413E39;
-}
-.origin-pin:hover, .origin-pin.loading {
-    margin-left: 11px;
-    border-left: none;
-    box-shadow: inset 0px 0px 0px 1px #514F4B; /* inside-border */
-    border-radius: 6px;
-    background-color: #3F3F3F;
-}
-.origin-pin.loading {
-    background-color: #37332F;
 }

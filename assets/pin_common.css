@@ -181,7 +181,10 @@ a.active {
     margin-right: 3px;
     color: rgb(122, 122, 122);
 }
-
+.pin.loading, .origin-pin.loading {
+    filter: brightness(70%) !important;
+    color: white;
+}
 .link-title {
     margin-top: 15px;
     line-height: 1.4em;
@@ -280,6 +283,16 @@ a.active {
     margin-left: 0;
     margin-bottom: 6px;
     font-size: 17px;
+}
+.origin-pin:hover, .origin-pin.loading {
+    margin-left: 11px;
+    border-left: none;
+    box-shadow: inset 0px 0px 0px 1px #514F4B; /* inside-border */
+    border-radius: 6px;
+    background-color: #3F3F3F;
+}
+.origin-pin.loading {
+    background-color: #37332F;
 }
 
 /* ------------------------------------------------------------ */

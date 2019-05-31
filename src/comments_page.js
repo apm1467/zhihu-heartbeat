@@ -1,7 +1,11 @@
+const electron = require('electron');
+const {BrowserWindow} = electron.remote;
 const request = require('request-promise-native');
 const constants = require('./constants');
 const auth = require('./auth');
 const {Pin, Comment} = require('./models');
+
+const current_window = electron.remote.getCurrentWindow();
 
 
 module.exports = class CommentsPage {
@@ -119,5 +123,41 @@ module.exports = class CommentsPage {
         pangu.spacingElementByClassName('content');
 
         this.offset += 20;
+    }
+
+    static async open_comments_page(pin_jquery) {
+        let pin = pin_jquery;
+        pin.addClass('loading');
+
+        let pin_id = pin.attr('data-id');
+
+        let pin_html;
+        if (pin.hasClass('origin-pin')) {
+            // refetch html for origin-pin to get author avatar
+            pin_html = await Pin.get_html(pin_id);
+        }
+        else
+            pin_html = pin.html();
+
+        let win = new BrowserWindow({
+            width: 450,
+            minWidth: 400,
+            maxWidth: 600,
+            height: 800,
+            titleBarStyle: 'hiddenInset',
+            backgroundColor: "#2C2924",
+            autoHideMenuBar: true,
+            fullscreenable: false,
+            show: false,
+            useContentSize: true
+        });
+        win.loadFile('src/comments_page.html');
+        win.webContents.on('did-finish-load', function() {
+            win.webContents.send('pin', pin_id, pin_html);
+            win.webContents.send('parent-win-id', current_window.webContents.id);
+
+            pin.removeClass('loading');
+            win.show();
+        });
     }
 }
