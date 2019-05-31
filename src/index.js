@@ -51,6 +51,8 @@ const current_window = remote.getCurrentWindow();
 // check app update
 {
     request(constants.GITHUB_CHECK_UPDATE_URL, function(error, response, body) {
+        if (!body)
+            return;
         let latest_version = body;
         let current_version = app.getVersion();
         if (current_version !== latest_version) {
