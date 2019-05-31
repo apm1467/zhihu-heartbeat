@@ -1,6 +1,5 @@
 const request = require('request');
 const electron = require('electron');
-const {clipboard} = electron;
 const remote = electron.remote;
 const shell = electron.shell;
 const ipc = electron.ipcRenderer;
@@ -9,6 +8,7 @@ const Feed = require('./feed');
 const {Pin} = require('./models');
 const pin_publish = require('./pin_publish');
 const constants = require('./constants');
+const CommentsPage = require('./comments_page');
 const auth = require('./auth');
 
 const current_window = remote.getCurrentWindow();
@@ -196,7 +196,7 @@ const current_window = remote.getCurrentWindow();
     // double click pin to open comments page
     $(document).on('dblclick', '.pin', function(event) {
         if (!$(event.target).is('a, a span, .img, .thumbnail'))
-            open_comments_page($(this));
+            CommentsPage.open_comments_page($(this));
     });
 
     // prevent text selection after double click
@@ -209,58 +209,6 @@ const current_window = remote.getCurrentWindow();
     $(document).on('dblclick', '.origin-pin', function(event) {
         event.stopPropagation();
     });
-
-    // context menu
-    $(document).on('contextmenu', '.pin, .origin-pin', function(event) {
-        if ($(event.target).is('.img'))
-            return;
-
-        let pin = $(this);
-        let template = [
-            {
-                label: '详情',
-                click: () => open_comments_page(
-                    $(this).closest('.origin-pin, .pin'))
-            },
-            { type: 'separator' },
-            {
-                label: '复制想法链接',
-                click: () => clipboard.writeText(
-                    constants.PIN_WEB_URL + '/' + pin.attr('data-id'))
-            }
-        ];
-
-        // make long pins collapsible
-        if (pin.outerHeight() > 400 && !pin.hasClass('origin-pin'))
-            template.unshift({
-                label: '折叠',
-                click: () => toggle_collapse(pin)
-            });
-
-        let menu = Menu.buildFromTemplate(template);
-        menu.popup({});
-    });
-
-    function toggle_collapse(pin) {
-        let pin_content = pin.children('.content');
-        if (pin.outerHeight() < 400) {
-            pin_content.removeClass('collapse');
-            setTimeout(() => pin_content.css('max-height', 'none'), 300);
-            return;
-        }
-
-        pin_content.css('max-height', pin_content.height());
-
-        // maintain scroll bar position if pin is partially out of screen
-        let container = $('.container');
-        let scroll_top = container.scrollTop();
-        let pin_h = pin.outerHeight(true);
-        if (pin.offset().top < 0)
-            container.animate({scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
-
-        pin_content.addClass('collapse');
-        pin_content.children('.collapsed-indicator').removeClass('hidden');
-    }
 }
 
 // ------------------------------------------------------------
@@ -276,7 +224,7 @@ const current_window = remote.getCurrentWindow();
                 event.preventDefault();
                 if (has_focus)
                     pin_focused.click(); // unfold & add focus
-                    open_comments_window(pin_focused);
+                    CommentsPage.open_comments_page(pin_focused);
                 break;
             case 'Escape':
                 $('.pin').removeClass('focus');

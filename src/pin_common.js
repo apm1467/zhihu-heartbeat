@@ -1,6 +1,7 @@
 const electron = require('electron');
+const {clipboard} = electron;
 const shell = electron.shell;
-const {BrowserWindow} = electron.remote;
+const {BrowserWindow, Menu} = electron.remote;
 const constants = require('./constants');
 const CommentsPage = require('./comments_page');
 const image = require('./image');
@@ -186,7 +187,6 @@ const current_window = electron.remote.getCurrentWindow();
 {
     $(document).on('click', '.origin-pin', function(event) {
         event.stopPropagation();
-
         let pin = $(this);
         if (
             !$(event.target).is('a, a span, .img, .thumbnail') &&
@@ -202,8 +202,7 @@ const current_window = electron.remote.getCurrentWindow();
 // pin collapse
 {
     // click pin to remove collapse
-    $(document).on('click contextmenu', '.pin', function(event) {
-        console.log($(event.target));
+    $(document).on('click', '.pin', function(event) {
         if ($(event.target).is('a, a span, .img, .thumbnail'))
             return;
 
@@ -214,4 +213,60 @@ const current_window = electron.remote.getCurrentWindow();
             content.children('.collapsed-indicator').addClass('hidden');
         }, 300);
     });
+}
+
+// ------------------------------------------------------------
+
+// pin context menu
+{
+    $(document).on('contextmenu', '.pin, .origin-pin', function(event) {
+        if ($(event.target).is('.img'))
+            return;
+
+        let pin = $(this);
+        let template = [
+            {
+                label: '详情',
+                click: () => CommentsPage.open_comments_page(
+                    $(this).closest('.origin-pin, .pin'))
+            },
+            { type: 'separator' },
+            {
+                label: '复制想法链接',
+                click: () => clipboard.writeText(
+                    constants.PIN_WEB_URL + '/' + pin.attr('data-id'))
+            }
+        ];
+        if (pin.outerHeight() > 350 && !pin.hasClass('origin-pin'))
+            template.unshift({
+                label: '折叠',
+                click: () => toggle_collapse(pin)
+            });
+
+        let menu = Menu.buildFromTemplate(template);
+        menu.popup({});
+    });
+
+    function toggle_collapse(pin) {
+        let content = pin.children('.content');
+        if (pin.outerHeight() < 350) {
+            content.removeClass('collapse');
+            setTimeout(() => content.css('max-height', 'none'), 300);
+            return;
+        }
+
+        content.css('max-height', content.height());
+
+        // maintain scroll position if pin is partially out of screen
+        let container = $('.container');
+        let scroll_top = container.scrollTop();
+        let pin_h = pin.outerHeight(true);
+        if (pin.offset().top < 0) {
+            container.animate(
+                {scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
+        }
+
+        content.addClass('collapse');
+        content.children('.collapsed-indicator').removeClass('hidden');
+    }
 }
