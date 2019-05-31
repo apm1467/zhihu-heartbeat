@@ -72,7 +72,7 @@ const current_window = electron.remote.getCurrentWindow();
             url.startsWith(constants.PROFILE_WEB_URL) || 
             a.hasClass('member_mention')
         ) {
-            uid = url.slice(constants.PROFILE_WEB_URL.length);
+            uid = url.slice(constants.PROFILE_WEB_URL.length + 1);
             profile.open_profile(uid);
         }
         else
