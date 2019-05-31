@@ -294,7 +294,7 @@ class Pin {
                 ${this.get_content_html()}
                 ${origin_pin_html}
                 <div class="collapsed-indicator hidden">
-                    <img src="${constants.COLLAPSED_INDICATOR}">
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
         `;

@@ -26,6 +26,12 @@
     padding: 15px;
     border-bottom: 1px solid #413E39;
 }
+.profile .author:hover .name i {
+    display: inline;
+    font-size: 14px;
+    margin-left: 6px;
+    color: #595959;
+}
 .profile .content {
     margin-right: 60px;
 }

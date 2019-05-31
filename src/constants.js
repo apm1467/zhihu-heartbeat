@@ -113,9 +113,6 @@ exports.GITHUB_CHECK_UPDATE_URL = 'https://raw.githubusercontent.com/apm1467/zhi
 // 100x100 pixel black image as fallback video thumbnail
 exports.BLANK_THUMBNAIL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAaUlEQVR42u3PQREAAAgDoK1/aI3g34MGNJMXKiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiJyWXmfZAEMq/KNAAAAAElFTkSuQmCC';
 
-// downwards arrow
-exports.COLLAPSED_INDICATOR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgb(106, 175, 253)' width='24' height='40'%3E%3Cpath transform='translate(0,20)' d='M12 13L8.285 9.218a.758.758 0 0 0-1.064 0 .738.738 0 0 0 0 1.052l4.249 4.512a.758.758 0 0 0 1.064 0l4.246-4.512a.738.738 0 0 0 0-1.052.757.757 0 0 0-1.063 0L12 13z'%3E%3C/path%3E%3C/svg%3E";
-
 // CSS for adjusting app scrollbar on Windows
 exports.WINDOWS_EXTRA_CSS = `
     ::-webkit-scrollbar {
