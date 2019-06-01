@@ -2,13 +2,11 @@ const request = require('request');
 const electron = require('electron');
 const remote = electron.remote;
 const shell = electron.shell;
-const ipc = electron.ipcRenderer;
-const {app, dialog, BrowserWindow, Menu} = remote;
+const {app, dialog, Menu} = remote;
 const Feed = require('./feed');
 const {Pin} = require('./models');
 const pin_publish = require('./pin_publish');
 const constants = require('./constants');
-const CommentsPage = require('./comments_page');
 const auth = require('./auth');
 
 const current_window = remote.getCurrentWindow();
@@ -69,57 +67,6 @@ const current_window = remote.getCurrentWindow();
                     shell.openExternal(constants.GITHUB_DOWNLOAD_URL);
             });
         }
-    });
-}
-
-// ------------------------------------------------------------
-
-// update post time of each pin every second
-{
-    setInterval(function() {
-        let now = Math.round(Date.now() / 1000);
-        $('.time').each(function() {
-            let time_field = $(this);
-            let post_time = parseInt(time_field.attr('data-time'));
-            time_field.text(get_relative_time_str(post_time, now));
-        });
-    }, 1000);
-
-    const sec_per_min = 60;
-    const sec_per_hour = sec_per_min * 60;
-    const sec_per_day = sec_per_hour * 24;
-    const sec_per_week = sec_per_day * 7;
-
-    function get_relative_time_str(post_time, now) {
-        let diff = now - post_time;
-        if (diff < sec_per_min)
-            return diff + ' 秒前';
-        if (diff < sec_per_hour)
-            return Math.round(diff / sec_per_min) + ' 分前';
-        if (diff < sec_per_day )
-            return Math.round(diff / sec_per_hour) + ' 时前';
-        if (diff < sec_per_week)
-            return Math.round(diff / sec_per_day) + ' 日前';
-        // fall back to display full date
-        let date = new Date(post_time * 1000);
-        return `${date.getMonth() + 1} 月 ${date.getDate()} 日`;
-    }
-}
-
-// ------------------------------------------------------------
-
-// update pin statistics
-{
-    // update all pin statistics every 10 min
-    setInterval(function() {
-        $('.pin').each(function() {
-            Pin.update_statistics($(this).attr('data-id'));
-        });
-    }, constants.PIN_STATISTICS_UPDATE_INTERVAL);
-
-    // update on demand
-    ipc.on('update-pin-statistics', function(event, pin_id) {
-        Pin.update_statistics(pin_id);
     });
 }
 
