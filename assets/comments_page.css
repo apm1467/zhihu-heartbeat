@@ -26,6 +26,7 @@
 .pin .content {
     padding-bottom: 15px;
     border-bottom: 1px solid #413E39;
+    user-select: text;
 }
 .comments {
     padding-top: 5px;
