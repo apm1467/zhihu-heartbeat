@@ -379,6 +379,41 @@ class Pin {
         }
         return pin.get_html();
     }
+
+    static collapse(pin_id) {
+        let pin = $(`.pin[data-id="${pin_id}"]`);
+        let content = pin.children('.content');
+
+        if (pin.outerHeight() < 350) {
+            content.removeClass('collapse');
+            setTimeout(() => content.css('max-height', 'none'), 300);
+            return;
+        }
+
+        content.css('max-height', content.height());
+
+        // maintain scroll position if pin is partially out of screen
+        let container = $('.container');
+        let scroll_top = container.scrollTop();
+        let pin_h = pin.outerHeight(true);
+        if (pin.offset().top < 0) {
+            container.animate(
+                {scrollTop: scroll_top - pin_h + 168}, 300, 'easieEaseOut');
+        }
+
+        content.addClass('collapse');
+        content.children('.collapsed-indicator').removeClass('hidden');
+    }
+
+    static uncollapse(pin_id) {
+        let pin = $(`.pin[data-id="${pin_id}"]`);
+        let content = pin.children('.content');
+        content.removeClass('collapse');
+        setTimeout(() => {
+            content.css('max-height', 'none');
+            content.children('.collapsed-indicator').addClass('hidden');
+        }, 300);
+    }
 }
 
 class CommentAuthor extends User {

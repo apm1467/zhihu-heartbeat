@@ -232,7 +232,11 @@ const current_window = remote.getCurrentWindow();
                 $('.pin').removeClass('focus');
                 break;
             case 'm':
-                toggle_collapse(pin_focused);
+                let pin_id = pin_focused.attr('data-id');
+                if (pin_focused.children('.content').hasClass('collapse'))
+                    Pin.uncollapse(pin_id);
+                else
+                    Pin.collapse(pin_id);
                 break;
             case 'i':
                 if (has_focus) {

@@ -34,9 +34,10 @@ module.exports = class CommentsPage {
 
         // collapse long pin
         let content = $('.pin .content');
-        let img_h = content.find('.img, .thumbnail') ? 250 : 0;
+        // img not loaded yet; add dummy value
+        let img_h = content.find('.img, .thumbnail').length ? 250 : 0;
         let pin_h = content.outerHeight() + img_h + 100;
-        if (pin_h > 310) {
+        if (pin_h > 350) {
             content.css('max-height', pin_h);
             content.addClass('collapsible collapse');
             content.children('.collapsed-indicator').removeClass('hidden');
