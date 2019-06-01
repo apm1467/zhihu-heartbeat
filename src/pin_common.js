@@ -297,9 +297,17 @@ const current_window = electron.remote.getCurrentWindow();
                     media.first().click();
                 }
                 break;
+            case 'o':
+                if (has_focus)
+                    pin_focused.find('.origin-pin').click();
+                break;
             case 's':
                 if (has_focus)
-                    pin_focused.find('.num-likes').click(); // click like button
+                    pin_focused.find('.num-likes').click();
+                break;
+            case 'u':
+                if (has_focus)
+                    pin_focused.find('.author .name').click();
                 break;
             case 'k':
             case 'ArrowUp':
@@ -328,7 +336,7 @@ const current_window = electron.remote.getCurrentWindow();
                     $('.feed .pin').each(function() {
                         let pin = $(this);
                         if (is_in_viewport(pin)) {
-                            $('.pin').removeClass('focus');
+                            $('.focus').removeClass('focus');
                             pin.addClass('focus');
                             return false;
                         }

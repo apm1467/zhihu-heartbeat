@@ -46,6 +46,7 @@
         // unique keyboard shortcuts
         window.addEventListener('keydown', (event) => {
             let container = $('.container');
+            let pin = $('.pin');
             let scroll_top = container.scrollTop();
             switch (event.key) {
                 case 'Escape':
@@ -53,17 +54,21 @@
                     break;
                 case 'm':
                     // toggle collapse
-                    let pin = $('.pin');
                     let pin_id = pin.attr('data-id');
                     if (pin.children('.content').hasClass('collapse'))
                         Pin.uncollapse(pin_id);
                     else
                         Pin.collapse(pin_id);
                     break;
+                case 'o':
+                    pin.find('.origin-pin').click();
+                    break;
                 case 's':
-                    // like pin
-                    $('.pin').find('.num-likes').click();
-                break;
+                    pin.find('.num-likes').click();
+                    break;
+                case 'u':
+                    pin.find('.author .name').click();
+                    break;
                 case 'k':
                 case 'ArrowUp':
                     container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
