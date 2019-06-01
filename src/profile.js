@@ -38,9 +38,6 @@ class ProfilePage {
     async start() {
         let feed = new Feed(this.uid);
         feed.start();
-
-        require('./pin_common');
-
         await User.update_profile(this.uid);
         $('.profile .author .name').append(
             '<i class="fas fa-link hidden"></i>');

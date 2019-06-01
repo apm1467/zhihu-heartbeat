@@ -18,11 +18,8 @@ module.exports = class CommentsPage {
 
     async start() {
         this._display_pin();
-
         await this._fetch_initial_comments();
         this._enable_scroll_event();
-
-        require('./pin_common');
     }
 
     _display_pin() {
