@@ -404,11 +404,15 @@ class Comment {
         const img_sign = ' <i class="fas fa-image"></i>';
         let links = this.content.match(
             /<a\s+(class=["'][^"']*["']\s+)?href=["'][^"']*["'](\s+class=["'][^"']*["'])?>/g);
-        if (links)
-            for (const l of links) {
-                if (l.includes('comment_img') || l.includes('comment_sticker'))
-                    this.content = this.content.replace(l, img_sign + l);
-            }
+        links = new Set(links);
+        for (const l of links) {
+            if (
+                l.includes('comment_img') ||
+                l.includes('comment_sticker') ||
+                l.includes('comment_gif')
+            )
+                this.content = this.content.split(l).join(img_sign + l);
+        }
     }
 
     get_html() {

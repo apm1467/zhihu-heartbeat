@@ -68,12 +68,16 @@ const current_window = electron.remote.getCurrentWindow();
         a.addClass('active').delay(500)
                             .queue(() => a.removeClass('active').dequeue());
 
-        if (a.hasClass('comment_img') || a.hasClass('comment_sticker'))
+        if (
+            a.hasClass('comment_img') ||
+            a.hasClass('comment_sticker') ||
+            a.hasClass('comment_gif')
+        )
             image.open_img_viewer([url], 0);
         else if (
-            (a.parents('.profile').length === 0 &&
-            url.startsWith(constants.PROFILE_WEB_URL)) || 
-            a.hasClass('member_mention')
+            a.hasClass('member_mention') ||
+            url.startsWith(constants.PROFILE_WEB_URL) &&
+            a.parents('.profile').length === 0
         ) {
             uid = url.slice(constants.PROFILE_WEB_URL.length + 1);
             profile.open_profile(uid);
