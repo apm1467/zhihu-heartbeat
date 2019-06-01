@@ -57,27 +57,11 @@
 
         // ------------------------------------------------------------
 
-        // accept keyboard shortcuts
+        // unique keyboard shortcuts
         window.addEventListener('keydown', (event) => {
-            let container = $('.comments-container');
-            let scroll_top = container.scrollTop();
             switch (event.key) {
                 case 'Escape':
-                    require('electron').remote.getCurrentWindow().close();
-                    break;
-                case 'm':
-                    $('.pin').click(); // toggle collapse
-                    break;
-                case 's':
-                    $('.pin').find('.num-likes').click(); // click heart button
-                break;
-                case 'k':
-                case 'ArrowUp':
-                    container.animate({scrollTop: scroll_top - 500}, 250, 'linear');
-                    break;
-                case 'j':
-                case 'ArrowDown':
-                    container.animate({scrollTop: scroll_top + 500}, 250, 'linear');
+                    current_window.close();
                     break;
             }
         });
@@ -86,7 +70,7 @@
 
 
         // click heart button to like pin
-        ipc.on('parent-id', function(event, parent_id) {
+        ipc.on('parent-win-id', function(event, parent_id) {
             console.log(parent_id);
             $(document).on('click', '.pin .num-likes', async function(event) {
                 let clicked_btn = $(this);

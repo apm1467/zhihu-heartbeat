@@ -18,24 +18,6 @@ const current_window = electron.remote.getCurrentWindow();
 
         scroll_to_top();
     });
-
-    // scroll to top if currently not at top;
-    // scroll back to the last scroll position if currently at top
-    function scroll_to_top() {
-        let container = $('.container');
-        let scroll_position = container.scrollTop();
-        if (scroll_position !== 0) {
-            localStorage.setItem('last_scroll_position', scroll_position);
-            container.animate({scrollTop: 0}, 300, 'easieEaseInOut');
-        }
-        else {
-            let last_scroll_position = parseInt(
-                localStorage.getItem('last_scroll_position'));
-            if (last_scroll_position) 
-                container.animate(
-                    {scrollTop: last_scroll_position}, 300, 'easieEaseInOut');
-        }
-    }
 }
 
 // ------------------------------------------------------------
@@ -285,4 +267,115 @@ const current_window = electron.remote.getCurrentWindow();
     $(document).on('dblclick', '.origin-pin', function(event) {
         event.stopPropagation();
     });
+}
+
+// ------------------------------------------------------------
+
+// common keyboard shortcuts
+{
+    window.addEventListener('keydown', (event) => {
+        let pin_focused = $('.focus');
+        let has_focus = pin_focused.length === 1;
+        switch (event.key) {
+            case ' ': // space bar
+            case 'Enter':
+                event.preventDefault();
+                if (has_focus)
+                    pin_focused.click(); // uncollapse & add focus
+                    CommentsPage.open_comments_page(pin_focused);
+                break;
+            case 'm':
+                let pin_id = pin_focused.attr('data-id');
+                if (pin_focused.children('.content').hasClass('collapse'))
+                    Pin.uncollapse(pin_id);
+                else
+                    Pin.collapse(pin_id);
+                break;
+            case 'i':
+                if (has_focus) {
+                    let media = pin_focused.find('.img, .video .thumbnail');
+                    media.first().click();
+                }
+                break;
+            case 's':
+                if (has_focus)
+                    pin_focused.find('.num-likes').click(); // click like button
+                break;
+            case 'k':
+            case 'ArrowUp':
+                if (has_focus && is_in_viewport(pin_focused)) {
+                    pin_focused.removeClass('focus');
+                    move_focus(pin_focused.prev());
+                }
+                else {
+                    $($('.feed .pin').get().reverse()).each(function() {
+                        let pin = $(this);
+                        if (is_in_viewport(pin)) {
+                            $('.focus').removeClass('focus');
+                            pin.addClass('focus');
+                            return false;
+                        }
+                    });
+                }
+                break;
+            case 'j':
+            case 'ArrowDown':
+                if (has_focus && is_in_viewport(pin_focused)) {
+                    pin_focused.removeClass('focus');
+                    move_focus(pin_focused.next());
+                }
+                else {
+                    $('.feed .pin').each(function() {
+                        let pin = $(this);
+                        if (is_in_viewport(pin)) {
+                            $('.pin').removeClass('focus');
+                            pin.addClass('focus');
+                            return false;
+                        }
+                    });
+                }
+                break;
+            case 'g':
+                scroll_to_top();
+                break;
+        }
+    });
+
+    function is_in_viewport(pin) {
+        let top = pin.offset().top - 55;
+        let bottom = top + pin.outerHeight(true);
+        let container_h = $('.container').height();
+        return !(bottom < 0 || top > container_h);
+    }
+
+    function move_focus(pin) {
+        pin.addClass('focus');
+        let top = pin.offset().top - 50;
+        let bottom = top + pin.outerHeight(true);
+        let container = $('.container');
+        let scroll_top = container.scrollTop();
+        if (top < 0 || bottom > container.height())
+            container.animate({scrollTop: scroll_top + top}, 300, 'easieEaseInOut');
+    }
+}
+
+// ------------------------------------------------------------
+
+
+// scroll to top if currently not at top;
+// otherwise scroll back to the last scroll position 
+function scroll_to_top() {
+    let container = $('.container');
+    let scroll_position = container.scrollTop();
+    if (scroll_position !== 0) {
+        localStorage.setItem('last_scroll_position', scroll_position);
+        container.animate({scrollTop: 0}, 300, 'easieEaseInOut');
+    }
+    else {
+        let last_scroll_position = parseInt(
+            localStorage.getItem('last_scroll_position'));
+        if (last_scroll_position) 
+            container.animate(
+                {scrollTop: last_scroll_position}, 300, 'easieEaseInOut');
+    }
 }

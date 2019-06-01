@@ -175,95 +175,15 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// accept keyboard shortcuts
+// unique keyboard shortcuts
 {
     window.addEventListener('keydown', (event) => {
-        let pin_focused = $('.focus');
-        let has_focus = pin_focused.length === 1;
         switch (event.key) {
-            case ' ': // space bar
-            case 'Enter':
-                event.preventDefault();
-                if (has_focus)
-                    pin_focused.click(); // unfold & add focus
-                    CommentsPage.open_comments_page(pin_focused);
-                break;
             case 'Escape':
-                $('.pin').removeClass('focus');
-                break;
-            case 'm':
-                let pin_id = pin_focused.attr('data-id');
-                if (pin_focused.children('.content').hasClass('collapse'))
-                    Pin.uncollapse(pin_id);
-                else
-                    Pin.collapse(pin_id);
-                break;
-            case 'i':
-                if (has_focus) {
-                    let media = pin_focused.find('.img, .video .thumbnail');
-                    media.first().click();
-                }
-                break;
-            case 's':
-                if (has_focus)
-                    pin_focused.find('.num-likes').click(); // click heart button
-                break;
-            case 'k':
-            case 'ArrowUp':
-                if (has_focus && is_in_viewport(pin_focused)) {
-                    pin_focused.removeClass('focus');
-                    move_focus(pin_focused.prev());
-                }
-                else {
-                    $($('.pin').get().reverse()).each(function() {
-                        let pin = $(this);
-                        if (is_in_viewport(pin)) {
-                            $('.pin').removeClass('focus');
-                            pin.addClass('focus');
-                            return false;
-                        }
-                    });
-                }
-                break;
-            case 'j':
-            case 'ArrowDown':
-                if (has_focus && is_in_viewport(pin_focused)) {
-                    pin_focused.removeClass('focus');
-                    move_focus(pin_focused.next());
-                }
-                else {
-                    $('.pin').each(function() {
-                        let pin = $(this);
-                        if (is_in_viewport(pin)) {
-                            $('.pin').removeClass('focus');
-                            pin.addClass('focus');
-                            return false;
-                        }
-                    });
-                }
-                break;
-            case 'g':
-                scroll_to_top();
+                $('.focus').removeClass('focus');
                 break;
         }
     });
-
-    function is_in_viewport(pin) {
-        let top = pin.offset().top - 55;
-        let bottom = top + pin.outerHeight(true);
-        let container_h = $('.container').height();
-        return !(bottom < 0 || top > container_h);
-    }
-
-    function move_focus(pin) {
-        pin.addClass('focus');
-        let top = pin.offset().top - 50;
-        let bottom = top + pin.outerHeight(true);
-        let container = $('.container');
-        let scroll_top = container.scrollTop();
-        if (top < 0 || bottom > container.height())
-            container.animate({scrollTop: scroll_top + top}, 300, 'easieEaseInOut');
-    }
 }
 
 // ------------------------------------------------------------
