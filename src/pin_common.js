@@ -247,3 +247,42 @@ const current_window = electron.remote.getCurrentWindow();
         menu.popup({});
     });
 }
+
+// ------------------------------------------------------------
+
+// pin focus
+{
+    // click pin to add focus
+    $(document).on('click contextmenu', '.feed .pin', function(event) {
+        if ($(event.target).is('a, a span, .img, .thumbnail'))
+            return;
+        let pin = $(this);
+        if (!pin.hasClass('focus')) {
+            $('.focus').removeClass('focus');
+            pin.addClass('focus');
+        }
+    });
+
+    // click title bar to remove focus
+    $(document).on('click contextmenu', '.title-bar', function(event) {
+        $('.focus').removeClass('focus');
+    });
+
+    // double click pin to open comments page
+    $(document).on('dblclick', '.feed .pin', function(event) {
+        if ($(event.target).is('a, a span, .img, .thumbnail'))
+            return;
+        CommentsPage.open_comments_page($(this));
+    });
+
+    // prevent text selection after double click
+    $(document).on('mousedown', '.feed .pin', function(event) {
+        if (event.detail > 1)
+            event.preventDefault();
+    });
+
+    // prevent double click on origin-pin from opening comments page
+    $(document).on('dblclick', '.origin-pin', function(event) {
+        event.stopPropagation();
+    });
+}

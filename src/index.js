@@ -125,7 +125,7 @@ const current_window = remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// click logo to publish new pin
+// click title bar logo to publish new pin
 {
     $(document).on('click', '.logo', function(event) {
         let logo = $(this);
@@ -170,46 +170,6 @@ const current_window = remote.getCurrentWindow();
         else
             await Pin.like(pin_id);
         clicked_btn.fadeTo(200, 1);
-    });
-}
-
-// ------------------------------------------------------------
-
-// pin focus & context menu
-{
-    // click pin to add focus
-    $(document).on('click contextmenu', '.pin', function(event) {
-        // not add focus when clicking links or images
-        if ($(event.target).is('a, a span, .img, .thumbnail'))
-            return;
-
-        let pin = $(this);
-        if (!pin.hasClass('focus')) {
-            $('.pin').removeClass('focus');
-            pin.addClass('focus');
-        }
-    });
-
-    // click title bar to remove focus
-    $(document).on('click contextmenu', '.title-bar', function(event) {
-        $('.pin').removeClass('focus');
-    });
-
-    // double click pin to open comments page
-    $(document).on('dblclick', '.pin', function(event) {
-        if (!$(event.target).is('a, a span, .img, .thumbnail'))
-            CommentsPage.open_comments_page($(this));
-    });
-
-    // prevent text selection after double click
-    $(document).on('mousedown', '.pin', function(event) {
-        if (event.detail > 1)
-            event.preventDefault();
-    });
-
-    // prevent double click on origin-pin from opening comments page for repin
-    $(document).on('dblclick', '.origin-pin', function(event) {
-        event.stopPropagation();
     });
 }
 

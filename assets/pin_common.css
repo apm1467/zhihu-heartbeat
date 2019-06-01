@@ -54,6 +54,26 @@ a.active {
 }
 
 /* ------------------------------------------------------------ */
+/* pin focus */
+.pin.focus {
+    background-color: #37332F;
+    color: rgb(220, 220, 220);
+    border-top: 1px solid rgb(80, 80, 80);
+    margin-top: -1px;
+    cursor: auto;
+}
+.pin.focus .content {
+    user-select: text;
+}
+.pin.focus .name {
+    color: rgb(220, 220, 220);
+}
+.pin.focus + .pin {
+    border-top: 1px solid rgb(80, 80, 80);
+    margin-top: -1px;
+}
+
+/* ------------------------------------------------------------ */
 /* author */
 
 .author {
@@ -70,11 +90,15 @@ a.active {
     position: absolute;
     transform: translate(0, 2px);
 }
-.author:hover .avatar, .comment-author:hover .avatar {
+.pin .author:hover .avatar,
+.profile .author:hover .avatar,
+.comment-author:hover .avatar {
     box-shadow: 0 0 7px rgb(180, 180, 180);
     transition: box-shadow 0.1s;
 }
-.author.active .avatar, .comment-author.active .avatar {
+.pin .author.active .avatar,
+.profile .author.active .avatar,
+.comment-author.active .avatar {
     box-shadow: 0 0 12px white;
 }
 .author .name {
@@ -84,11 +108,15 @@ a.active {
     color: rgb(204, 204, 204);
     user-select: none;
 }
-.author:hover .name, .comment-author:hover .name {
+.pin .author:hover .name,
+.profile .author:hover .name,
+.comment-author:hover .name {
     color: white;
     transition: color 0.1s;
 }
-.author.active .name, .comment-author.active .name {
+.pin .author.active .name,
+.profile .author.active .name,
+.comment-author.active .name {
     text-shadow: 0 0 5px white;
 }
 

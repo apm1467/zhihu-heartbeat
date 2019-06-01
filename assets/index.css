@@ -139,23 +139,6 @@ body {
 .feed {
     width: 100%;
 }
-.pin.focus {
-    background-color: #37332F;
-    color: rgb(220, 220, 220);
-    border-top: 1px solid rgb(80, 80, 80);
-    margin-top: -1px;
-    cursor: auto;
-}
-.pin.focus .content {
-    user-select: text;
-}
-.pin.focus .name {
-    color: rgb(220, 220, 220);
-}
-.pin.focus + .pin {
-    border-top: 1px solid rgb(80, 80, 80);
-    margin-top: -1px;
-}
 .pin .content {
     padding-bottom: 11px;
     border-bottom: 1px solid #413E39;
