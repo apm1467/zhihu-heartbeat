@@ -57,6 +57,10 @@
                     else
                         Pin.collapse(pin_id);
                     break;
+                case 'i':
+                    let media = pin.find('.img, .video .thumbnail');
+                    media.first().click();
+                    break;
                 case 'o':
                     pin.find('.origin-pin').click();
                     break;
