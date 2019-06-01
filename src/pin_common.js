@@ -262,11 +262,10 @@ const current_window = electron.remote.getCurrentWindow();
 
 // ------------------------------------------------------------
 
-// pin collapse
+// click pin to uncollapse
 {
-    // click pin to remove collapse
     $(document).on('click', '.pin', function(event) {
-        if ($(event.target).is('a, a span, .img, .thumbnail'))
+        if ($(event.target).is('a, a span, .img, .thumbnail, .num-likes'))
             return;
         Pin.uncollapse($(this).attr('data-id'));
     });
