@@ -1,8 +1,11 @@
 const request = require('request-promise-native');
-const {BrowserWindow} = require('electron').remote;
+const electron = require('electron');
+const {BrowserWindow} = electron.remote;
 const auth = require('./auth');
 const Feed = require('./feed');
 const {User} = require('./models');
+
+const current_window = electron.remote.getCurrentWindow();
 
 
 function open_profile(uid) {
@@ -22,6 +25,7 @@ function open_profile(uid) {
 
     win.webContents.on('did-finish-load', function() {
         win.webContents.send('uid', uid);
+        win.webContents.send('parent-win-id', current_window.webContents.id);
         win.show();
     });
 }

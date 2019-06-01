@@ -155,7 +155,8 @@ module.exports = class CommentsPage {
         win.loadFile('src/comments_page.html');
         win.webContents.on('did-finish-load', function() {
             win.webContents.send('pin', pin_id, pin_html);
-            win.webContents.send('parent-win-id', current_window.webContents.id);
+            win.webContents.send(
+                'parent-win-id', current_window.webContents.id);
 
             pin.removeClass('loading');
             win.show();
