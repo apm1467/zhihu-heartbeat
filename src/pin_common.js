@@ -382,7 +382,7 @@ const current_window = electron.remote.getCurrentWindow();
                 break;
             case 'u':
                 if (has_focus)
-                    pin_focused.find('.author .name').click();
+                    pin_focused.find('.author .avatar').click();
                 break;
             case 'k':
             case 'ArrowUp':
