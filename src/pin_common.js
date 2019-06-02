@@ -137,7 +137,8 @@ const current_window = electron.remote.getCurrentWindow();
             url.startsWith(constants.PROFILE_WEB_URL) &&
             a.parents('.profile').length === 0
         ) {
-            uid = url.slice(constants.PROFILE_WEB_URL.length + 1);
+            let s = url.split('/');
+            let uid = s[s.length - 1];
             profile.open_profile(uid);
         }
         else
