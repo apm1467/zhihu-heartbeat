@@ -63,6 +63,19 @@ module.exports = class CommentsPage {
             jar: true,
             json: true
         });
+        for (var reply of res['data']) {
+            const url = `${constants.COMMENT_URL}/${reply.id}/child_comments`;
+            if (reply.child_comments.length < reply.child_comment_count) {
+                let child_resp = await request({
+                    method: 'GET',
+                    url: url,
+                    headers: auth.get_authorized_request_header(),
+                    jar: true,
+                    json: true
+                });
+                reply.child_comments = child_resp.data
+            }
+        }
         this._append_to_list(res['data']);
     }
 
