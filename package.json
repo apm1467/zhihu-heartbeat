@@ -1,6 +1,6 @@
 {
   "name": "Heartbeat",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "（非官方）知乎想法桌面客户端",
   "main": "src/main.js",
   "scripts": {
