@@ -12,7 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^6.0.0",
-    "electron-builder": "^20.18.0",
+    "electron-builder": "^21.0.0",
     "electron-reloader": "^0.2.0"
   },
   "dependencies": {
@@ -24,7 +24,8 @@
     "appId": "ch.yige.zhihu-heartbeat",
     "mac": {
       "category": "public.app-category.social-networking",
-      "target": "zip"
+      "target": "zip",
+      "identity": null
     },
     "win": {
       "target": "zip"
