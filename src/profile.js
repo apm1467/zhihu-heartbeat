@@ -10,6 +10,7 @@ const current_window = electron.remote.getCurrentWindow();
 
 function open_profile(uid) {
     let win = new BrowserWindow({
+        webPreferences: { nodeIntegration: true },
         width: 450,
         minWidth: 400,
         maxWidth: 600,

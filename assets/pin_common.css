@@ -207,6 +207,7 @@ a.active {
 }
 .content .fa-retweet, .content .fa-image {
     margin-right: 3px;
+    margin-left: 3px;
     color: rgb(122, 122, 122);
 }
 .pin.loading, .origin-pin.loading {

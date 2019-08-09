@@ -138,6 +138,7 @@ module.exports = class CommentsPage {
             pin_html = pin.html();
 
         let win = new BrowserWindow({
+            webPreferences: { nodeIntegration: true },
             width: 450,
             minWidth: 400,
             maxWidth: 600,

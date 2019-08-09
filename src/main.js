@@ -15,6 +15,7 @@ let main_window = null;
 // create main window
 app.on('ready', function() {
     main_window = new BrowserWindow({
+        webPreferences: { nodeIntegration: true },
         width: 500,
         minWidth: 400,
         maxWidth: 600,

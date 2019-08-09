@@ -6,6 +6,7 @@ const auth = require('./auth');
 
 exports.open_editor = function() {
     let win = new BrowserWindow({
+        webPreferences: { nodeIntegration: true },
         show: false,
         resizable: false,
         height: 550,

@@ -15,6 +15,7 @@ function open_img_viewer(urls, index_clicked) {
     img.onload = function() {
         let {win_w, win_h} = calculate_img_window_size(this.width, this.height);
         let win = new BrowserWindow({
+            webPreferences: { nodeIntegration: true },
             titleBarStyle: 'hidden',
             show: false,
             height: win_h,
@@ -82,7 +83,7 @@ exports.open_img_context_menu = function(urls_compressed, index_clicked, img = n
 }
 
 function calculate_img_window_size(img_w, img_h) {
-    let current_screen = electron.screen.getDisplayMatching(current_window.getBounds());
+    let current_screen = remote.screen.getDisplayMatching(current_window.getBounds());
     let screen_w = current_screen.workAreaSize.width;
     let screen_h = current_screen.workAreaSize.height;
     let max_w = Math.ceil(screen_w * 0.95);

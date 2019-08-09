@@ -223,6 +223,7 @@ const current_window = electron.remote.getCurrentWindow();
         let height = parseInt(video.attr('data-height'));
 
         let player_win = new BrowserWindow({
+            webPreferences: { nodeIntegration: true },
             titleBarStyle: 'hidden',
             show: false,
             height: height,
