@@ -4,7 +4,6 @@
 
     <script>
         const ipc = require('electron').ipcRenderer;
-        const Hls = require('hls.js');
         const request = require('request-promise-native');
         const {Pin} = require('./models');
         const auth = require('./auth');
@@ -46,33 +45,15 @@
 
         // get video url from renderer
         ipc.on('video', async function(event, video_url, pin_id) {
-            // play mp4
-            if (video_url.includes('.mp4')) {
-                video.src = video_url;
-                video.load();
-                try {
-                    await video.play();
-                }
-                catch (err) {
-                    console.log(err);
-                    refresh_video_url();
-                }
-                return;
+            video.src = video_url;
+            video.load();
+            try {
+                await video.play();
             }
-
-            // play m3u
-            const hls = new Hls({fragLoadingMaxRetry: 1});
-            hls.loadSource(video_url);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-
-            hls.on(Hls.Events.ERROR, function(event, data) {
-                console.log(data);
-                if (data.fatal)
-                    refresh_video_url();
-            });
+            catch (err) {
+                console.log(err);
+                refresh_video_url();
+            }
 
             async function refresh_video_url() {
                 console.log('refreshing video url');
