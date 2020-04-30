@@ -16,7 +16,7 @@
     "electron-reloader": "^0.2.0"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.7"
   },
