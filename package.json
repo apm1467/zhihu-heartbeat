@@ -11,7 +11,7 @@
   "author": "Yi Ge",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^6.0.0",
+    "electron": "^18.3.7",
     "electron-builder": "^21.0.0",
     "electron-reloader": "^0.2.0"
   },
